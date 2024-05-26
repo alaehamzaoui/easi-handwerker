@@ -5,6 +5,7 @@ import (
 	"database/sql"
 )
 
+// Storage definiert die Schnittstelle für den Datenzugriff.
 type Storage interface {
 	CreateHandwerker(*data.Handwerker) error
 	GetHandwerkers() ([]*data.Handwerker, error)
@@ -19,10 +20,12 @@ type Storage interface {
 	UpdateVerification(string) error
 }
 
+// postgresStore implementiert die Storage-Schnittstelle für die PostgreSQL-Datenbank.
 type postgresStore struct {
 	db *sql.DB
 }
 
+// NewPostgresStore erstellt eine neue Instanz von postgresStore.
 func NewPostgresStore() (*postgresStore, error) {
 	connStr := "user=eadidev dbname=postgres password=easinoteasi sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
@@ -34,15 +37,21 @@ func NewPostgresStore() (*postgresStore, error) {
 	}
 	return &postgresStore{db: db}, nil
 }
+
+// Init initialisiert die Datenbank, indem alle Tabellen gelöscht und neu erstellt werden.
 func (s *postgresStore) Init() error {
-	//drop the tables
+	// Tabellen löschen
 	s.deleteAllTables()
-	//-------create all Tables-------
+	// Alle Tabellen erstellen
 	return s.CreateTables()
 }
+
+// deleteAllTables löscht alle Tabellen in der Datenbank.
 func (s *postgresStore) deleteAllTables() {
 	s.db.Exec("drop table verification; drop table handwerker;")
 }
+
+// CreateTables erstellt die Tabellen in der Datenbank.
 func (s *postgresStore) CreateTables() error {
 	query := `
 			create table if not exists handwerker (
