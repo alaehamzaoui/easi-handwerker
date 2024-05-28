@@ -11,12 +11,12 @@ type Storage interface {
 	GetHandwerkers() ([]*data.Handwerker, error)
 	GetHandwerkerByID(int) (*data.Handwerker, error)
 	GetHandwerkerByNumber(int64) (*data.Handwerker, error)
-
 	UpdateHandwerker(*data.Handwerker) error
 	DeleteHandwerker(int) error
 
 	CreateVerification(*data.Verfication) error
 	GetVerification() ([]*data.Verfication, error)
+	GetVerificationByID(int) (*data.Verfication, error)
 	UpdateVerification(string) error
 }
 
@@ -41,7 +41,8 @@ func NewPostgresStore() (*postgresStore, error) {
 // Init initialisiert die Datenbank, indem alle Tabellen gelöscht und neu erstellt werden.
 func (s *postgresStore) Init() error {
 	// Tabellen löschen
-	s.deleteAllTables()
+	// s.deleteAllTables()
+
 	// Alle Tabellen erstellen
 	return s.CreateTables()
 }
@@ -62,6 +63,11 @@ func (s *postgresStore) CreateTables() error {
 				encrypted_password varchar(100),
 				email varchar(50) primary key,
 				created_at timestamp
+			);
+			create table if not exists verification (
+				id serial unique,
+				email varchar(50) primary key,
+				is_verified boolean
 			);
 		`
 	_, err := s.db.Exec(query)
