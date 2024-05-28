@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+type Verification struct {
+}
 
 // Verification definiert die Handler-Funktionen für die Verifizierung eines Handwerkers.
 func (h *Verification) Handleification(w http.ResponseWriter, r *http.Request) error {
@@ -26,4 +28,3 @@ func (h *Verification) HandleGetVerification(w http.ResponseWriter, r *http.Requ
 func (h *Verification) HandleCreateVerification(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
-	

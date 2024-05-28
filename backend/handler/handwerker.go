@@ -5,7 +5,8 @@ import (
 	"net/http"
 )
 
-
+type Handwerker struct {
+}
 
 // HandleHandwerker behandelt den GET- und POST-Request für Handwerker.
 func (h *Handwerker) HandleHandwerker(w http.ResponseWriter, r *http.Request) error {
@@ -21,10 +22,12 @@ func (h *Handwerker) HandleHandwerker(w http.ResponseWriter, r *http.Request) er
 func (h *Handwerker) HandleGetHandwerker(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
+
 // HandleCreateHandwerker behandelt den POST-Request zum Erstellen eines Handwerkers.
 func (h *Handwerker) HandleCreateHandwerker(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
+
 // HandleDeleteHandwerker behandelt den DELETE-Request für Handwerker.
 func (h *Handwerker) HandleDeleteHandwerker(w http.ResponseWriter, r *http.Request) error {
 	return nil
@@ -39,4 +42,3 @@ func (h *Handwerker) HandleGetHandwerkerByID(w http.ResponseWriter, r *http.Requ
 	}
 	return fmt.Errorf("unsupported method")
 }
-
