@@ -18,7 +18,6 @@ backend
 ├── handler
 │   ├── database.go
 │   ├── handwerker.go
-│   ├── middleware.go
 │   └── verification.go
 ├── go.mod
 ├── go.sum
