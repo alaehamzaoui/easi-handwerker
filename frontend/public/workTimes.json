@@ -1,0 +1,37 @@
+[
+  {
+    "day": "Montag",
+    "from": "09:00",
+    "to": "11:02"
+  },
+  {
+    "day": "Dienstag",
+    "from": "07:00",
+    "to": "09:09"
+  },
+  {
+    "day": "Mittwoch",
+    "from": "",
+    "to": ""
+  },
+  {
+    "day": "Donnerstag",
+    "from": "",
+    "to": ""
+  },
+  {
+    "day": "Freitag",
+    "from": "",
+    "to": ""
+  },
+  {
+    "day": "Samstag",
+    "from": "",
+    "to": ""
+  },
+  {
+    "day": "Sonntag",
+    "from": "",
+    "to": ""
+  }
+]
