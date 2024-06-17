@@ -1,0 +1,178 @@
+.container {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  .header {
+    position: relative;
+    color: white;
+    text-align: center;
+    padding: 5%;
+  }
+  .backgroundImageContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Ensure the background image is behind other content */
+    box-shadow: 10px 4px 20px rgb(56, 53, 53);
+  }
+  .backgroundImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(1.2) brightness(1.1); /* Adjust contrast and brightness */
+  
+  }
+  
+  .sloganContainer {
+    margin-top: 20%;
+    margin-bottom: 0%;
+    display: flex;
+    text-shadow: 5px 4px 5px rgb(155, 142, 142);
+    font-size: 250%;
+  }
+  
+  .logoContainer {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1; /* Ensure the logo is above the background image */
+  }
+  
+  .logo {
+    width: 300px; /* Example size */
+    height: auto; /* Maintain logo aspect ratio */
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    margin: 20px 0;
+    z-index: 2; /* Ensure the buttons are above the background image */
+  }
+  
+  .button {
+    padding: 10px 20px;
+    font-size: 25px;
+    color: black;
+    background-color: #f7f6f3; /* Example background color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10%;
+    box-shadow: 10px 4px 10px rgb(88, 82, 82);
+    width: 20%;
+  }
+  .button:hover {
+    background-color: #f3e40d;
+  }
+  
+  .registerContainer {
+    display: flex;
+    justify-content: flex-end; /* Verschiebt den Inhalt nach rechts */
+    align-items: flex-start; /* Verschiebt den Inhalt nach oben */
+    gap: 20px;
+    margin: 20px 0;
+    z-index: 2;
+    margin-top: 0;
+  }
+  .buttonregister {
+    font-size: 10px;
+    color: black;
+    background-color: #f7f6f3; /* Beispiel Hintergrundfarbe */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0%;
+    width: 10%;
+    height: 100%;
+    box-shadow: 5px 2px 5px rgb(88, 82, 82);
+  }
+  .buttonregister:hover {
+    background-color: #797770;
+  }
+  .main {
+    padding: 20px;
+    margin-top: 5%;
+    margin-right: auto;
+    margin-left: auto;
+    
+    display: flex; /* Arrange professor cards horizontally */
+    flex-wrap: wrap; /* Wrap cards to fit container width */
+    justify-content: center;
+    font-weight: bold; /* Make text bold */
+
+  }
+  
+  .features {
+  
+    display: flex;
+    justify-content: space-around;
+    margin-top: 0%;
+    width: 100% ;
+    height: auto; /* Adjust based on your layout requirements */
+  }
+  
+  .features div {
+    text-align: center;
+    flex: 1 1 200px;
+    margin: 10px;
+    box-shadow: 10px 4px 10px rgb(88, 82, 82);
+    margin-top: 50px;
+    display: flex;
+
+
+  }
+
+.footer {
+    background-color: black;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-top: 100px;
+
+  }
+  
+  .footerContainer {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .footerBottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 100px;
+  }
+  
+  
+.footerLeft {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .footerAddress,
+  .footerSocial {
+    flex: 1;
+    text-align: left; 
+    
+  }
+  
+  .footerLogo {
+    text-align: right; /* Richtet das Logo rechts aus */
+  }
+  
+  .footer p {
+    margin: 5px 0;
+  }
+  
+  .footerHeading {
+    font-weight: bold;
+    color: yellow;
+  }
+  
