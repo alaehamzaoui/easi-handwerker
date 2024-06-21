@@ -6,6 +6,13 @@
     
     
   }
+
+  .logoContainer {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
 .container {
     background-color: white;
     padding: 40px;
@@ -30,6 +37,7 @@
   }
   
   .input {
+    color: black;
     padding: 15px;
     border: 2px solid #ccc;
     border-radius: 5px;

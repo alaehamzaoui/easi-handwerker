@@ -1,7 +1,9 @@
 "use client"
 import Link from 'next/link';
 import { useState } from 'react';
+import Image from 'next/image';
 import styles from './page.module.css'; 
+import logo from "../../images/MiniMeister-Logo-white.png"
 export default function Login() {
   
   const [email, setEmail] = useState('');
@@ -23,6 +25,9 @@ export default function Login() {
 
   return (
     <div className={styles.mainContainer}>
+      <div className={styles.logoContainer}>
+        <Image src={logo} alt="Logo" width={200} height={200} />
+      </div>
     <div className={styles.container}>
       <h1 className='${styles.title} text-black text-4xl mb-7 tracking-wider leading-none'><strong>Login</strong></h1>
       <form onSubmit={handleLogin} className={styles.form}>
