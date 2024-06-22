@@ -51,7 +51,7 @@ export default function Home() {
       </header>
 
       <main className={styles.main}>
-        <h3>Was bieten wir an?</h3>
+        <h3 className="ueberschrift">Was bieten wir an?</h3>
         <div className={styles.features}>
           <Feature imgSrc={icon1} title="Benutzerfreundliche Suche" />
           <Feature imgSrc={icon2} title="Modernes Design" />
