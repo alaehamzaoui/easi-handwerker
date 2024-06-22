@@ -34,10 +34,7 @@ export default function Home() {
         <div className={styles.logoContainer}>
           <Image src={logo} alt="MiniMeister Logo" width={200} height={200} />
         </div>
-        <div className={styles.registerContainer}>
-          <button className={styles.buttonregister}>Auftrag einstellen</button>
-          <button className={styles.buttonregister}>Als Azubi anmelden</button>
-        </div>
+       
         <div className={styles.sloganContainer}>
           <h1>Handwerkliche Lösungen für Ihren Alltag</h1>
         </div>
