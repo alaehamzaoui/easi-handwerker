@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from 'react';
-import handwerkerData from "./data/data.js";
+import handwerkerData from "../data/data";
 
 interface Handwerker {
   vorname: string;
