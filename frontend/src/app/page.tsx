@@ -59,9 +59,7 @@ export default function Home() {
           <Feature imgSrc={icon4} title="Verfügbarkeitskalender" />
         </div>
       </main>
-
-      <footer className={styles.footer}>
-        <div className={styles.footerContainer}>
+      <div className={styles.description}>
           <h2>Willkommen bei 'MiniMeister'!</h2>
           <p>
             Wir verstehen die Herausforderungen, wenn es um kleine
@@ -78,6 +76,11 @@ export default function Home() {
             Handwerkern auf Ihrem Weg zur Meisterschaft. Besuchen Sie heute
             noch unsere Plattform und entdecken Sie die Vorteile!
           </p>
+        </div>
+
+      <footer className={styles.footer}>
+        <div className={styles.footerContainer}>
+          
           <div className={styles.footerBottom}>
             <div className={styles.footerLeft}>
               <div className={styles.footerAddress}>
