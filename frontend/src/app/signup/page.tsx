@@ -19,6 +19,25 @@ export default function SignUp() {
 
     const handleSubmit = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
+
+        //überprüft, dass es keine Lücke gibt
+        if (!firstName || !lastName || !birthDate || !category || !street || !city || !phone || !email || !password || !passwordAgain) {
+            alert('Bitte füllen Sie alle Felder aus');
+            return;
+        }
+        //überprüft ob die Passwörter gleich sind
+        if (password !== passwordAgain) {
+            alert('die eingegebenen Passwörter übereinstimmen nicht');
+            return;
+        }
+
+        //überprüft die Richtigkeit der Email-Adresse
+        const emailRegel = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegel.test(email)) {
+            alert('Bitte geben Sie eine gültige Email-Adresse');
+            return;
+        }
+
         const userData = {
             firstName,
             lastName,
@@ -27,7 +46,8 @@ export default function SignUp() {
             city,
             phone,
             email,
-            password
+            password,
+            passwordAgain
         };
         localStorage.setItem(email, JSON.stringify(userData));
         alert('Ihre Registrierung war erfolgreich!');
@@ -61,21 +81,26 @@ export default function SignUp() {
                     </div>
                     <div className={styles.row}>
                         <input
-                            type="text"
+                            type="date"
                             id="birthDate"
                             value={birthDate}
                             placeholder='Geburtsdatum'
                             onChange={(e) => setBirthDate(e.target.value)}
                             className={styles.input}
                         />
-                        <input
-                            type="text"
+                        <select
                             id="category"
                             value={category}
-                            placeholder='Art der Ausbildung'
                             onChange={(e) => setCategory(e.target.value)}
                             className={styles.input}
-                        />
+                        >
+                            <option value="">Art der Ausbildung</option>
+                            <option value="Maurer/-in">Maurer/-in</option>
+                            <option value="Zimmerer/Zimmerin">Zimmerer/Zimmerin</option>
+                            <option value="Dachdecker/-in">Dachdecker/-in</option>
+                            <option value="Friseur/-in">Friseur/-in</option>
+                            <option value="Kosmetiker/-in">Kosmetiker/-in</option>
+                        </select>
                     </div>
                     <div className={styles.row}>
                         <input
