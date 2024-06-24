@@ -1,92 +1,64 @@
 "use client"
 import Link from 'next/link';
-import React from 'react';
 import { useState } from 'react';
-
-export default function SignUp() {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [birthDate, setBirthDate] = useState('');
-    const [city, setCity] = useState('');
-    const [phone, setPhone] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
-        const userData = {
-          firstName,
-          lastName,
-          birthDate,
-          city,
-          phone,
-          email,
-          password
-        };
-        //Speicherung von data in localStorage
-        localStorage.setItem(email, JSON.stringify(userData));
-        alert('Ihre Registrierung war erfolgreich!');
-      };
+import Image from 'next/image';
+import styles from '../../styles/login.module.css'; 
+import logo from "../../images/MiniMeister-Logo-white.png"
+export default function Login() {
   
-    return (
-      <div>
-        <h1><strong>Registrierung</strong></h1>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="firstName"></label>
-          <input
-            type="text"
-            id="firstName"
-            value={firstName} placeholder='Vorname'
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-          <div><label htmlFor="lastName"></label>
-          <input
-            type="text"
-            id="lastName"
-            value={lastName} placeholder='Nachname'
-            onChange={(e) => setLastName(e.target.value)}
-          /></div>
-          <div><label htmlFor="birthDate"></label>
-          <input
-            type="date"
-            id="birthDate"
-            value={birthDate} placeholder='Geburtsdatum'
-            onChange={(e) => setBirthDate(e.target.value)}
-          /></div>
-          <div><label htmlFor="city"></label>
-          <input
-            type="text"
-            id="city"
-            value={city} placeholder='PLZ Stadt'
-            onChange={(e) => setCity(e.target.value)}
-          /></div>
-          <div><label htmlFor="phone"></label>
-          <input
-            type="tel"
-            id="phone"
-            value={phone} placeholder='telefonnummer'
-            onChange={(e) => setPhone(e.target.value)}
-          /></div>
-          <div><label htmlFor="email"></label>
-          <input
-            type="email"
-            id="email"
-            value={email} placeholder='Email'
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    const userDataString = localStorage.getItem(email);
+    let userData;
+    if (userDataString) {
+      userData = JSON.parse(userDataString);
+    }
+    if (userData && userData.password === password) {
+      alert('Login erfolreich!');
+    } else {
+      alert('Error: Benutzer nicht gefunden oder falsches Passwort');
+    }
+  };
+
+  return (
+    <div className={styles.mainContainer}>
+      <div className={styles.logoContainer}>
+        <Image src={logo} alt="Logo" width={200} height={200} />
+      </div>
+    <div className={styles.container}>
+      <h1 className='${styles.title} text-black text-4xl mb-7 tracking-wider leading-none'><strong>Login</strong></h1>
+      <form onSubmit={handleLogin} className={styles.form}>
+        <div>
+          <input 
+            type='text' 
+            name="email" 
+            placeholder='Email' 
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
-          /></div>
-          <div><label htmlFor="password"></label>
-          <input
-            type="password"
-            id="password"
-            value={password} placeholder='Passwort'
+            className={styles.input}
+          />
+        </div>
+        <div>
+          <input 
+            type='password' 
+            name="password" 
+            placeholder='Passwort' 
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
-          /></div>
-          <button type="submit">Registrieren</button>
-        </form>
-      <Link href="/login">
-        <button><strong>Login</strong>
-        </button>
-      </Link>
+            className={styles.input}
+          />
+        </div>
+        <button type='submit' className={styles.button}>Login</button>
+      </form>
+      <p className='${styles.registerText} text-black'>kein Account ?  
+        <Link href="/signup">
+          <button className={styles.registerButton}><strong>Registrierung</strong></button>
+        </Link>
+      </p>
+    </div>
     </div>
   );
 }
