@@ -14,6 +14,11 @@ interface WorkTime {
 const Dashboard = () => {
   const [workTimes, setWorkTimes] = useState<WorkTime[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   // Funktion zum Laden der gespeicherten Arbeitszeiten
   const fetchWorkTimes = () => {
@@ -43,8 +48,8 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-row bg-gray-100 text-black">
-      <aside className="w-64 bg-yellow-600 text-black flex flex-col p-4">
+    <div className={`${isDarkMode ? 'bg-black text-yellow-500' : 'bg-gray-100 text-black'} min-h-screen flex flex-row`}>
+      <aside className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-yellow-600 text-black'} w-64 flex flex-col p-4`}>
         <h1 className="text-3xl font-bold mb-8">MiniMeister</h1>
         <nav>
           <ul>
@@ -68,15 +73,21 @@ const Dashboard = () => {
       </aside>
 
       <div className="flex-grow flex flex-col">
-        <header className="bg-yellow-600 text-black p-4">
+        <header className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-yellow-600 text-black'} p-4 flex justify-between items-center`}>
           <h2 className="text-2xl font-bold">Dashboard für Handwerker</h2>
+          <button
+            onClick={toggleTheme}
+            className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-400 transition"
+          >
+            {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
         </header>
 
         <main className="flex-grow container mx-auto p-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               <button
-                className="bg-yellow-600 text-black py-2 px-4 rounded hover:bg-yellow-700 mb-4 flex items-center"
+                className={`${isDarkMode ? 'bg-gray-800 text-yellow-500' : 'bg-yellow-600 text-black'} py-2 px-4 rounded hover:bg-yellow-700 mb-4 flex items-center`}
                 onClick={() => setIsModalOpen(true)}
               >
                 <FaClock className="mr-2" /> Zeit pflegen
@@ -96,8 +107,8 @@ const Dashboard = () => {
                 />
               )}
 
-              <table className="table-auto w-full mt-4 bg-white shadow-md rounded text-center">
-                <thead className="bg-gray-200">
+              <table className={`${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'} table-auto w-full mt-4 shadow-md rounded text-center`}>
+                <thead className={`${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
                   <tr>
                     <th className="px-4 py-2">Tag</th>
                     <th className="px-4 py-2">Von</th>
@@ -106,7 +117,7 @@ const Dashboard = () => {
                 </thead>
                 <tbody>
                   {workTimes.map((workTime, index) => (
-                    <tr key={index} className="border-t">
+                    <tr key={index} className={`${isDarkMode ? 'border-t border-gray-700' : 'border-t'}`}>
                       <td className="px-4 py-2">{workTime.day}</td>
                       <td className="px-4 py-2">{workTime.from}</td>
                       <td className="px-4 py-2">{workTime.to}</td>
@@ -116,22 +127,22 @@ const Dashboard = () => {
               </table>
             </div>
 
-            <div className="bg-white shadow-md rounded p-4 text-center">
+            <div className={`${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'} shadow-md rounded p-4 text-center`}>
               <img
                 className="w-32 h-32 rounded-full mx-auto mb-4"
                 src="/path/to/profile-pic.jpg"
                 alt="Profile"
               />
-              <h2 className="text-xl font-bold text-yellow-600">Ilyas Errarhoute</h2>
-              <p className="text-gray-600">Elektriker</p>
-              <p className="text-gray-600">Bochum</p>
-              <p className="text-gray-600">PLZ: 44787</p>
-              <p className="text-gray-600">Adresse: Musterstraße 1</p>
+              <h2 className={`${isDarkMode ? 'text-yellow-500' : 'text-yellow-600'} text-xl font-bold`}>Ilyas Errarhoute</h2>
+              <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Elektriker</p>
+              <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Bochum</p>
+              <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>PLZ: 44787</p>
+              <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Adresse: Musterstraße 1</p>
             </div>
           </div>
         </main>
 
-        <footer className="bg-black text-white p-4 text-center">
+        <footer className={`${isDarkMode ? 'bg-gray-900 text-white' : 'bg-black text-white'} p-4 text-center`}>
           <p>Entwickelt von EASI</p>
         </footer>
       </div>
