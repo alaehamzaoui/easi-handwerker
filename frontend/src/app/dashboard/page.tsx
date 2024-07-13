@@ -15,9 +15,16 @@ const Dashboard = () => {
   const [workTimes, setWorkTimes] = useState<WorkTime[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userName, setUserName] = useState<string | null>(null);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('user');
+    window.location.href = '/login';
   };
 
   // Funktion zum Laden der gespeicherten Arbeitszeiten
@@ -30,7 +37,15 @@ const Dashboard = () => {
 
   // Lade gespeicherte Arbeitszeiten beim Initialisieren der Komponente
   useEffect(() => {
-    fetchWorkTimes();
+    const userDataString = localStorage.getItem('user');
+    if (!userDataString) {
+      window.location.href = '/login';
+    } else {
+      const userData = JSON.parse(userDataString);
+      setUserName(userData.firstName);
+      fetchWorkTimes();
+      setIsLoading(false);
+    }
   }, []);
 
   // Aktualisiere die Arbeitszeiten und speichere sie in der JSON-Datei
@@ -44,8 +59,12 @@ const Dashboard = () => {
     })
       .then((res) => res.json())
       .then(() => fetchWorkTimes()) // Lade die Arbeitszeiten erneut
-      .catch((err) => console.error('Error updating work times:', err));
+      .catch((err) => console.error('Fehler beim Aktualisieren der Arbeitszeiten:', err));
   };
+
+  if (isLoading) {
+    return null; 
+  }
 
   return (
     <div className={`${isDarkMode ? 'bg-black text-yellow-500' : 'bg-gray-100 text-black'} min-h-screen flex flex-row`}>
@@ -75,12 +94,23 @@ const Dashboard = () => {
       <div className="flex-grow flex flex-col">
         <header className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-yellow-600 text-black'} p-4 flex justify-between items-center`}>
           <h2 className="text-2xl font-bold">Dashboard für Handwerker</h2>
-          <button
-            onClick={toggleTheme}
-            className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-400 transition"
-          >
-            {isDarkMode ? 'Light Mode' : 'Dark Mode'}
-          </button>
+          <div className="flex items-center">
+            {userName && (
+              <span className="mr-4">{`Willkommen, ${userName}`}</span>
+            )}
+            <button
+              onClick={logout}
+              className="ml-4 px-4 py-2 bg-yellow-500 white rounded hover:bg-yellow-400 transition"
+            >
+              Logout
+            </button>
+            <button
+              onClick={toggleTheme}
+              className="ml-4 px-4 py-2 bg-yellow-500 white rounded hover:bg-yellow-400 transition"
+            >
+              {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+            </button>
+          </div>
         </header>
 
         <main className="flex-grow container mx-auto p-4">
