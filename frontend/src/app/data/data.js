@@ -4,7 +4,7 @@ const handwerkerData = [
     vorname: "John",
     nachname: "Doe",
     stadt: "Berlin",
-    categorie: "Electrician",
+    categorie: "Elektriker",
     telefonnummer: "0123456789"
   },
   {
@@ -13,7 +13,7 @@ const handwerkerData = [
     vorname: "Jane",
     nachname: "Smith",
     stadt: "Hamburg",
-    categorie: "Plumber",
+    categorie: "Klempner",
     telefonnummer: "9876543210"
   },
   {
@@ -22,7 +22,7 @@ const handwerkerData = [
     vorname: "Max",
     nachname: "Mustermann",
     stadt: "Munich",
-    categorie: "Carpenter",
+    categorie: "Tischler",
     telefonnummer: "5647382910"
   },
 
@@ -33,7 +33,7 @@ const handwerkerData = [
     vorname: "Anna",
     nachname: "Müller",
     stadt: "Frankfurt",
-    categorie: "Painter",
+    categorie: "Maler",
     telefonnummer: "7456321980"
   },
   {
@@ -42,7 +42,7 @@ const handwerkerData = [
     vorname: "Peter",
     nachname: "Schmidt",
     stadt: "Cologne",
-    categorie: "Roofer",
+    categorie: "Dachdecker",
     telefonnummer: "3210987654"
   },
   {
@@ -51,7 +51,7 @@ const handwerkerData = [
     vorname: "Maria",
     nachname: "Schulz",
     stadt: "Stuttgart",
-    categorie: "Tiler",
+    categorie: "Fliesenleger",
     telefonnummer: "6543210987"
   },
 ];

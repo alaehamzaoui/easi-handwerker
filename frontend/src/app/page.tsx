@@ -17,6 +17,7 @@ export default function Home() {
   return (
     <Layout>
       <Head>
+      <link rel="icon" href="/favicon.ico" sizes="any" />
         <title>MiniMeister</title>
       </Head>
 
