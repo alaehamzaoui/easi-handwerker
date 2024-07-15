@@ -1,9 +1,12 @@
-'use client';
+// src/app/search/page.tsx
+"use client";  // Mark this file as a Client Component
 
+import { useRouter } from 'next/navigation'; // Update the import
 import { useState, useEffect } from 'react';
 import handwerkerData from "../data/data";
 
 interface Handwerker {
+  id: number;
   vorname: string;
   nachname: string;
   stadt: string;
@@ -12,6 +15,8 @@ interface Handwerker {
 }
 
 export default function Home() {
+  const router = useRouter();
+
   const [category, setCategory] = useState('');
   const [city, setCity] = useState('');
   const [filteredHandwerker, setFilteredHandwerker] = useState<Handwerker[]>(handwerkerData);
@@ -90,6 +95,10 @@ export default function Home() {
   const uniqueCategories = [...new Set(handwerkerData.map(handwerker => handwerker.categorie))];
   const uniqueCities = [...new Set(handwerkerData.map(handwerker => handwerker.stadt))];
 
+  const handleCardClick = (id: number) => {
+    router.push(`/profile/${id}`);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-yellow-500 p-8">
       <h1 className="text-6xl font-extrabold mb-12 text-center tracking-wider drop-shadow-lg">Handwerker Search Page</h1>
@@ -140,12 +149,16 @@ export default function Home() {
         </div>
       </div>
       <div className="space-y-8 md:w-3/4 mx-auto">
-        {filteredHandwerker.map((handwerker, index) => (
-          <div key={index} className="border border-yellow-500 p-8 rounded-xl shadow-2xl bg-gray-800 transition transform hover:-translate-y-2 hover:shadow-3xl hover:bg-gray-700">
+        {filteredHandwerker.map((handwerker) => (
+          <div 
+            key={handwerker.id} 
+            onClick={() => handleCardClick(handwerker.id)}
+            className="border border-yellow-500 p-8 rounded-xl shadow-2xl bg-gray-800 transition transform hover:-translate-y-2 hover:shadow-3xl hover:bg-gray-700 cursor-pointer"
+          >
             <p className="text-white text-lg"><strong className="text-yellow-500">Vorname:</strong> {handwerker.vorname}</p>
             <p className="text-white text-lg"><strong className="text-yellow-500">Nachname:</strong> {handwerker.nachname}</p>
             <p className="text-white text-lg"><strong className="text-yellow-500">Stadt:</strong> {handwerker.stadt}</p>
-            <p className="text-white text-lg"><strong className="text-yellow-500">Categorie:</strong> {handwerker.categorie}</p>
+            <p className="text-white text-lg"><strong className="text-yellow-500">Kategorie:</strong> {handwerker.categorie}</p>
             <p className="text-white text-lg"><strong className="text-yellow-500">Telefonnummer:</strong> {handwerker.telefonnummer}</p>
           </div>
         ))}
