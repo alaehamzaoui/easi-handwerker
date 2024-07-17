@@ -48,9 +48,11 @@ export default function Login() {
 
     return (
         <div className={styles.mainContainer}>
+            <Link href="/">
             <div className={styles.logoContainer}>
                 <Image src={logo} alt="Logo" width={200} height={200} />
             </div>
+            </Link>
             <div className={styles.container}>
                 <h1 className={`${styles.title} text-black text-4xl mb-7 tracking-wider leading-none`}><strong>Login</strong></h1>
                 <form onSubmit={handleSubmit} className={styles.form}>
@@ -77,7 +79,7 @@ export default function Login() {
                     <button type="submit" className={styles.button}>Login</button>
                 </form>
                 <Link href="/signup">
-                    <p className={`${styles.registerText} text-black`}>kein Account? <button className={styles.loginButton}><strong>Registrierung</strong></button></p>
+                    <p className={`${styles.registerText} text-black`}>kein Account? <button className={styles.registerButton}><strong>Registrierung</strong></button></p>
                 </Link>
             </div>
             {isPopupVisible && <Popup message={popupMessage} onClose={closePopup} />}
