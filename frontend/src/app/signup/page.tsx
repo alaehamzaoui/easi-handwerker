@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import Image from 'next/image';
-import styles from './page.module.css';
+import styles from '../../styles/signup.module.css';
 import logo from "../../images/MiniMeister-Logo-white.png"
 
 export default function SignUp() {
