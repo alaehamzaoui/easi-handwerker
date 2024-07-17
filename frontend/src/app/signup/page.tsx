@@ -1,7 +1,7 @@
 "use client"
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from '../../styles/signup.module.css';
 import logo from "../../images/MiniMeister-Logo-white.png";
 import Popup from '../../components/Popup';
@@ -19,16 +19,6 @@ export default function SignUp() {
     const [passwordAgain, setPasswordAgain] = useState('');
     const [popupMessage, setPopupMessage] = useState('');
     const [isPopupVisible, setIsPopupVisible] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        const userDataString = localStorage.getItem('user');
-        if (userDataString) {
-            window.location.href ='../dashboard';
-        } else {
-            setIsLoading(false);
-        }
-    }, []);
 
     const showPopup = (message: string) => {
         setPopupMessage(message);
@@ -39,46 +29,49 @@ export default function SignUp() {
         setIsPopupVisible(false);
     };
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
-        //überprüft, dass es keine Lücke gibt
         if (!firstName || !lastName || !birthDate || !category || !street || !city || !phone || !email || !password || !passwordAgain) {
             showPopup('Bitte füllen Sie alle Felder aus');
             return;
         }
-        //überprüft ob die Passwörter gleich sind
         if (password !== passwordAgain) {
             showPopup('die eingegebenen Passwörter übereinstimmen nicht');
             return;
         }
-        //überprüft die Richtigkeit der Email-Adresse
         const emailRegel = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegel.test(email)) {
             showPopup('Bitte geben Sie eine gültige Email-Adresse');
             return;
         }
+
         const userData = {
             firstName,
             lastName,
             birthDate,
             category,
+            street,
             city,
             phone,
             email,
-            password,
-            passwordAgain
+            password
         };
-        localStorage.setItem('user', JSON.stringify(userData));
-        showPopup('Ihre Registrierung war erfolgreich!');
-        setTimeout(() => {
-            window.location.href =('../dashboard');
-        }, 2000);
-    };
 
-    if (isLoading) {
-        return null;
-    }
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+
+        if (response.ok) {
+            showPopup('Ihre Registrierung war erfolgreich!');
+        } else {
+            showPopup('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
+        }
+    };
 
     return (
         <div className={styles.mainContainer}>

@@ -1,21 +1,5 @@
 const handwerkerData = [
-  {
-    id: 1,
-    vorname: "John",
-    nachname: "Doe",
-    stadt: "Berlin",
-    categorie: "Elektriker",
-    telefonnummer: "0123456789"
-  },
-  {
-    id: 2,
 
-    vorname: "Jane",
-    nachname: "Smith",
-    stadt: "Hamburg",
-    categorie: "Klempner",
-    telefonnummer: "9876543210"
-  },
   {
     id: 3,
 
@@ -26,7 +10,6 @@ const handwerkerData = [
     telefonnummer: "5647382910"
   },
 
-  // Add more data here
   {
     id: 4,
 

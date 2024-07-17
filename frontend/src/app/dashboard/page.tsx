@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import WorkTimeModal from '../../components/WorkTimeModal';
-import React from 'react';
 import { FaClock, FaUser, FaHome } from 'react-icons/fa';
 
 interface WorkTime {
@@ -10,7 +9,6 @@ interface WorkTime {
   from: string;
   to: string;
 }
-
 
 const Dashboard = () => {
   const [workTimes, setWorkTimes] = useState<WorkTime[]>([]);
@@ -24,25 +22,25 @@ const Dashboard = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
     window.location.href = '/login';
   };
 
-  const fetchWorkTimes = () => {
-    fetch('/api/workTimes')
+  const fetchWorkTimes = (email: string) => {
+    fetch(`/api/workTimes?email=${email}`)
       .then((res) => res.json())
       .then((data) => setWorkTimes(data))
       .catch((err) => console.error('Error fetching work times:', err));
   };
 
   useEffect(() => {
-    const userDataString = localStorage.getItem('user');
+    const userDataString = sessionStorage.getItem('user');
     if (!userDataString) {
       window.location.href = '/login';
     } else {
       const userData = JSON.parse(userDataString);
       setUserData(userData);
-      fetchWorkTimes();
+      fetchWorkTimes(userData.email);
       setIsLoading(false);
     }
   }, []);
@@ -53,10 +51,10 @@ const Dashboard = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(updatedWorkTimes),
+      body: JSON.stringify({ email: userData.email, workTimes: updatedWorkTimes }),
     })
       .then((res) => res.json())
-      .then(() => fetchWorkTimes())
+      .then(() => fetchWorkTimes(userData.email))
       .catch((err) => console.error('Fehler beim Aktualisieren der Arbeitszeiten:', err));
   };
 
@@ -129,7 +127,7 @@ const Dashboard = () => {
                   }}
                   onCancel={() => {
                     setIsModalOpen(false);
-                    fetchWorkTimes();
+                    fetchWorkTimes(userData.email);
                   }}
                 />
               )}
@@ -162,14 +160,14 @@ const Dashboard = () => {
                   alt="Persönliche Daten"
                 />
                 <h2 className={`${isDarkMode ? 'text-yellow-500' : 'text-yellow-600'} text-xl font-bold`}>{`${userData.firstName} ${userData.lastName}`}</h2>
-                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{userData.profession}</p>
+                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{userData.category}</p>
                 <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{userData.city}</p>
+                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{userData.street}</p>
+                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{userData.phone}</p>
               </div>
             )}
           </div>
         </main>
-
-      
       </div>
     </div>
   );

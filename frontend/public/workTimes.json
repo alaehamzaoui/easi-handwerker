@@ -1,37 +1,187 @@
-[
-  {
-    "day": "Montag",
-    "from": "09:00",
-    "to": "11:02"
-  },
-  {
-    "day": "Dienstag",
-    "from": "07:00",
-    "to": "09:09"
-  },
-  {
-    "day": "Mittwoch",
-    "from": "12:30",
-    "to": "17:00"
-  },
-  {
-    "day": "Donnerstag",
-    "from": "15:00",
-    "to": "23:00"
-  },
-  {
-    "day": "Freitag",
-    "from": "",
-    "to": ""
-  },
-  {
-    "day": "Samstag",
-    "from": "",
-    "to": ""
-  },
-  {
-    "day": "Sonntag",
-    "from": "",
-    "to": ""
-  }
-]
+{
+  "kirostrotsky@gmail.com": [
+    {
+      "day": "Montag",
+      "from": "09:00",
+      "to": "11:02"
+    },
+    {
+      "day": "Dienstag",
+      "from": "07:00",
+      "to": "09:09"
+    },
+    {
+      "day": "Mittwoch",
+      "from": "12:30",
+      "to": "17:00"
+    },
+    {
+      "day": "Donnerstag",
+      "from": "15:00",
+      "to": "23:00"
+    },
+    {
+      "day": "Freitag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Samstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Sonntag",
+      "from": "",
+      "to": ""
+    }
+  ],
+  "kiros@gmail.com": [
+    {
+      "day": "Montag",
+      "from": "08:52",
+      "to": "09:05"
+    },
+    {
+      "day": "Dienstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Mittwoch",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Donnerstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Freitag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Samstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Sonntag",
+      "from": "",
+      "to": ""
+    }
+  ],
+  "Steve@gmail.com": [
+    {
+      "day": "Montag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Dienstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Mittwoch",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Donnerstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Freitag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Samstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Sonntag",
+      "from": "",
+      "to": ""
+    }
+  ],
+  "test@gmail.com": [
+    {
+      "day": "Montag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Dienstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Mittwoch",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Donnerstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Freitag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Samstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Sonntag",
+      "from": "",
+      "to": ""
+    }
+  ],
+  "ilyas@gmail.com": [
+    {
+      "day": "Montag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Dienstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Mittwoch",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Donnerstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Freitag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Samstag",
+      "from": "",
+      "to": ""
+    },
+    {
+      "day": "Sonntag",
+      "from": "",
+      "to": ""
+    }
+  ]
+}
