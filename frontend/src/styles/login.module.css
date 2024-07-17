@@ -1,136 +1,139 @@
 .mainContainer{
-    background-color: black;
-    height: 100vh; 
-    width: 100%; 
-    display: flex;
-    
-    
-  }
+  background-color: black;
+  height: 100vh; 
+  width: 100%; 
+  display: flex;
+  
+  
+}
 
-  .logoContainer {
-    position: absolute;
-    top: 20px;
-    left: 20px;
+.logoContainer {
+  position: absolute;
+  top: 20px;
+  left: 20px;
 }
 
 .container {
-    background-color: white;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
-    margin: auto;
-    width: 100%;
-    text-align: center;
-    position: relative;
-  }
-  
-  .title {
-    font-size: 32px;
-    margin-bottom: 30px;
-  }
-  
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .input {
-    color: black;
-    padding: 15px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    font-size: 18px;
-  }
-  
-  .button {
-    background-color: #f4b400;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .button:hover {
-    background-color: #e0a800;
-  }
-  
-  .registerButton {
-    background-color: transparent;
-    border: none;
-    color: #f4b400;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
-  }
-  
-  .registerButton:hover {
-    color: #e0a800;
-  }
-  
-  .registertext{
-    margin-top: 20px;
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: auto;
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+
+.title {
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input {
+  color: black;
+  padding: 15px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 18px;
+  width : 100%;
+}
+
+.button {
+  background-color: #f4b400;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.button:hover {
+  background-color: #e0a800;
+}
+
+.registerButton {
+  background-color: transparent;
+  border: none;
+  color: #f4b400;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-left: 5%;
+}
+
+.registerButton:hover {
+  color: #e0a800;
+}
+
+.registertext{
+  margin-top: 20px;
+
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 30px; 
+    max-width: 400px; 
   }
 
-  @media (max-width: 768px) {
-    .container {
-      padding: 30px; 
-      max-width: 400px; 
-    }
-  
-    .title {
-      font-size: 28px;
-    }
-  
-    .input {
-      padding: 12px; 
-      font-size: 16px; 
-    }
-  
-    .button {
-      padding: 8px; 
-      font-size: 14px;
-    }
-  
-    .registerButton {
-      font-size: 14px; 
-    }
-  
-    .registertext {
-      font-size: 14px; 
-      color: gray;
-    }
+  .title {
+    font-size: 28px;
   }
-  
-  @media (max-width: 480px) {
-    .container {
-      padding: 20px; 
-      max-width: 300px;
-    }
-  
-    .title {
-      font-size: 24px; 
-      color: black;
-    }
-  
-    .input {
-      padding: 10px; 
-      font-size: 14px; 
-    }
-  
-    .button {
-      padding: 6px;
-      font-size: 12px;
-    }
-  
-    .registerButton {
-      font-size: 12px; 
-    }
-  
-    .registertext {
-      font-size: 12px; 
-    }
+
+  .input {
+    padding: 12px; 
+    font-size: 16px; 
   }
+
+  .button {
+    padding: 8px; 
+    font-size: 14px;
+  }
+
+  .registerButton {
+    font-size: 14px; 
+  }
+
+  .registertext {
+    font-size: 14px; 
+    color: gray;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 20px; 
+    max-width: 300px;
+  }
+
+  .title {
+    font-size: 24px; 
+    color: black;
+  }
+
+  .input {
+    padding: 10px; 
+    font-size: 14px; 
+  }
+
+  .button {
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  .registerButton {
+    font-size: 12px; 
+  }
+
+  .registertext {
+    font-size: 12px; 
+  }
+}

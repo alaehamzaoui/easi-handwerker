@@ -2,12 +2,14 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import styles from '../../styles/login.module.css'; 
 import logo from "../../images/MiniMeister-Logo-white.png"
 export default function Login() {
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleLogin = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -17,7 +19,10 @@ export default function Login() {
       userData = JSON.parse(userDataString);
     }
     if (userData && userData.password === password) {
-      alert('Login erfolreich!');
+      //alert('Login erfolreich!');
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 100);
     } else {
       alert('Error: Benutzer nicht gefunden oder falsches Passwort');
     }
@@ -51,6 +56,7 @@ export default function Login() {
             className={styles.input}
           />
         </div>
+
         <button type='submit' className={styles.button}>Login</button>
       </form>
       <p className='${styles.registerText} text-black'>kein Account ?  
