@@ -1,14 +1,14 @@
 build:
 	@go build -o bin/backend
 
-run : build
+run: build
 	@./bin/backend
 
-test :
+test:
 	@go test -v ./...
 
-drop :
+drop:
 	@go run cmd/drop/main.go
 
-migrate :
+migrate:
 	@go run cmd/migrate/main.go
