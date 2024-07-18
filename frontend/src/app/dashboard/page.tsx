@@ -1,8 +1,7 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from 'react';
 import WorkTimeModal from '../../components/WorkTimeModal';
-import React from 'react';
 import { FaClock, FaUser, FaHome } from 'react-icons/fa';
 
 interface WorkTime {
@@ -16,54 +15,51 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [userName, setUserName] = useState<string | null>(null);
+  const [userData, setUserData] = useState<any>(null);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
 
   const logout = () => {
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
     window.location.href = '/login';
   };
 
-  // Funktion zum Laden der gespeicherten Arbeitszeiten
-  const fetchWorkTimes = () => {
-    fetch('/api/workTimes')
+  const fetchWorkTimes = (email: string) => {
+    fetch(`/api/workTimes?email=${email}`)
       .then((res) => res.json())
       .then((data) => setWorkTimes(data))
       .catch((err) => console.error('Error fetching work times:', err));
   };
 
-  // Lade gespeicherte Arbeitszeiten beim Initialisieren der Komponente
   useEffect(() => {
-    const userDataString = localStorage.getItem('user');
+    const userDataString = sessionStorage.getItem('user');
     if (!userDataString) {
       window.location.href = '/login';
     } else {
       const userData = JSON.parse(userDataString);
-      setUserName(userData.firstName);
-      fetchWorkTimes();
+      setUserData(userData);
+      fetchWorkTimes(userData.email);
       setIsLoading(false);
     }
   }, []);
 
-  // Aktualisiere die Arbeitszeiten und speichere sie in der JSON-Datei
   const handleUpdateWorkTime = (updatedWorkTimes: WorkTime[]) => {
     fetch('/api/workTimes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(updatedWorkTimes),
+      body: JSON.stringify({ email: userData.email, workTimes: updatedWorkTimes }),
     })
       .then((res) => res.json())
-      .then(() => fetchWorkTimes()) // Lade die Arbeitszeiten erneut
+      .then(() => fetchWorkTimes(userData.email))
       .catch((err) => console.error('Fehler beim Aktualisieren der Arbeitszeiten:', err));
   };
 
   if (isLoading) {
-    return null; 
+    return null;
   }
 
   return (
@@ -93,11 +89,10 @@ const Dashboard = () => {
 
       <div className="flex-grow flex flex-col">
         <header className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-yellow-600 text-black'} p-4 flex justify-between items-center`}>
-          <h2 className="text-2xl font-bold">Dashboard für Handwerker</h2>
+          {userData && (
+            <span className="text-2xl font-bold">{`Willkommen, ${userData.firstName}`}</span>
+          )}
           <div className="flex items-center">
-            {userName && (
-              <span className="mr-4">{`Willkommen, ${userName}`}</span>
-            )}
             <button
               onClick={logout}
               className="ml-4 px-4 py-2 bg-yellow-500 white rounded hover:bg-yellow-400 transition"
@@ -132,7 +127,7 @@ const Dashboard = () => {
                   }}
                   onCancel={() => {
                     setIsModalOpen(false);
-                    fetchWorkTimes(); // Lade die Arbeitszeiten erneut
+                    fetchWorkTimes(userData.email);
                   }}
                 />
               )}
@@ -157,24 +152,22 @@ const Dashboard = () => {
               </table>
             </div>
 
-            <div className={`${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'} shadow-md rounded p-4 text-center`}>
-              <img
-                className="w-32 h-32 rounded-full mx-auto mb-4"
-                src="/path/to/profile-pic.jpg"
-                alt="Profile"
-              />
-              <h2 className={`${isDarkMode ? 'text-yellow-500' : 'text-yellow-600'} text-xl font-bold`}>Ilyas Errarhoute</h2>
-              <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Elektriker</p>
-              <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Bochum</p>
-              <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>PLZ: 44787</p>
-              <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Adresse: Musterstraße 1</p>
-            </div>
+            {userData && (
+              <div className={`${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'} shadow-md rounded p-4 text-center`}>
+                <img
+                  className="w-32 h-32 rounded-full mx-auto mb-4"
+                  src="/path/to/profile-pic.jpg"
+                  alt="Persönliche Daten"
+                />
+                <h2 className={`${isDarkMode ? 'text-yellow-500' : 'text-yellow-600'} text-xl font-bold`}>{`${userData.firstName} ${userData.lastName}`}</h2>
+                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{userData.category}</p>
+                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{userData.city}</p>
+                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{userData.street}</p>
+                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{userData.phone}</p>
+              </div>
+            )}
           </div>
         </main>
-
-        <footer className={`${isDarkMode ? 'bg-gray-900 text-white' : 'bg-black text-white'} p-4 text-center`}>
-          <p>Entwickelt von EASI</p>
-        </footer>
       </div>
     </div>
   );

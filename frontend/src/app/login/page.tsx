@@ -1,6 +1,6 @@
-"use client"
+"use client";
+import { useState } from 'react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from '../../styles/login.module.css';
 import logo from "../../images/MiniMeister-Logo-white.png";
@@ -11,23 +11,6 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [popupMessage, setPopupMessage] = useState('');
     const [isPopupVisible, setIsPopupVisible] = useState(false);
-    const [shouldRedirect, setShouldRedirect] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        const userDataString = localStorage.getItem('user');
-        if (userDataString) {
-            window.location.href = "../dashboard";
-        } else {
-            setIsLoading(false); 
-        }
-    }, []);
-
-    useEffect(() => {
-        if (shouldRedirect) {
-            window.location.href = "../dashboard";
-        }
-    }, [shouldRedirect]);
 
     const showPopup = (message: string) => {
         setPopupMessage(message);
@@ -36,64 +19,68 @@ export default function Login() {
 
     const closePopup = () => {
         setIsPopupVisible(false);
-        if (popupMessage === 'Login erfolgreich!') {
-            setShouldRedirect(true);
-        }
     };
 
-    const handleLogin = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        const userDataString = localStorage.getItem(email);
-        let userData;
-        if (userDataString) {
-            userData = JSON.parse(userDataString);
-        }
-        if (userData && userData.password === password) {
-            showPopup('Login erfolgreich!');
+
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Login erfolgreich:', data.user);
+            showPopup('Login erfolgreich! Weiterleitung zum Dashboard...');
+            sessionStorage.setItem('user', JSON.stringify(data.user));
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 2000);
         } else {
-            showPopup('Error: Benutzer nicht gefunden oder falsches Passwort');
+            const errorData = await response.json();
+            showPopup(`Login fehlgeschlagen: ${errorData.error}`);
         }
     };
-
-    if (isLoading) {
-        return null; 
-    }
 
     return (
         <div className={styles.mainContainer}>
+            <Link href="/">
             <div className={styles.logoContainer}>
                 <Image src={logo} alt="Logo" width={200} height={200} />
             </div>
+            </Link>
             <div className={styles.container}>
                 <h1 className={`${styles.title} text-black text-4xl mb-7 tracking-wider leading-none`}><strong>Login</strong></h1>
-                <form onSubmit={handleLogin} className={styles.form}>
-                    <div>
+                <form onSubmit={handleSubmit} className={styles.form}>
+                    <div className={styles.row}>
                         <input
-                            type='text'
-                            name="email"
-                            placeholder='Email'
+                            type="email"
+                            id="email"
                             value={email}
+                            placeholder='Email'
                             onChange={(e) => setEmail(e.target.value)}
                             className={styles.input}
                         />
                     </div>
-                    <div>
+                    <div className={styles.row}>
                         <input
-                            type='password'
-                            name="password"
-                            placeholder='Passwort'
+                            type="password"
+                            id="password"
                             value={password}
+                            placeholder='Passwort'
                             onChange={(e) => setPassword(e.target.value)}
                             className={styles.input}
                         />
                     </div>
-                    <button type='submit' className={styles.button}>Login</button>
+                    <button type="submit" className={styles.button}>Login</button>
                 </form>
-                <p className={`${styles.registerText} text-black`}>kein Account ?
-                    <Link href="/signup">
-                        <button className={styles.registerButton}><strong>Registrierung</strong></button>
-                    </Link>
-                </p>
+                <Link href="/signup">
+                    <p className={`${styles.registerText} text-black`}>kein Account? <button className={styles.registerButton}><strong>Registrierung</strong></button></p>
+                </Link>
             </div>
             {isPopupVisible && <Popup message={popupMessage} onClose={closePopup} />}
         </div>
