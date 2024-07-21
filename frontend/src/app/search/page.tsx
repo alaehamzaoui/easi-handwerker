@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import users from '../../../public/users.json'; // Adjust the path accordingly
+import users from '../../../public/users.json'; 
 import logo from "../../images/MiniMeister-Logo-white.png";
 
 interface Handwerker {

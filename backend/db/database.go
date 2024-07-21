@@ -23,11 +23,11 @@ func NewPostgresStore() (*postgresStore, error) {
 }
 
 func (s *postgresStore) Init() error {
-	//drop the tables
+	//alle Tabellen löschen
 	s.deleteAllTables()
-	//-------create all Tables-------
+	//tabellen neu erstellen bei jedem Start
 	return s.CreateTables()
-	//return nil
+	//return nil ist für den Test
 }
 func (s *postgresStore) deleteAllTables() {
 	s.db.Exec("drop table handwerker;")
