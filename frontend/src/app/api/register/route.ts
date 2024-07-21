@@ -27,21 +27,9 @@ export async function POST(req: NextRequest) {
     city,
     phone,
     email,
-    password
+    password,
+    bild
   } = await req.json();
-
-  // Neues Benutzerobjekt
-  const newUser = {
-    firstName,
-    lastName,
-    birthDate,
-    category,
-    street,
-    city,
-    phone,
-    email,
-    password
-  };
 
   // Benutzer lesen und hinzufügen
   let usersData;
@@ -52,6 +40,26 @@ export async function POST(req: NextRequest) {
     console.error('Fehler beim Lesen der Benutzerdatei:', error);
     usersData = [];
   }
+
+  // Berechnung der neuen Benutzer-ID
+  const newId = usersData.length > 0 ? Math.max(...usersData.map((user: any) => user.id || 0)) + 1 : 1;
+  const defaultBild = "https://www.w3schools.com/howto/img_avatar.png"
+
+
+  // Neues Benutzerobjekt mit ID
+  const newUser = {
+    id: newId,
+    firstName,
+    lastName,
+    birthDate,
+    category,
+    street,
+    city,
+    phone,
+    email,
+    password,
+    picture : defaultBild
+  };
 
   usersData.push(newUser);
 

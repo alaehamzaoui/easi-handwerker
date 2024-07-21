@@ -5,3 +5,6 @@ body, html {
     font-family: Arial, sans-serif;
 
   }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

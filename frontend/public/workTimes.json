@@ -1,51 +1,14 @@
 {
-  "kirostrotsky@gmail.com": [
+  "Nutzer@mail.de": [
     {
       "day": "Montag",
+      "from": "08:00",
+      "to": "14:00"
+    },
+    {
+      "day": "Dienstag",
       "from": "09:00",
-      "to": "11:02"
-    },
-    {
-      "day": "Dienstag",
-      "from": "07:00",
-      "to": "09:09"
-    },
-    {
-      "day": "Mittwoch",
-      "from": "12:30",
-      "to": "17:00"
-    },
-    {
-      "day": "Donnerstag",
-      "from": "15:00",
-      "to": "23:00"
-    },
-    {
-      "day": "Freitag",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Samstag",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Sonntag",
-      "from": "",
-      "to": ""
-    }
-  ],
-  "kiros@gmail.com": [
-    {
-      "day": "Montag",
-      "from": "08:52",
-      "to": "09:05"
-    },
-    {
-      "day": "Dienstag",
-      "from": "",
-      "to": ""
+      "to": "13:50"
     },
     {
       "day": "Mittwoch",
@@ -73,81 +36,7 @@
       "to": ""
     }
   ],
-  "Steve@gmail.com": [
-    {
-      "day": "Montag",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Dienstag",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Mittwoch",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Donnerstag",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Freitag",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Samstag",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Sonntag",
-      "from": "",
-      "to": ""
-    }
-  ],
-  "test@gmail.com": [
-    {
-      "day": "Montag",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Dienstag",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Mittwoch",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Donnerstag",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Freitag",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Samstag",
-      "from": "",
-      "to": ""
-    },
-    {
-      "day": "Sonntag",
-      "from": "",
-      "to": ""
-    }
-  ],
-  "ilyas@gmail.com": [
+  "Max@Muster.com": [
     {
       "day": "Montag",
       "from": "",

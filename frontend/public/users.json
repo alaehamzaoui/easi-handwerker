@@ -1,79 +1,28 @@
 [
   {
-    "firstName": "kali",
-    "lastName": "kali",
-    "birthDate": "2024-07-07",
-    "category": "Dachdecker/-in",
-    "street": "kali kali",
-    "city": "222",
-    "phone": "222",
-    "email": "kirostrotsky@gmail.com",
-    "password": "kali"
-  },
-  {
-    "firstName": "kali",
-    "lastName": "kali",
-    "birthDate": "2024-07-12",
-    "category": "Friseur/-in",
-    "street": "kali kali",
-    "city": "222",
-    "phone": "222",
-    "email": "kiros@gmail.com",
-    "password": "kali"
-  },
-  {
-    "firstName": "kali",
-    "lastName": "kali",
-    "birthDate": "2024-07-05",
-    "category": "Zimmerer/Zimmerin",
-    "street": "kali kali",
-    "city": "222",
-    "phone": "222",
-    "email": "kiros@gmail.com",
-    "password": "kali"
-  },
-  {
-    "firstName": "alo",
-    "lastName": "kali",
-    "birthDate": "2024-07-03",
-    "category": "Zimmerer/Zimmerin",
-    "street": "kali kali",
-    "city": "222",
-    "phone": "222",
-    "email": "kiros@gmail.com",
-    "password": "kali"
-  },
-  {
-    "firstName": "steve",
-    "lastName": "kali",
-    "birthDate": "2024-07-11",
-    "category": "Dachdecker/-in",
-    "street": "kali kali",
-    "city": "222",
-    "phone": "222",
-    "email": "Steve@gmail.com",
-    "password": "$2a$10$MlyoJ9wKkOPjxXXcnoaiLutaoDXcC7QgZw5uZLNjGMwK7xGJmNnGS"
-  },
-  {
-    "firstName": "test",
-    "lastName": "test",
-    "birthDate": "2024-07-16",
+    "id": 4,
+    "firstName": "Nutzer",
+    "lastName": "Nutzer",
+    "birthDate": "2000-09-09",
     "category": "Maurer/-in",
-    "street": "steven",
-    "city": "7777",
-    "phone": "444",
-    "email": "test@gmail.com",
-    "password": "$2a$10$BnarfnU2kvAEshUx5pf6lOehzHtTvRFQWDay96BwhDrRPyJvL75Um"
+    "street": "Nutzerstr",
+    "city": "bochum",
+    "phone": "000000",
+    "email": "Nutzer@mail.de",
+    "password": "null",
+    "picture": "https://www.w3schools.com/howto/img_avatar.png"
   },
   {
-    "firstName": "ilyas",
-    "lastName": "err",
-    "birthDate": "2024-07-05",
+    "id": 5,
+    "firstName": "Max",
+    "lastName": "Muster",
+    "birthDate": "2000-03-22",
     "category": "Dachdecker/-in",
-    "street": "koll",
-    "city": "bochum",
-    "phone": "0125855656",
-    "email": "ilyas@gmail.com",
-    "password": "test"
+    "street": "Musterstraße",
+    "city": "dortmund",
+    "phone": "12345678899",
+    "email": "Max@Muster.com",
+    "password": "kali",
+    "picture": "https://www.w3schools.com/howto/img_avatar.png"
   }
 ]
