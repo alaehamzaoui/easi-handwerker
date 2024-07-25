@@ -3,91 +3,90 @@ import fs from 'fs';
 import path from 'path';
 
 // Pfade zu den JSON-Dateien
-const usersFilePath = path.resolve(process.cwd(), 'public', 'users.json');
-const workTimesFilePath = path.resolve(process.cwd(), 'public', 'workTimes.json');
+const benutzerDateiPfad = path.resolve(process.cwd(), 'public', 'users.json');
+const arbeitszeitenDateiPfad = path.resolve(process.cwd(), 'public', 'workTimes.json');
 
 // Standard-Arbeitszeiten
-const defaultWorkTimes = [
-  { day: 'Montag', from: '', to: '' },
-  { day: 'Dienstag', from: '', to: '' },
-  { day: 'Mittwoch', from: '', to: '' },
-  { day: 'Donnerstag', from: '', to: '' },
-  { day: 'Freitag', from: '', to: '' },
-  { day: 'Samstag', from: '', to: '' },
-  { day: 'Sonntag', from: '', to: '' }
+const standardArbeitszeiten = [
+  { tag: 'Montag', von: '', bis: '' },
+  { tag: 'Dienstag', von: '', bis: '' },
+  { tag: 'Mittwoch', von: '', bis: '' },
+  { tag: 'Donnerstag', von: '', bis: '' },
+  { tag: 'Freitag', von: '', bis: '' },
+  { tag: 'Samstag', von: '', bis: '' },
+  { tag: 'Sonntag', von: '', bis: '' }
 ];
 
 export async function POST(req: NextRequest) {
   const {
-    firstName,
-    lastName,
-    birthDate,
-    category,
-    street,
-    city,
-    phone,
+    vorname,
+    nachname,
+    geburtsdatum,
+    kategorie,
+    straße,
+    stadt,
+    telefon,
     email,
-    password,
+    passwort,
     bild
   } = await req.json();
 
   // Benutzer lesen und hinzufügen
-  let usersData;
+  let benutzerDaten;
   try {
-    const data = fs.readFileSync(usersFilePath, 'utf-8');
-    usersData = JSON.parse(data);
+    const daten = fs.readFileSync(benutzerDateiPfad, 'utf-8');
+    benutzerDaten = JSON.parse(daten);
   } catch (error) {
     console.error('Fehler beim Lesen der Benutzerdatei:', error);
-    usersData = [];
+    benutzerDaten = [];
   }
 
   // Berechnung der neuen Benutzer-ID
-  const newId = usersData.length > 0 ? Math.max(...usersData.map((user: any) => user.id || 0)) + 1 : 1;
-  const defaultBild = "https://www.w3schools.com/howto/img_avatar.png"
-
+  const neueId = benutzerDaten.length > 0 ? Math.max(...benutzerDaten.map((benutzer: any) => benutzer.id || 0)) + 1 : 1;
+  const standardBild = "https://www.w3schools.com/howto/img_avatar.png"
 
   // Neues Benutzerobjekt mit ID
-  const newUser = {
-    id: newId,
-    firstName,
-    lastName,
-    birthDate,
-    category,
-    street,
-    city,
-    phone,
+  const neuerBenutzer = {
+    id: neueId,
+    vorname,
+    nachname,
+    geburtsdatum,
+    kategorie,
+    straße,
+    stadt,
+    telefon,
     email,
-    password,
-    picture : defaultBild
+    passwort,
+    bild: standardBild
   };
 
-  usersData.push(newUser);
+  benutzerDaten.push(neuerBenutzer);
 
   try {
-    fs.writeFileSync(usersFilePath, JSON.stringify(usersData, null, 2), 'utf-8');
+    fs.writeFileSync(benutzerDateiPfad, JSON.stringify(benutzerDaten, null, 2), 'utf-8');
   } catch (error) {
     console.error('Fehler beim Schreiben der Benutzerdatei:', error);
-    return NextResponse.json({ error: 'Fehler beim Speichern des Benutzers' }, { status: 500 });
+    return NextResponse.json({ fehler: 'Fehler beim Speichern des Benutzers' }, { status: 500 });
   }
 
   // Arbeitszeiten für den neuen Benutzer hinzufügen
-  let workTimesData;
+  let arbeitszeitenDaten;
   try {
-    const data = fs.readFileSync(workTimesFilePath, 'utf-8');
-    workTimesData = JSON.parse(data);
+    const daten = fs.readFileSync(arbeitszeitenDateiPfad, 'utf-8');
+    arbeitszeitenDaten = JSON.parse(daten);
   } catch (error) {
     console.error('Fehler beim Lesen der Arbeitszeiten-Datei:', error);
-    workTimesData = {};
+    arbeitszeitenDaten = {};
   }
 
-  workTimesData[email] = defaultWorkTimes;
+  arbeitszeitenDaten[email] = standardArbeitszeiten;
 
   try {
-    fs.writeFileSync(workTimesFilePath, JSON.stringify(workTimesData, null, 2), 'utf-8');
+    fs.writeFileSync(arbeitszeitenDateiPfad, JSON.stringify(arbeitszeitenDaten, null, 2), 'utf-8');
   } catch (error) {
     console.error('Fehler beim Schreiben der Arbeitszeiten-Datei:', error);
-    return NextResponse.json({ error: 'Fehler beim Speichern der Arbeitszeiten' }, { status: 500 });
+    return NextResponse.json({ fehler: 'Fehler beim Speichern der Arbeitszeiten' }, { status: 500 });
   }
 
-  return NextResponse.json({ message: 'Benutzer erfolgreich registriert' });
+  return NextResponse.json({ nachricht: 'Benutzer erfolgreich registriert' });
 }

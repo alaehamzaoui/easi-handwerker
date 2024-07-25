@@ -3,36 +3,36 @@
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import users from '../../../public/users.json'; 
+import benutzer from '../../../public/users.json'; 
 import logo from "../../images/MiniMeister-Logo-white.png";
 
 interface Handwerker {
   id: number;
-  firstName: string;
-  lastName: string;
-  city: string;
-  category: string;
-  phone: string;
-  picture: string;
+  vorname: string;
+  nachname: string;
+  stadt: string;
+  kategorie: string;
+  telefon: string;
+  bild: string;
 }
 
-export default function Home() {
+export default function Startseite() {
   const router = useRouter();
 
-  const [category, setCategory] = useState('');
-  const [city, setCity] = useState('');
-  const [filteredHandwerker, setFilteredHandwerker] = useState<Handwerker[]>(users);
+  const [kategorie, setKategorie] = useState('');
+  const [stadt, setStadt] = useState('');
+  const [gefilterteHandwerker, setGefilterteHandwerker] = useState<Handwerker[]>(benutzer);
 
   useEffect(() => {
-    const newFilteredHandwerker = users.filter(handwerker =>
-      (category === '' || handwerker.category.toLowerCase().includes(category.toLowerCase())) &&
-      (city === '' || handwerker.city.toLowerCase().includes(city.toLowerCase()))
+    const neueGefilterteHandwerker = benutzer.filter(handwerker =>
+      (kategorie === '' || handwerker.kategorie.toLowerCase().includes(kategorie.toLowerCase())) &&
+      (stadt === '' || handwerker.stadt.toLowerCase().includes(stadt.toLowerCase()))
     );
-    setFilteredHandwerker(newFilteredHandwerker);
-  }, [category, city]);
+    setGefilterteHandwerker(neueGefilterteHandwerker);
+  }, [kategorie, stadt]);
 
-  const uniqueCategories = [...new Set(users.map(handwerker => handwerker.category))];
-  const uniqueCities = [...new Set(users.map(handwerker => handwerker.city))];
+  const eindeutigeKategorien = [...new Set(benutzer.map(handwerker => handwerker.kategorie))];
+  const eindeutigeStädte = [...new Set(benutzer.map(handwerker => handwerker.stadt))];
 
   const handleCardClick = (id: number) => {
     router.push(`/profile/${id}`);
@@ -51,47 +51,47 @@ export default function Home() {
           <div className="relative w-full md:w-1/4">
             <input
               type="text"
-              list="categories"
+              list="kategorien"
               placeholder="z.B. Elektriker"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              value={kategorie}
+              onChange={(e) => setKategorie(e.target.value)}
               className="w-full px-6 py-4 border border-gray-300 rounded-lg bg-white text-gray-700 placeholder-gray-500 focus:outline-none focus:border-yellow-500 shadow-lg transition-transform transform hover:scale-105"
             />
-            <datalist id="categories">
-              {uniqueCategories.map((cat, index) => (
-                <option key={index} value={cat} />
+            <datalist id="kategorien">
+              {eindeutigeKategorien.map((kat, index) => (
+                <option key={index} value={kat} />
               ))}
             </datalist>
           </div>
           <div className="relative w-full md:w-1/4">
             <input
               type="text"
-              list="cities"
+              list="städte"
               placeholder="z.B. Berlin"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
+              value={stadt}
+              onChange={(e) => setStadt(e.target.value)}
               className="w-full px-6 py-4 border border-gray-300 rounded-lg bg-white text-gray-700 placeholder-gray-500 focus:outline-none focus:border-yellow-500 shadow-lg transition-transform transform hover:scale-105"
             />
-            <datalist id="cities">
-              {uniqueCities.map((city, index) => (
-                <option key={index} value={city} />
+            <datalist id="städte">
+              {eindeutigeStädte.map((stadt, index) => (
+                <option key={index} value={stadt} />
               ))}
             </datalist>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:w-3/4 mx-auto">
-          {filteredHandwerker.map((handwerker) => (
+          {gefilterteHandwerker.map((handwerker) => (
             <div 
               key={handwerker.id} 
               onClick={() => handleCardClick(handwerker.id)}
               className="border border-gray-300 p-8 rounded-xl shadow-2xl bg-white transition transform hover:-translate-y-2 hover:shadow-3xl hover:bg-gray-200 cursor-pointer flex flex-col items-center"
             >
-              <img src={handwerker.picture} alt={handwerker.firstName} className="w-24 h-24 rounded-full mb-4" />
-              <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Vorname:</strong> {handwerker.firstName}</p>
-              <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Nachname:</strong> {handwerker.lastName}</p>
-              <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Stadt:</strong> {handwerker.city}</p>
-              <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Kategorie:</strong> {handwerker.category}</p>
-              <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Telefonnummer:</strong> {handwerker.phone}</p>
+              <img src={handwerker.bild} alt={handwerker.vorname} className="w-24 h-24 rounded-full mb-4" />
+              <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Vorname:</strong> {handwerker.vorname}</p>
+              <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Nachname:</strong> {handwerker.nachname}</p>
+              <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Stadt:</strong> {handwerker.stadt}</p>
+              <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Kategorie:</strong> {handwerker.kategorie}</p>
+              <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Telefonnummer:</strong> {handwerker.telefon}</p>
             </div>
           ))}
         </div>

@@ -1,50 +1,50 @@
 "use client";
 
-import { useParams, useRouter } from 'next/navigation'; // Using next/navigation for client components
+import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import users from '../../../../public/users.json'; // Adjust the path if necessary
-import worktimes from '../../../../public/worktimes.json'; // Import worktimes.json
+import benutzer from '../../../../public/users.json'; 
+import arbeitszeiten from '../../../../public/worktimes.json'; 
 import Image from 'next/image';
-import logo from "../../../images/MiniMeister-Logo-white.png"; // Import logo
+import logo from "../../../images/MiniMeister-Logo-white.png"; 
 
-const ProfileDetails = () => {
+const ProfilDetails = () => {
   const router = useRouter();
-  const { id } = useParams(); // Using useParams from next/navigation
+  const { id } = useParams();
 
-  const [craftsman, setCraftsman] = useState(null);
-  const [workTimes, setWorkTimes] = useState([]);
+  const [handwerker, setHandwerker] = useState(null);
+  const [arbeitsZeiten, setArbeitsZeiten] = useState([]);
 
   useEffect(() => {
     if (id) {
-      const foundCraftsman = users.find(user => user.id === parseInt(id as string));
-      setCraftsman(foundCraftsman);
-      if (foundCraftsman && foundCraftsman.email) {
-        const userWorkTimes = worktimes[foundCraftsman.email];
-        setWorkTimes(userWorkTimes || []);
+      const gefundenerHandwerker = benutzer.find(benutzer => benutzer.id === parseInt(id as string));
+      setHandwerker(gefundenerHandwerker);
+      if (gefundenerHandwerker && gefundenerHandwerker.email) {
+        const benutzerArbeitsZeiten = arbeitszeiten[gefundenerHandwerker.email];
+        setArbeitsZeiten(benutzerArbeitsZeiten || []);
       }
     }
   }, [id]);
 
-  const getNextTwoWeeks = () => {
-    const today = new Date();
-    const nextTwoWeeks = [];
+  const getNaechsteZweiWochen = () => {
+    const heute = new Date();
+    const naechsteZweiWochen = [];
     for (let i = 0; i < 14; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      nextTwoWeeks.push(date);
+      const datum = new Date(heute);
+      datum.setDate(heute.getDate() + i);
+      naechsteZweiWochen.push(datum);
     }
-    return nextTwoWeeks;
+    return naechsteZweiWochen;
   };
 
-  const getDayName = (date: Date) => {
-    return date.toLocaleDateString('de-DE', { weekday: 'long' });
+  const getTagName = (datum: Date) => {
+    return datum.toLocaleDateString('de-DE', { weekday: 'long' });
   };
 
-  if (!craftsman) {
+  if (!handwerker) {
     return <div>Handwerker nicht gefunden.</div>;
   }
 
-  const { firstName, lastName, city, category, phone, picture } = craftsman;
+  const { vorname, nachname, stadt, kategorie, telefon, bild } = handwerker;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -59,30 +59,30 @@ const ProfileDetails = () => {
           <div className="flex-1 mr-8">
             <h2 className="text-2xl font-bold mb-4">Verfügbare Arbeitszeiten</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {getNextTwoWeeks().map((date, index) => {
-                const dayName = getDayName(date);
-                const workTime = workTimes.find(wt => wt.day === dayName);
-                if (!workTime || !workTime.from || !workTime.to) return null;
+              {getNaechsteZweiWochen().map((datum, index) => {
+                const tagName = getTagName(datum);
+                const arbeitsZeit = arbeitsZeiten.find(az => az.tag === tagName);
+                if (!arbeitsZeit || !arbeitsZeit.von || !arbeitsZeit.bis) return null;
                 return (
                   <button
                     key={index}
                     className="border border-gray-300 p-4 rounded-lg shadow-sm bg-green-200 hover:bg-green-300 transition-colors"
                   >
-                    <p className="text-lg font-semibold">{dayName}, {date.toLocaleDateString('de-DE')}</p>
-                    <p className="text-gray-600">{workTime.from} - {workTime.to}</p>
+                    <p className="text-lg font-semibold">{tagName}, {datum.toLocaleDateString('de-DE')}</p>
+                    <p className="text-gray-600">{arbeitsZeit.von} - {arbeitsZeit.bis}</p>
                   </button>
                 );
               })}
             </div>
           </div>
           <div className="flex-1 flex flex-col items-center">
-            <img src={picture} alt={`${firstName} ${lastName}`} className="w-32 h-32 rounded-full mb-4" />
-            <h1 className="text-3xl font-bold">{`${firstName} ${lastName}`}</h1>
-            <p className="text-gray-600 mb-4">{category}</p>
+            <img src={bild} alt={`${vorname} ${nachname}`} className="w-32 h-32 rounded-full mb-4" />
+            <h1 className="text-3xl font-bold">{`${vorname} ${nachname}`}</h1>
+            <p className="text-gray-600 mb-4">{kategorie}</p>
             <div className="space-y-4">
-              <p className="text-lg"><strong className="text-yellow-500">Stadt:</strong> {city}</p>
-              <p className="text-lg"><strong className="text-yellow-500">Kategorie:</strong> {category}</p>
-              <p className="text-lg"><strong className="text-yellow-500">Telefonnummer:</strong> {phone}</p>
+              <p className="text-lg"><strong className="text-yellow-500">Stadt:</strong> {stadt}</p>
+              <p className="text-lg"><strong className="text-yellow-500">Kategorie:</strong> {kategorie}</p>
+              <p className="text-lg"><strong className="text-yellow-500">Telefonnummer:</strong> {telefon}</p>
             </div>
           </div>
         </div>
@@ -94,4 +94,4 @@ const ProfileDetails = () => {
   );
 };
 
-export default ProfileDetails;
+export default ProfilDetails;

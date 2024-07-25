@@ -6,22 +6,22 @@ import styles from '../../styles/login.module.css';
 import logo from "../../images/MiniMeister-Logo-white.png";
 import Popup from '../../components/Popup';
 
-export default function Login() {
+export default function Anmeldung() {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [popupMessage, setPopupMessage] = useState('');
-    const [isPopupVisible, setIsPopupVisible] = useState(false);
+    const [passwort, setPasswort] = useState('');
+    const [popupNachricht, setPopupNachricht] = useState('');
+    const [istPopupSichtbar, setIstPopupSichtbar] = useState(false);
 
-    const showPopup = (message: string) => {
-        setPopupMessage(message);
-        setIsPopupVisible(true);
+    const zeigePopup = (nachricht: string) => {
+        setPopupNachricht(nachricht);
+        setIstPopupSichtbar(true);
     };
 
-    const closePopup = () => {
-        setIsPopupVisible(false);
+    const schließePopup = () => {
+        setIstPopupSichtbar(false);
     };
 
-    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    const handleAbsenden = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
         const response = await fetch('/api/login', {
@@ -29,33 +29,33 @@ export default function Login() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, passwort }),
         });
 
         if (response.ok) {
-            const data = await response.json();
-            console.log('Login erfolgreich:', data.user);
-            showPopup('Login erfolgreich! Weiterleitung zum Dashboard...');
-            sessionStorage.setItem('user', JSON.stringify(data.user));
+            const daten = await response.json();
+            console.log('Login erfolgreich:', daten.benutzer);
+            zeigePopup('Login erfolgreich! Weiterleitung zum Dashboard...');
+            sessionStorage.setItem('benutzer', JSON.stringify(daten.benutzer));
             setTimeout(() => {
                 window.location.href = '/dashboard';
             }, 2000);
         } else {
-            const errorData = await response.json();
-            showPopup(`Login fehlgeschlagen: ${errorData.error}`);
+            const fehlerDaten = await response.json();
+            zeigePopup(`Login fehlgeschlagen: ${fehlerDaten.fehler}`);
         }
     };
 
     return (
         <div className={styles.mainContainer}>
             <Link href="/">
-            <div className={styles.logoContainer}>
-                <Image src={logo} alt="Logo" width={200} height={200} />
-            </div>
+                <div className={styles.logoContainer}>
+                    <Image src={logo} alt="Logo" width={200} height={200} />
+                </div>
             </Link>
             <div className={styles.container}>
-                <h1 className={`${styles.title} text-black text-4xl mb-7 tracking-wider leading-none`}><strong>Login</strong></h1>
-                <form onSubmit={handleSubmit} className={styles.form}>
+                <h1 className={`${styles.title} text-black text-4xl mb-7 tracking-wider leading-none`}><strong>Anmeldung</strong></h1>
+                <form onSubmit={handleAbsenden} className={styles.form}>
                     <div className={styles.row}>
                         <input
                             type="email"
@@ -69,20 +69,20 @@ export default function Login() {
                     <div className={styles.row}>
                         <input
                             type="password"
-                            id="password"
-                            value={password}
+                            id="passwort"
+                            value={passwort}
                             placeholder='Passwort'
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => setPasswort(e.target.value)}
                             className={styles.input}
                         />
                     </div>
-                    <button type="submit" className={styles.button}>Login</button>
+                    <button type="submit" className={styles.button}>Anmeldung</button>
                 </form>
                 <Link href="/signup">
                     <p className={`${styles.registerText} text-black`}>kein Account? <button className={styles.registerButton}><strong>Registrierung</strong></button></p>
                 </Link>
             </div>
-            {isPopupVisible && <Popup message={popupMessage} onClose={closePopup} />}
+            {istPopupSichtbar && <Popup message={popupNachricht} onClose={schließePopup} />}
         </div>
     );
 }

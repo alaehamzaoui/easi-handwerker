@@ -1,28 +1,54 @@
 [
   {
     "id": 4,
-    "firstName": "Nutzer",
-    "lastName": "Nutzer",
-    "birthDate": "2000-09-09",
-    "category": "Maurer/-in",
-    "street": "Nutzerstr",
-    "city": "bochum",
-    "phone": "000000",
+    "vorname": "Nutzer",
+    "nachname": "Nutzer",
+    "geburtsdatum": "2000-09-09",
+    "kategorie": "Maurer/-in",
+    "straße": "Nutzerstr",
+    "stadt": "bochum",
+    "telefon": "000000",
     "email": "Nutzer@mail.de",
-    "password": "null",
-    "picture": "https://www.w3schools.com/howto/img_avatar.png"
+    "passwort": "null",
+    "bild": "https://www.w3schools.com/howto/img_avatar.png"
   },
   {
     "id": 5,
-    "firstName": "Max",
-    "lastName": "Muster",
-    "birthDate": "2000-03-22",
-    "category": "Dachdecker/-in",
-    "street": "Musterstraße",
-    "city": "dortmund",
-    "phone": "12345678899",
+    "vorname": "Max",
+    "nachname": "Muster",
+    "geburtsdatum": "2000-03-22",
+    "kategorie": "Dachdecker/-in",
+    "straße": "Musterstraße",
+    "stadt": "dortmund",
+    "telefon": "12345678899",
     "email": "Max@Muster.com",
-    "password": "kali",
-    "picture": "https://www.w3schools.com/howto/img_avatar.png"
+    "passwort": "kali",
+    "bild": "https://www.w3schools.com/howto/img_avatar.png"
+  },
+  {
+    "id": 6,
+    "vorname": "Ilyas",
+    "nachname": "Errarhoute",
+    "geburtsdatum": "2001-07-06",
+    "kategorie": "Zimmerer/Zimmerin",
+    "straße": "Kollegstrasse 2 , Zimmer 323",
+    "stadt": "Bochum",
+    "telefon": "017640135960",
+    "email": "ilyas.errarhoute@stud.hs-bochum.de",
+    "passwort": "test",
+    "bild": "https://www.w3schools.com/howto/img_avatar.png"
+  },
+  {
+    "id": 7,
+    "vorname": "kali1",
+    "nachname": "kali",
+    "geburtsdatum": "2000-06-25",
+    "kategorie": "Dachdecker/-in",
+    "straße": "kali",
+    "stadt": "kali",
+    "telefon": "017640135960",
+    "email": "kali@gmail.com",
+    "passwort": "test",
+    "bild": "https://www.w3schools.com/howto/img_avatar.png"
   }
 ]

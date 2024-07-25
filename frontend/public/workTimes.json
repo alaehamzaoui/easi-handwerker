@@ -1,76 +1,150 @@
 {
   "Nutzer@mail.de": [
     {
-      "day": "Montag",
-      "from": "08:00",
-      "to": "14:00"
+      "tag": "Montag",
+      "von": "10:00",
+      "bis": "12:00"
     },
     {
-      "day": "Dienstag",
-      "from": "09:00",
-      "to": "13:50"
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
     },
     {
-      "day": "Mittwoch",
-      "from": "",
-      "to": ""
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
     },
     {
-      "day": "Donnerstag",
-      "from": "",
-      "to": ""
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
     },
     {
-      "day": "Freitag",
-      "from": "",
-      "to": ""
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
     },
     {
-      "day": "Samstag",
-      "from": "",
-      "to": ""
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
     },
     {
-      "day": "Sonntag",
-      "from": "",
-      "to": ""
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
     }
   ],
   "Max@Muster.com": [
     {
-      "day": "Montag",
-      "from": "",
-      "to": ""
+      "tag": "Montag",
+      "von": "10:00",
+      "bis": "12:00"
     },
     {
-      "day": "Dienstag",
-      "from": "",
-      "to": ""
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
     },
     {
-      "day": "Mittwoch",
-      "from": "",
-      "to": ""
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
     },
     {
-      "day": "Donnerstag",
-      "from": "",
-      "to": ""
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
     },
     {
-      "day": "Freitag",
-      "from": "",
-      "to": ""
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
     },
     {
-      "day": "Samstag",
-      "from": "",
-      "to": ""
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
     },
     {
-      "day": "Sonntag",
-      "from": "",
-      "to": ""
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ],
+  "ilyas.errarhoute@stud.hs-bochum.de": [
+    {
+      "tag": "Montag",
+      "von": "10:00",
+      "bis": "12:00"
+    },
+    {
+      "tag": "Dienstag",
+      "von": "04:00",
+      "bis": "06:00"
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ],
+  "kali@gmail.com": [
+    {
+      "tag": "Montag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
     }
   ]
 }

@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/lib/pq"
 )
@@ -11,7 +12,7 @@ type postgresStore struct {
 }
 
 func NewPostgresStore() (*postgresStore, error) {
-	connStr := "user=eadidev dbname=postgres password=easinoteasi sslmode=disable"
+	connStr := "user=easidev dbname=postgres password=easinoteasi sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, err
@@ -23,6 +24,7 @@ func NewPostgresStore() (*postgresStore, error) {
 }
 
 func (s *postgresStore) Init() error {
+	fmt.Println("Init() called")
 	//alle Tabellen löschen
 	s.deleteAllTables()
 	//tabellen neu erstellen bei jedem Start
@@ -30,9 +32,12 @@ func (s *postgresStore) Init() error {
 	//return nil ist für den Test
 }
 func (s *postgresStore) deleteAllTables() {
+	fmt.Println("deleteAllTables() called")
 	s.db.Exec("drop table handwerker;")
+
 }
 func (s *postgresStore) CreateTables() error {
+	fmt.Print("CreateTables() called")
 	query := `CREATE TABLE handwerker (
 				id SERIAL PRIMARY KEY,
 				firstName VARCHAR(20),

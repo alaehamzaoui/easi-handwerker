@@ -6,71 +6,71 @@ import styles from '../../styles/signup.module.css';
 import logo from "../../images/MiniMeister-Logo-white.png";
 import Popup from '../../components/Popup';
 
-export default function SignUp() {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [birthDate, setBirthDate] = useState('');
-    const [category, setCategory] = useState('');
-    const [street, setStreet] = useState('');
-    const [city, setCity] = useState('');
-    const [phone, setPhone] = useState('');
+export default function Anmeldung() {
+    const [vorname, setVorname] = useState('');
+    const [nachname, setNachname] = useState('');
+    const [geburtsdatum, setGeburtsdatum] = useState('');
+    const [kategorie, setKategorie] = useState('');
+    const [straße, setStraße] = useState('');
+    const [stadt, setStadt] = useState('');
+    const [telefon, setTelefon] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordAgain, setPasswordAgain] = useState('');
-    const [popupMessage, setPopupMessage] = useState('');
-    const [isPopupVisible, setIsPopupVisible] = useState(false);
+    const [passwort, setPasswort] = useState('');
+    const [passwortWiederholen, setPasswortWiederholen] = useState('');
+    const [popupNachricht, setPopupNachricht] = useState('');
+    const [istPopupSichtbar, setIstPopupSichtbar] = useState(false);
 
-    const calculateAge = (birthDate: string) => {
-        const birth = new Date(birthDate);
-        const today = new Date();
-        let age = today.getFullYear() - birth.getFullYear();
-        const monthDifference = today.getMonth() - birth.getMonth();
-        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birth.getDate())) {
-            age--;
+    const berechneAlter = (geburtsdatum: string) => {
+        const geburt = new Date(geburtsdatum);
+        const heute = new Date();
+        let alter = heute.getFullYear() - geburt.getFullYear();
+        const monatsUnterschied = heute.getMonth() - geburt.getMonth();
+        if (monatsUnterschied < 0 || (monatsUnterschied === 0 && heute.getDate() < geburt.getDate())) {
+            alter--;
         }
-        return age;
+        return alter;
     };
     
-    const showPopup = (message: string) => {
-        setPopupMessage(message);
-        setIsPopupVisible(true);
+    const zeigePopup = (nachricht: string) => {
+        setPopupNachricht(nachricht);
+        setIstPopupSichtbar(true);
     };
 
-    const closePopup = () => {
-        setIsPopupVisible(false);
+    const schließePopup = () => {
+        setIstPopupSichtbar(false);
     };
 
-    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    const handleAbsenden = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
-        if (!firstName || !lastName || !birthDate || !category || !street || !city || !phone || !email || !password || !passwordAgain) {
-            showPopup('Bitte füllen Sie alle Felder aus');
+        if (!vorname || !nachname || !geburtsdatum || !kategorie || !straße || !stadt || !telefon || !email || !passwort || !passwortWiederholen) {
+            zeigePopup('Bitte füllen Sie alle Felder aus');
             return;
         }
-        if (calculateAge(birthDate) < 18 || calculateAge(birthDate)>67) {
-            showPopup('Das eingegebene Datum ist ungültig');
+        if (berechneAlter(geburtsdatum) < 18 || berechneAlter(geburtsdatum) > 67) {
+            zeigePopup('Das eingegebene Datum ist ungültig');
             return;
         }
-        if (password !== passwordAgain) {
-            showPopup('die eingegebenen Passwörter übereinstimmen nicht');
+        if (passwort !== passwortWiederholen) {
+            zeigePopup('Die eingegebenen Passwörter stimmen nicht überein');
             return;
         }
         const emailRegel = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegel.test(email)) {
-            showPopup('Bitte geben Sie eine gültige Email-Adresse');
+            zeigePopup('Bitte geben Sie eine gültige Email-Adresse ein');
             return;
         }
 
-        const userData = {
-            firstName,
-            lastName,
-            birthDate,
-            category,
-            street,
-            city,
-            phone,
+        const benutzerdaten = {
+            vorname,
+            nachname,
+            geburtsdatum,
+            kategorie,
+            straße,
+            stadt,
+            telefon,
             email,
-            password
+            passwort
         };
 
         const response = await fetch('/api/register', {
@@ -78,13 +78,13 @@ export default function SignUp() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(userData),
+            body: JSON.stringify(benutzerdaten),
         });
 
         if (response.ok) {
-            showPopup('Ihre Registrierung war erfolgreich!');
+            zeigePopup('Ihre Registrierung war erfolgreich!');
         } else {
-            showPopup('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
+            zeigePopup('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
         }
     };
 
@@ -97,38 +97,38 @@ export default function SignUp() {
             </Link>
             <div className={styles.container}>
                 <h1 className={`${styles.title} text-black text-4xl mb-7 tracking-wider leading-none`}><strong>Registrierung</strong></h1>
-                <form onSubmit={handleSubmit} className={styles.form}>
+                <form onSubmit={handleAbsenden} className={styles.form}>
                     <div className={styles.row}>
                         <input
                             type="text"
-                            id="firstName"
-                            value={firstName}
+                            id="vorname"
+                            value={vorname}
                             placeholder='Vorname'
-                            onChange={(e) => setFirstName(e.target.value)}
+                            onChange={(e) => setVorname(e.target.value)}
                             className={styles.input}
                         />
                         <input
                             type="text"
-                            id="lastName"
-                            value={lastName}
+                            id="nachname"
+                            value={nachname}
                             placeholder='Nachname'
-                            onChange={(e) => setLastName(e.target.value)}
+                            onChange={(e) => setNachname(e.target.value)}
                             className={styles.input}
                         />
                     </div>
                     <div className={styles.row}>
                         <input
                             type="date"
-                            id="birthDate"
-                            value={birthDate}
+                            id="geburtsdatum"
+                            value={geburtsdatum}
                             placeholder='Geburtsdatum'
-                            onChange={(e) => setBirthDate(e.target.value)}
+                            onChange={(e) => setGeburtsdatum(e.target.value)}
                             className={styles.input}
                         />
                         <select
-                            id="category"
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
+                            id="kategorie"
+                            value={kategorie}
+                            onChange={(e) => setKategorie(e.target.value)}
                             className={styles.input}
                         >
                             <option value="">Art der Ausbildung</option>
@@ -142,28 +142,28 @@ export default function SignUp() {
                     <div className={styles.row}>
                         <input
                             type="text"
-                            id="street"
-                            value={street}
+                            id="straße"
+                            value={straße}
                             placeholder='Straße & Hausnummer'
-                            onChange={(e) => setStreet(e.target.value)}
+                            onChange={(e) => setStraße(e.target.value)}
                             className={styles.input}
                         />
                         <input
                             type="text"
-                            id="city"
-                            value={city}
+                            id="stadt"
+                            value={stadt}
                             placeholder='Stadt'
-                            onChange={(e) => setCity(e.target.value)}
+                            onChange={(e) => setStadt(e.target.value)}
                             className={styles.input}
                         />
                     </div>
                     <div className={styles.row}>
                         <input
                             type="tel"
-                            id="phone"
-                            value={phone}
+                            id="telefon"
+                            value={telefon}
                             placeholder='Telefonnummer'
-                            onChange={(e) => setPhone(e.target.value)}
+                            onChange={(e) => setTelefon(e.target.value)}
                             className={styles.input}
                         />
                         <input
@@ -178,28 +178,28 @@ export default function SignUp() {
                     <div className={styles.row}>
                         <input
                             type="password"
-                            id="password"
-                            value={password}
+                            id="passwort"
+                            value={passwort}
                             placeholder='Passwort'
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => setPasswort(e.target.value)}
                             className={styles.input}
                         />
                         <input
                             type="password"
-                            id="passwordAgain"
-                            value={passwordAgain}
+                            id="passwortWiederholen"
+                            value={passwortWiederholen}
                             placeholder='Passwort bestätigen'
-                            onChange={(e) => setPasswordAgain(e.target.value)}
+                            onChange={(e) => setPasswortWiederholen(e.target.value)}
                             className={styles.input}
                         />
                     </div>
                     <button type="submit" className={styles.button}>Registrieren</button>
                 </form>
                 <Link href="/login">
-                    <p className={`${styles.registerText} text-black`}>Haben Sie schon ein Account? <button className={styles.loginButton}><strong>Login</strong></button></p>
+                    <p className={`${styles.registerText} text-black`}>Haben Sie schon ein Konto? <button className={styles.loginButton}><strong>Login</strong></button></p>
                 </Link>
             </div>
-            {isPopupVisible && <Popup message={popupMessage} onClose={closePopup} />}
+            {istPopupSichtbar && <Popup message={popupNachricht} onClose={schließePopup} />}
         </div>
     );
 }
