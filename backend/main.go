@@ -1,10 +1,23 @@
 package main
 
 import (
-	"fmt"
+	"backend/db"
+	"backend/handler"
+	"flag"
+	"log"
 )
 
 func main() {
 
-	fmt.Println("Hello, World!")
+	flag.Parse()
+	store, err := db.NewPostgresStore()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := store.Init(); err != nil {
+		log.Fatal(err)
+	}
+	server := handler.NewAPIServer(":3005", store)
+	server.Run()
+
 }

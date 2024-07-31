@@ -1,0 +1,150 @@
+{
+  "Nutzer@mail.de": [
+    {
+      "tag": "Montag",
+      "von": "10:00",
+      "bis": "12:00"
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ],
+  "Max@Muster.com": [
+    {
+      "tag": "Montag",
+      "von": "10:00",
+      "bis": "12:00"
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ],
+  "ilyas.errarhoute@stud.hs-bochum.de": [
+    {
+      "tag": "Montag",
+      "von": "10:00",
+      "bis": "12:00"
+    },
+    {
+      "tag": "Dienstag",
+      "von": "04:00",
+      "bis": "06:00"
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ],
+  "kali@gmail.com": [
+    {
+      "tag": "Montag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ]
+}
