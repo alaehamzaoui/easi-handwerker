@@ -50,5 +50,18 @@
     "email": "kali@gmail.com",
     "passwort": "test",
     "bild": "https://www.w3schools.com/howto/img_avatar.png"
+  },
+  {
+    "id": 8,
+    "vorname": "Hadi",
+    "nachname": "Ali",
+    "geburtsdatum": "1995-01-01",
+    "kategorie": "Dachdecker/-in",
+    "straße": "Bochumer str. 44",
+    "stadt": "Wetter",
+    "telefon": "017624491167",
+    "email": "hadi@gmail.com",
+    "passwort": "hadi",
+    "bild": "https://www.w3schools.com/howto/img_avatar.png"
   }
 ]

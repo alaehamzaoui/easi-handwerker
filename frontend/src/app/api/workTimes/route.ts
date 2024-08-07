@@ -18,17 +18,14 @@ export async function GET(req: NextRequest) {
   if (!workTimesData[email]) {
     return NextResponse.json({ error: 'Keine Arbeitszeiten gefunden' }, { status: 404 });
   }
-
   return NextResponse.json(workTimesData[email]);
 }
-
 export async function POST(req: NextRequest) {
   const { email, workTimes } = await req.json();
 
   if (!email || !workTimes) {
     return NextResponse.json({ error: 'Email und Arbeitszeiten erforderlich' }, { status: 400 });
   }
-
   const workTimesData = JSON.parse(fs.readFileSync(workTimesFilePath, 'utf-8'));
   workTimesData[email] = workTimes;
 

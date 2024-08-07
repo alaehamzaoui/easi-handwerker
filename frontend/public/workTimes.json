@@ -146,5 +146,42 @@
       "von": "",
       "bis": ""
     }
+  ],
+  "hadi@gmail.com": [
+    {
+      "tag": "Montag",
+      "von": "08:00",
+      "bis": "10:00"
+    },
+    {
+      "tag": "Dienstag",
+      "von": "12:00",
+      "bis": "14:00"
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "16:00",
+      "bis": "18:00"
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
   ]
 }
