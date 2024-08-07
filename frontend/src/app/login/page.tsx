@@ -24,7 +24,7 @@ export default function Anmeldung() {
     const handleAbsenden = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
-        const response = await fetch('/api/login', {
+        const response = await fetch('http://localhost:3005/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -34,9 +34,10 @@ export default function Anmeldung() {
 
         if (response.ok) {
             const daten = await response.json();
-            console.log('Login erfolgreich:', daten.benutzer);
+            console.log('Login erfolgreich:', daten.email);
             zeigePopup('Login erfolgreich! Weiterleitung zum Dashboard...');
-            sessionStorage.setItem('benutzer', JSON.stringify(daten.benutzer));
+            sessionStorage.setItem('email', JSON.stringify(daten.email));
+            sessionStorage.setItem('token', JSON.stringify(daten.token));
             setTimeout(() => {
                 window.location.href = '/dashboard';
             }, 2000);

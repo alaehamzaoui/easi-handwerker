@@ -7,17 +7,25 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 func (s *APIServer) Run() {
 	router := mux.NewRouter()
 
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:3000"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders: []string{"Content-Type"},
+	})
+
+	handler := c.Handler(router)
 	router.HandleFunc("/hello", makeHTTPHandleFunc(s.handleHello))
-	//router.HandleFunc("/login", makeHTTPHandleFunc(s.handleLogin))
-	//router.HandleFunc("/register", makeHTTPHandleFunc(s.handleRegister))
+	router.HandleFunc("/handwerker", makeHTTPHandleFunc(s.handleHandwerker))
+	router.HandleFunc("/login", makeHTTPHandleFunc(s.handleLogin))
 
 	log.Println("JSON API server running on port: ", s.listenAddr)
-	http.ListenAndServe(s.listenAddr, router)
+	http.ListenAndServe(s.listenAddr, handler)
 }
 
 type Storage interface {
@@ -27,6 +35,7 @@ type Storage interface {
 	GetHandwerkerByNumber(int64) (*data.Handwerker, error)
 	UpdateHandwerker(*data.Handwerker) error
 	DeleteHandwerker(int) error
+	GetHandwerkerByEmail(string) (*data.Handwerker, error)
 
 	CreateVerification(*data.Verfication) error
 	GetVerification() ([]*data.Verfication, error)
@@ -44,7 +53,6 @@ func NewAPIServer(listenAddr string, store Storage) *APIServer {
 		store:      store,
 	}
 }
-
 func (s *APIServer) handleHello(w http.ResponseWriter, r *http.Request) error {
 	return WriteJSON(w, http.StatusOK, map[string]string{"mihna": "9wad"})
 }

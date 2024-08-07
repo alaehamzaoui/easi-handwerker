@@ -1,49 +1,75 @@
 package handler
 
 import (
+	"backend/data"
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
 
-type Handwerker struct {
+func (s *APIServer) handleCreateHandwerker(w http.ResponseWriter, r *http.Request) error {
+
+	req := new(data.CreateHandwerkerRequest)
+	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+		return err
+	}
+
+	handwerker, err := data.NewHandwerker(req.Vorname, req.Nachname, req.Art, req.Geburtsdatum, req.Straße, req.Hausnummer, req.PLZ, req.Stadt, req.Telefon, req.Email, req.Password, "")
+	if err != nil {
+		return err
+	}
+	if err := s.store.CreateHandwerker(handwerker); err != nil {
+		return err
+	}
+
+	return WriteJSON(w, http.StatusOK, handwerker)
 }
 
-func (h *Handwerker) HandleCreateHandwerker(w http.ResponseWriter, r *http.Request) error {
-	return nil
-}
-
-func (h *Handwerker) HandleHandwerker(w http.ResponseWriter, r *http.Request) error {
+func (s *APIServer) handleHandwerker(w http.ResponseWriter, r *http.Request) error {
 	if r.Method == "GET" {
-		return h.HandleGetHandwerker(w, r)
+		return s.handleGetHandwerker(w, r)
 	} else if r.Method == "POST" {
-		return h.HandleCreateHandwerker(w, r)
+		return s.handleCreateHandwerker(w, r)
 	}
 	return fmt.Errorf("unsupported method")
 }
 
-func (h *Handwerker) HandleGetHandwerker(w http.ResponseWriter, r *http.Request) error {
-	return nil
-}
-
-func (h *Handwerker) HandleDeleteHandwerker(w http.ResponseWriter, r *http.Request) error {
-	return nil
-}
-
-func (h *Handwerker) HandleGetHandwerkerByID(w http.ResponseWriter, r *http.Request) error {
-	if r.Method == "GET" {
-		return h.HandleGetHandwerker(w, r)
-	} else if r.Method == "DELETE" {
-		return h.HandleDeleteHandwerker(w, r)
+func (s *APIServer) handleGetHandwerker(w http.ResponseWriter, r *http.Request) error {
+	handwerker, err := s.store.GetHandwerkers()
+	if err != nil {
+		return err
 	}
-	return fmt.Errorf("unsupported method")
+	return WriteJSON(w, http.StatusOK, handwerker)
 }
 
-func (h *Handwerker) PermissionDenied(w http.ResponseWriter) {
-}
-
-func (h *Handwerker) WithJWTAuth(HandlerFunc http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("calling WithJWTAuth middleware")
-		HandlerFunc(w, r)
+func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
+	if r.Method != "POST" {
+		return fmt.Errorf(" nicht unterstützt")
 	}
+
+	var req data.LoginRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		return err
+	}
+
+	handwerker, err := s.store.GetHandwerkerByEmail(req.Email)
+	if err != nil {
+		return err
+	}
+
+	if !handwerker.ValidPassword(req.Password) {
+		return fmt.Errorf("not authenticated")
+	}
+
+	token, err := createJWT(handwerker)
+	if err != nil {
+		return err
+	}
+
+	resp := data.LoginResponse{
+		Token: token,
+		Email: handwerker.Email,
+	}
+
+	return WriteJSON(w, http.StatusOK, resp)
 }

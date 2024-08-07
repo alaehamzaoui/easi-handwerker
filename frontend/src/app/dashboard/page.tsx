@@ -22,7 +22,8 @@ const Dashboard = () => {
   };
 
   const logout = () => {
-    sessionStorage.removeItem('benutzer');
+    sessionStorage.removeItem('email');
+    sessionStorage.removeItem('token');
     window.location.href = '/login';
   };
 
@@ -34,18 +35,18 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    const benutzerDatenString = sessionStorage.getItem('benutzer');
+    const benutzerDatenString = sessionStorage.getItem('email');
     if (!benutzerDatenString) {
       window.location.href = '/login';
     } else {
       const benutzerDaten = JSON.parse(benutzerDatenString);
       setBenutzerDaten(benutzerDaten);
-      fetchArbeitszeiten(benutzerDaten.email);
+      fetchArbeitszeiten(benutzerDaten);
       setIstLaden(false);
     }
   }, []);
 
-  const handleUpdateArbeitszeit = (aktualisierteArbeitszeiten: Arbeitszeit[]) => {
+  /*const handleUpdateArbeitszeit = (aktualisierteArbeitszeiten: Arbeitszeit[]) => {
     fetch('/api/workTimes', {
       method: 'POST',
       headers: {
@@ -56,7 +57,7 @@ const Dashboard = () => {
       .then((res) => res.json())
       .then(() => fetchArbeitszeiten(benutzerDaten.email))
       .catch((err) => console.error('Fehler beim Aktualisieren der Arbeitszeiten:', err));
-  };
+  };*/
 
   if (istLaden) {
     return null;
@@ -90,7 +91,7 @@ const Dashboard = () => {
       <div className="flex-grow flex flex-col">
         <header className={`${istDunkelModus ? 'bg-gray-800 text-white' : 'bg-yellow-600 text-black'} p-4 flex justify-between items-center`}>
           {benutzerDaten && (
-            <span className="text-2xl font-bold">{`Willkommen, ${benutzerDaten.vorname}`}</span>
+            <span className="text-2xl font-bold">{`Willkommen, ${benutzerDaten}`}</span>
           )}
           <div className="flex items-center">
             <button
@@ -122,7 +123,7 @@ const Dashboard = () => {
                 <ArbeitszeitModal
                   initialArbeitszeiten={arbeitszeiten}
                   onSave={(aktualisierteArbeitszeiten) => {
-                    handleUpdateArbeitszeit(aktualisierteArbeitszeiten);
+                    //handleUpdateArbeitszeit(aktualisierteArbeitszeiten);
                     setIstModalOffen(false);
                   }}
                   onCancel={() => {
@@ -141,13 +142,13 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {arbeitszeiten.map((arbeitszeit, index) => (
+                  {/*arbeitszeiten.map((arbeitszeit, index) => (
                     <tr key={index} className={`${istDunkelModus ? 'border-t border-gray-700' : 'border-t'}`}>
                       <td className="px-4 py-2">{arbeitszeit.tag}</td>
                       <td className="px-4 py-2">{arbeitszeit.von}</td>
                       <td className="px-4 py-2">{arbeitszeit.bis}</td>
                     </tr>
-                  ))}
+                  ))*/}
                 </tbody>
               </table>
             </div>

@@ -39,15 +39,21 @@ func (s *postgresStore) deleteAllTables() {
 func (s *postgresStore) CreateTables() error {
 	fmt.Print("CreateTables() called")
 	query := `CREATE TABLE handwerker (
-				id SERIAL PRIMARY KEY,
-				firstName VARCHAR(20),
-				lastName VARCHAR(20),
-				number BIGINT,
-				email VARCHAR(40),
-				encryptedPassword VARCHAR(60),
-				createdAt TIMESTAMP
-			);
-		`
+			id SERIAL PRIMARY KEY,
+			vorname VARCHAR(50),
+			nachname VARCHAR(50),
+			geburtsdatum DATE,
+			art VARCHAR(50),
+			straße VARCHAR(100),
+			hausnummer VARCHAR(10),
+			plz BIGINT,
+			stadt VARCHAR(50),
+			telefon BIGINT,
+			nummer SERIAL,
+			email VARCHAR(100) UNIQUE,
+			encryptedPassword VARCHAR(60),
+			createdAt TIMESTAMP
+		);`
 	_, err := s.db.Exec(query)
 	return err
 }
