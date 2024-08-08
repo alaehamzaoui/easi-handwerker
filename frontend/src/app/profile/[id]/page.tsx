@@ -60,12 +60,23 @@ const ProfilDetails = () => {
     const [email, setEmail] = useState('');
     const [tel, setTel] = useState('');
     const [anliegen, setAnliegen] = useState('');
+   
+    //variablen für die Arbeitszeiten
+    const [ausgewählterTag, setAusgewählterTag] = useState('');
+    const [startZeit, setStartZeit] = useState('');
+    const [endZeit, setEndZeit] = useState('');
     
 
     const [popupNachricht, setPopupNachricht] = useState('');
     const [istPopupSichtbar, setIstPopupSichtbar] = useState(false);
-
-
+    
+    //Handleclick funktion um die Arbeitszeiten zu buchen
+    const handleClick = (tagName, datum, von, bis) => {
+      setAusgewählterTag(`${tagName}, ${datum.toLocaleDateString('de-DE')}`);
+      setStartZeit(von);
+      setEndZeit(bis);
+      setIsOpen(true);
+  }
   const buchen = async (e: { preventDefault: () => void; }) => {
 
       e.preventDefault();
@@ -88,7 +99,11 @@ const ProfilDetails = () => {
           stadtPLZ,
           email,
           tel,
-          anliegen
+          anliegen,
+          //variablen für Arbeitszeiten
+          ausgewählterTag,  
+          startZeit,        
+           endZeit         
       };
 
       const response = await fetch('/api/order', {
@@ -150,20 +165,25 @@ const ProfilDetails = () => {
             <h2 className="text-2xl font-bold mb-4">Verfügbare Arbeitszeiten</h2>
             {istPopupSichtbar && <Popup message={popupNachricht} onClose={schließePopup} />}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {getNaechsteZweiWochen().map((datum, index) => {
+             
+            {getNaechsteZweiWochen().map((datum, index) => {
                 const tagName = getTagName(datum);
                 const arbeitsZeit = arbeitsZeiten.find(az => az.tag === tagName);
-                if (!arbeitsZeit || !arbeitsZeit.von || !arbeitsZeit.bis) return null;
-                return (
-                  <div className="react-modals">
-                  <button
-                    onClick={() => setIsOpen(true)}
-                    key={index}
-                    className="border border-gray-300 p-4 rounded-lg shadow-sm bg-green-200 hover:bg-green-300 transition-colors"
-                  >
-                    <p className="text-lg font-semibold">{tagName}, {datum.toLocaleDateString('de-DE')}</p>
-                    <p className="text-gray-600">{arbeitsZeit.von} - {arbeitsZeit.bis}</p>
-                  </button>
+                 if (!arbeitsZeit || !arbeitsZeit.von || !arbeitsZeit.bis) return null;
+                 return (
+                    <div className="react-modals">
+                        <button
+                          //Der onClick-Handler des Buttons ruft jetzt die neue handleClick-Funktion auf,
+                          // die den ausgewählten Tag, die Startzeit und die Endzeit setzt und anschließend das Modal öffnet
+                            onClick={() => handleClick(tagName, datum, arbeitsZeit.von, arbeitsZeit.bis)}
+                            key={index}
+                            className="border border-gray-300 p-4 rounded-lg shadow-sm bg-green-200 hover:bg-green-300 transition-colors"
+                        >
+                            <p className="text-lg font-semibold">{tagName}, {datum.toLocaleDateString('de-DE')}</p>
+                            <p className="text-gray-600">{arbeitsZeit.von} - {arbeitsZeit.bis}</p>
+                        </button>
+
+
 
                   {isOpen && 
                    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">

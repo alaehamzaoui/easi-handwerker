@@ -14,7 +14,11 @@ export async function POST(req: NextRequest) {
     stadtPLZ,
     email,
     tel,
-    anliegen
+    anliegen,
+    ausgewählterTag,    
+    startZeit,          
+    endZeit
+
 } = await req.json();
 
   // Aufträge lesen und erstellen
@@ -28,7 +32,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Berechnung der Auftrag-ID
-  const newId = orderData.length > 0 ? Math.max(...orderData.map((user: any) => user.id || 0)) + 1 : 1;
+  const newId = orderData.length > 0 ? Math.max(...orderData.map((order: any) => order.orderId || 0)) + 1 : 1;
 
 
   // Neuer Auftrag mit ID
@@ -40,7 +44,10 @@ export async function POST(req: NextRequest) {
     stadtPLZ,
     email,
     tel,
-    anliegen
+    anliegen,
+    ausgewählterTag,    
+    startZeit,          
+    endZeit
   };
   orderData.push(newOrder);
   try {
