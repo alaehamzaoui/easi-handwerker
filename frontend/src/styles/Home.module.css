@@ -2,9 +2,9 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  opacity: 0; 
+  opacity: 0;
   transform: translateY(20px);
-  animation: fadeInSlideUp 1s ease forwards; 
+  animation: fadeInSlideUp 1s ease forwards;
 }
 
 @keyframes fadeInSlideUp {
@@ -44,7 +44,7 @@
   width: 100%;
   height: 100%;
   z-index: -1;
-  animation: parallaxBackground 10s ease infinite; 
+  animation: parallaxBackground 10s ease infinite;
 }
 
 @keyframes parallaxBackground {
@@ -84,7 +84,7 @@
   top: 20px;
   left: 20px;
   z-index: 1;
-  animation: logoFadeIn 1s ease forwards 1s; 
+  animation: logoFadeIn 1s ease forwards 1s;
 }
 
 @keyframes logoFadeIn {
@@ -107,7 +107,7 @@
   z-index: 2;
   opacity: 0;
   transform: translateX(20%) , translateY(90%);
-  animation: fadeInSlideUp 1.5s ease forwards 1.5s; 
+  animation: fadeInSlideUp 1.5s ease forwards 1.5s;
 }
 
 .button {
@@ -122,7 +122,7 @@
   box-shadow: 5px 2px 5px rgb(88, 82, 82);
   width: 150px;
   transition: background-color 0.3s ease, transform 0.3s ease;
-  position: relative; 
+  position: relative;
 }
 
 .button .overlay {
@@ -130,8 +130,8 @@
   bottom: calc(30% + 10px);
   left: 50%;
   transform: translateX(-50%) translateY(-15%);
-  width: 150%; 
-  height: 225px; 
+  width: 150%;
+  height: 225px;
   padding: 20px;
   background-color: #ffcc00;
   color: #fff;
@@ -147,6 +147,7 @@
 }
 
 .button:hover .overlay {
+  transition-delay: 1s;
   opacity: 1;
   pointer-events: auto;
 }
@@ -172,7 +173,7 @@
   max-width: 100%;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeInSlideUp 1.5s ease forwards 2s; 
+  animation: fadeInSlideUp 1.5s ease forwards 2s;
 }
 
 .features {
@@ -193,7 +194,7 @@
   padding: 10px;
   opacity: 0;
   transform: scale(0.9);
-  animation: featureFadeIn 1.5s ease forwards 2.5s; 
+  animation: featureFadeIn 1.5s ease forwards 2.5s;
 }
 
 @keyframes featureFadeIn {
@@ -216,7 +217,7 @@
   text-align: center;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeInSlideUp 1.5s ease forwards 3s; 
+  animation: fadeInSlideUp 1.5s ease forwards 3s;
 }
 
 .footer {
@@ -226,7 +227,7 @@
   text-align: center;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeInSlideUp 1.5s ease forwards 3.5s; 
+  animation: fadeInSlideUp 1.5s ease forwards 3.5s;
 }
 
 .footerContainer {
@@ -241,7 +242,7 @@
   flex-wrap: wrap;
   margin-top: 40px;
   opacity: 0;
-  animation: fadeIn 3s ease forwards 4s; 
+  animation: fadeIn 3s ease forwards 4s;
 }
 
 @keyframes fadeIn {
@@ -287,8 +288,8 @@
   }
 
   .overlay {
-    max-width: 450px; 
-    height: 337.5px; 
+    max-width: 450px;
+    height: 337.5px;
   }
 
   .features div {
@@ -317,8 +318,8 @@
   }
 
   .overlay {
-    max-width: 375px; 
-    height: 337.5px; 
+    max-width: 375px;
+    height: 337.5px;
   }
 
   .features div {
@@ -343,7 +344,7 @@
 
   .overlay {
     max-width: 300px;
-    height: 337.5px; 
+    height: 337.5px;
   }
 
   .features {
@@ -358,3 +359,4 @@
     max-width: 90%;
   }
 }
+
