@@ -10,8 +10,18 @@ interface Arbeitszeit {
   bis: string;
 }
 
+interface Auftrag {
+  auftragId: number;
+  name: string;
+  ausgewählterTag: string;
+  startZeit: string;
+  endZeit: string;
+  anliegen: string;
+}
+
 const Dashboard = () => {
   const [arbeitszeiten, setArbeitszeiten] = useState<Arbeitszeit[]>([]);
+  const [auftraege, setAuftraege] = useState<Auftrag[]>([]);
   const [istModalOffen, setIstModalOffen] = useState(false);
   const [istDunkelModus, setIstDunkelModus] = useState(false);
   const [istLaden, setIstLaden] = useState(true);
@@ -33,6 +43,22 @@ const Dashboard = () => {
       .catch((err) => console.error('Fehler beim Abrufen der Arbeitszeiten:', err));
   };
 
+  const fetchAuftraege = (userId: string) => {
+    fetch(`/api/auftrag?userId=${userId}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Fehler beim Abrufen der Aufträge');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log('Auftragsdaten:', data); // Fügen Sie dies hinzu, um die abgerufenen Daten zu überprüfen
+        setAuftraege(data);
+      })
+      .catch((err) => console.error('Fehler beim Abrufen der Aufträge:', err));
+  };
+  
+
   useEffect(() => {
     const benutzerDatenString = sessionStorage.getItem('benutzer');
     if (!benutzerDatenString) {
@@ -41,6 +67,7 @@ const Dashboard = () => {
       const benutzerDaten = JSON.parse(benutzerDatenString);
       setBenutzerDaten(benutzerDaten);
       fetchArbeitszeiten(benutzerDaten.email);
+      fetchAuftraege(benutzerDaten.id);
       setIstLaden(false);
     }
   }, []);
@@ -150,6 +177,18 @@ const Dashboard = () => {
                   ))}
                 </tbody>
               </table>
+
+              {/* Anzeige der Aufträge */}
+              <h2 className="text-2xl font-bold mt-8 mb-4">Ihre Aufträge</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {auftraege.map((auftrag, index) => (
+                  <div key={index} className="border border-gray-300 p-4 rounded-lg shadow-sm bg-yellow-200 hover:bg-yellow-300 transition-colors">
+                    <p className="text-lg font-semibold">{auftrag.ausgewählterTag}</p>
+                    <p className="text-gray-700">{auftrag.startZeit} - {auftrag.endZeit}</p>
+                    <p className="text-gray-600">{auftrag.anliegen}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {benutzerDaten && (

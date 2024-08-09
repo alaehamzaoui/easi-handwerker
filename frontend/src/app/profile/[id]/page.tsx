@@ -3,26 +3,47 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import benutzer from '../../../../public/users.json'; 
-import arbeitszeiten from '../../../../public/worktimes.json'; 
+import arbeitszeitenData from '../../../../public/worktimes.json'; 
 import Image from 'next/image';
 import logo from "../../../images/MiniMeister-Logo-white.png"; 
 import Modal from 'react-modal';
 import styles from '../../../styles/profile.module.css';
 import Popup from '../../../components/Popup';
 
+interface Arbeitszeit {
+  tag: string;
+  von: string;
+  bis: string;
+}
 
+type Arbeitszeiten = {
+  [email: string]: Arbeitszeit[];
+};
+const arbeitszeiten: Arbeitszeiten = arbeitszeitenData;
 
 const ProfilDetails = () => {
   const router = useRouter();
   const { id } = useParams();
-
-  const [handwerker, setHandwerker] = useState(null);
+  interface Handwerker {
+    id: number;
+    vorname: string;
+    nachname: string;
+    geburtsdatum: string;
+    kategorie: string;
+    stadt: string;
+    telefon: string;
+    email: string;
+    passwort: string;
+    bild: string;
+  }
+  
+  const [handwerker, setHandwerker] = useState<Handwerker | undefined>(undefined);
   const [arbeitsZeiten, setArbeitsZeiten] = useState([]);
 
   useEffect(() => {
     if (id) {
       const gefundenerHandwerker = benutzer.find(benutzer => benutzer.id === parseInt(id as string));
-      setHandwerker(gefundenerHandwerker);
+      setHandwerker(gefundenerHandwerker as Handwerker); ;
       if (gefundenerHandwerker && gefundenerHandwerker.email) {
         const benutzerArbeitsZeiten = arbeitszeiten[gefundenerHandwerker.email];
         setArbeitsZeiten(benutzerArbeitsZeiten || []);
@@ -71,7 +92,11 @@ const ProfilDetails = () => {
     const [istPopupSichtbar, setIstPopupSichtbar] = useState(false);
     
     //Handleclick funktion um die Arbeitszeiten zu buchen
-    const handleClick = (tagName, datum, von, bis) => {
+    const handleClick = (  tagName: string, 
+      datum: Date, 
+      von: string, 
+      bis: string) => {
+      
       setAusgewählterTag(`${tagName}, ${datum.toLocaleDateString('de-DE')}`);
       setStartZeit(von);
       setEndZeit(bis);
@@ -106,7 +131,7 @@ const ProfilDetails = () => {
            endZeit         
       };
 
-      const response = await fetch('/api/order', {
+      const response = await fetch('/api/auftrag', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
