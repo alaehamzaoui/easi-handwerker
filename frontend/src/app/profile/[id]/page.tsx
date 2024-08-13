@@ -39,6 +39,13 @@ const ProfilDetails = () => {
   
   const [handwerker, setHandwerker] = useState<Handwerker | undefined>(undefined);
   const [arbeitsZeiten, setArbeitsZeiten] = useState([]);
+  const [vorhandeneBuchungen, setVorhandeneBuchungen] = useState<Arbeitszeit[]>([]);
+
+  const istZeitSlotReserviert = (tag: string, von: string, bis: string) => {
+    return vorhandeneBuchungen.some(
+      buchung => buchung.tag === tag && buchung.von === von && buchung.bis === bis
+    );
+  };
 
   useEffect(() => {
     if (id) {
@@ -47,6 +54,19 @@ const ProfilDetails = () => {
       if (gefundenerHandwerker && gefundenerHandwerker.email) {
         const benutzerArbeitsZeiten = arbeitszeiten[gefundenerHandwerker.email];
         setArbeitsZeiten(benutzerArbeitsZeiten || []);
+        // Abrufen der bestehenden Buchungen für den aktuellen Handwerker
+      fetch(`/api/auftrag?userId=${id}`)
+      .then(response => response.json())
+      .then(data => {
+        const vorhandeneBuchungen = data.map((buchung: any) => ({
+          tag: buchung.ausgewählterTag,
+          von: buchung.startZeit,
+          bis: buchung.endZeit
+        }));
+        setVorhandeneBuchungen(vorhandeneBuchungen);
+      })
+      .catch(error => console.error('Fehler beim Laden der bestehenden Buchungen:', error));
+   
       }
     }
   }, [id]);
@@ -194,7 +214,10 @@ const ProfilDetails = () => {
             {getNaechsteZweiWochen().map((datum, index) => {
                 const tagName = getTagName(datum);
                 const arbeitsZeit = arbeitsZeiten.find(az => az.tag === tagName);
-                 if (!arbeitsZeit || !arbeitsZeit.von || !arbeitsZeit.bis) return null;
+                 if (!arbeitsZeit || !arbeitsZeit.von || !arbeitsZeit.bis){ return null;}
+                 if (istZeitSlotReserviert(`${tagName}, ${datum.toLocaleDateString('de-DE')}`, arbeitsZeit.von, arbeitsZeit.bis)) {
+                  return null; // Verstecke diesen Zeit-Slot, wenn er bereits reserviert ist
+                }
                  return (
                     <div className="react-modals">
                         <button

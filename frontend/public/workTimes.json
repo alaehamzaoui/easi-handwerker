@@ -7,18 +7,18 @@
     },
     {
       "tag": "Dienstag",
-      "von": "",
-      "bis": ""
+      "von": "08:00",
+      "bis": "11:00"
     },
     {
       "tag": "Mittwoch",
-      "von": "",
-      "bis": ""
+      "von": "09:30",
+      "bis": "12:30"
     },
     {
       "tag": "Donnerstag",
-      "von": "",
-      "bis": ""
+      "von": "08:55",
+      "bis": "12:00"
     },
     {
       "tag": "Freitag",
@@ -44,13 +44,13 @@
     },
     {
       "tag": "Dienstag",
-      "von": "",
-      "bis": ""
+      "von": "15:00",
+      "bis": "16:00"
     },
     {
       "tag": "Mittwoch",
-      "von": "",
-      "bis": ""
+      "von": "10:40",
+      "bis": "12:10"
     },
     {
       "tag": "Donnerstag",
