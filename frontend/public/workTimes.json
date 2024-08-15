@@ -35,5 +35,190 @@
       "von": "",
       "bis": ""
     }
+  ],
+  "chris@gmail.com": [
+    {
+      "tag": "Montag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ],
+  "maxim@gmail.com": [
+    {
+      "tag": "Montag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ],
+  "mahmut@gmail.com": [
+    {
+      "tag": "Montag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ],
+  "khaled@gmail.com": [
+    {
+      "tag": "Montag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ],
+  "wad@gmail.com": [
+    {
+      "tag": "Montag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
   ]
 }

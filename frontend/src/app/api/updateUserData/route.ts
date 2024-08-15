@@ -1,29 +1,46 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
 
-// Dummy-Datenbankabfrage-Funktion (Ersetze dies durch echte Datenbankoperationen)
-const updateUserDataInDatabase = async (id: string, data: Partial<UserData>) => {
-  // Beispiel einer Datenbankaktualisierung
-  // db.users.update({ id: id }, { ...data });
-  return { success: true }; // Rückgabe von Erfolg
-};
+// Pfad zur JSON-Datei
+const userFilePath = path.join(process.cwd(), 'public', 'users.json');
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    const { id, ...updatedData } = req.body;
+// POST-Methode für die API
+export async function POST(request: Request) {
+  const updatedUserData = await request.json();
 
-    try {
-      const result = await updateUserDataInDatabase(id, updatedData);
+  try {
+    // Lade die aktuellen Benutzer aus der JSON-Datei
+    const users = JSON.parse(fs.readFileSync(userFilePath, 'utf8'));
 
-      if (result.success) {
-        res.status(200).json({ success: true });
-      } else {
-        res.status(500).json({ success: false, message: 'Fehler beim Aktualisieren der Benutzerdaten' });
-      }
-    } catch (error) {
-      res.status(500).json({ success: false, message: 'Serverfehler' });
+    // Finde den entsprechenden Benutzer
+    const userIndex = users.findIndex((user: any) => user.id === updatedUserData.id);
+
+    if (userIndex === -1) {
+      return NextResponse.json({ error: 'Benutzer nicht gefunden' }, { status: 404 });
     }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Methode ${req.method} nicht erlaubt`);
+
+    // Passwort nur aktualisieren, wenn es im Request enthalten ist und nicht leer ist
+    if (updatedUserData.passwort) {
+        // Das Passwort speichern
+        users[userIndex].passwort = updatedUserData.passwort;
+      }
+
+    // Aktualisiere die anderen Felder des Benutzers
+    users[userIndex] = {
+      ...users[userIndex],
+      vorname: updatedUserData.vorname,
+      nachname: updatedUserData.nachname,
+      telefon: updatedUserData.telefon,
+      // Weitere Felder, die aktualisiert werden sollen
+    };
+
+    // Schreibe die aktualisierten Benutzerdaten zurück in die JSON-Datei
+    fs.writeFileSync(userFilePath, JSON.stringify(users, null, 2));
+
+    return NextResponse.json({ message: 'Benutzerdaten erfolgreich aktualisiert' }, { status: 200 });
+  } catch (error) {
+    console.error('Fehler beim Aktualisieren der Benutzerdaten:', error);
+    return NextResponse.json({ error: 'Fehler beim Aktualisieren der Benutzerdaten' }, { status: 500 });
   }
 }

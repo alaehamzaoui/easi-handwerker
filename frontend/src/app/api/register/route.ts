@@ -35,7 +35,8 @@ export async function POST(req: NextRequest) {
     email,
     passwort,
     stundenlohn,
-    bild
+    bild,
+    
 } = await req.json();
 
   // Benutzer lesen und hinzufügen
@@ -73,7 +74,6 @@ var defaultBild: string | StaticImageData = '';
    
   }
 
-
   // Neues Benutzerobjekt mit ID
   const newUser = {
     id: newId,
@@ -87,7 +87,8 @@ var defaultBild: string | StaticImageData = '';
     email,
     passwort,
     stundenlohn,
-    bild: defaultBild
+    bild: defaultBild,
+    verified: false
   };
   usersData.push(newUser);
   try {

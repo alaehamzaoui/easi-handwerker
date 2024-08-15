@@ -1,76 +1,89 @@
 import { useState } from 'react';
 
+interface BenutzerDaten {
+  vorname: string;
+  nachname: string;
+  email: string;
+  passwort?: string;
+  kategorie: string;
+  stadt: string;
+  straße: string;
+  telefon: string;
+  stundenlohn: string;
+  bild: { src: string };
+  id: string;
+}
+
 interface BenutzerDatenModalProps {
-  initialBenutzerDaten: any;
-  onSave: (aktualisierteDaten: any) => void;
+  initialBenutzerDaten: BenutzerDaten;
+  onSave: (daten: BenutzerDaten) => void;
   onCancel: () => void;
 }
 
 const BenutzerDatenModal = ({ initialBenutzerDaten, onSave, onCancel }: BenutzerDatenModalProps) => {
-  const [benutzerDaten, setBenutzerDaten] = useState(initialBenutzerDaten);
-  const [passwort, setPasswort] = useState('');
-  const [neuesPasswort, setNeuesPasswort] = useState('');
+  const [formData, setFormData] = useState<BenutzerDaten>(initialBenutzerDaten);
 
-  const handleSave = () => {
-    const aktualisierteDaten = { ...benutzerDaten };
-    if (neuesPasswort) {
-      aktualisierteDaten.neuesPasswort = neuesPasswort; // Neues Passwort nur senden, wenn es angegeben wurde
-    }
-    onSave(aktualisierteDaten);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = () => {
+    onSave(formData);
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white rounded p-6 max-w-lg w-full">
-        <h2 className="text-2xl font-bold mb-4">Profil bearbeiten</h2>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg">
+        <h2 className="text-2xl mb-4">Persönliche Daten bearbeiten</h2>
         <div className="mb-4">
-          <label className="block text-sm font-medium">Vorname</label>
+          <label className="block text-gray-700">Vorname</label>
           <input
-            type="text"
-            value={benutzerDaten.vorname}
-            onChange={(e) => setBenutzerDaten({ ...benutzerDaten, vorname: e.target.value })}
-            className="mt-1 block w-full border border-gray-300 rounded py-2 px-3"
+            name="vorname"
+            value={formData.vorname}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded mt-2"
           />
         </div>
+
         <div className="mb-4">
-          <label className="block text-sm font-medium">Nachname</label>
+          <label className="block text-gray-700">Nachname</label>
           <input
-            type="text"
-            value={benutzerDaten.nachname}
-            onChange={(e) => setBenutzerDaten({ ...benutzerDaten, nachname: e.target.value })}
-            className="mt-1 block w-full border border-gray-300 rounded py-2 px-3"
+            name="nachname"
+            value={formData.nachname}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded mt-2"
           />
         </div>
-        {/* Weitere Felder für Adresse, Telefonnummer etc. */}
+
         <div className="mb-4">
-          <label className="block text-sm font-medium">Passwort</label>
+          <label className="block text-gray-700">Telefonnummer</label>
+          <input
+            name="telefon"
+            value={formData.telefon}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded mt-2"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700">Passwort</label>
           <input
             type="password"
-            value={passwort}
-            onChange={(e) => setPasswort(e.target.value)}
-            className="mt-1 block w-full border border-gray-300 rounded py-2 px-3"
+            name="passwort"
+            value={formData.passwort || ''}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded mt-2"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Neues Passwort</label>
-          <input
-            type="password"
-            value={neuesPasswort}
-            onChange={(e) => setNeuesPasswort(e.target.value)}
-            className="mt-1 block w-full border border-gray-300 rounded py-2 px-3"
-          />
-        </div>
+
         <div className="flex justify-end">
-          <button
-            onClick={onCancel}
-            className="mr-4 px-4 py-2 bg-gray-200 text-black rounded hover:bg-gray-300 transition"
-          >
+          <button onClick={onCancel} className="bg-gray-300 p-2 rounded mr-4">
             Abbrechen
           </button>
-          <button
-            onClick={handleSave}
-            className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition"
-          >
+          <button onClick={handleSubmit} className="bg-yellow-600 text-white p-2 rounded">
             Speichern
           </button>
         </div>

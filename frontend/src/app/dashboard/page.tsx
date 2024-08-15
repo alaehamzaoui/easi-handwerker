@@ -27,6 +27,7 @@ interface BenutzerDaten {
   vorname: string;
   nachname: string;
   email: string;
+  passwort: string;
   kategorie: string;
   stadt: string;
   straße: string;
@@ -44,7 +45,6 @@ const Dashboard = () => {
   const [istDunkelModus, setIstDunkelModus] = useState(false);
   const [istLaden, setIstLaden] = useState(true);
   const [benutzerDaten, setBenutzerDaten] = useState<BenutzerDaten | null>(null);
-  const [istPasswortModalOffen, setIstPasswortModalOffen] = useState(false);
 
   const toggleTheme = () => {
     setIstDunkelModus(!istDunkelModus);
@@ -185,7 +185,7 @@ const Dashboard = () => {
                   className={`${istDunkelModus ? 'bg-gray-800 text-yellow-500' : 'bg-yellow-600 text-black'} py-2 px-4 rounded hover:bg-yellow-700 mb-4 flex items-center`}
                   onClick={() => setIstBenutzerDatenModalOffen(true)}
                 >
-                  <FaUser className="mr-2" /> Profil bearbeiten
+                  <FaUser className="mr-2" />  Persönliche Daten bearbeiten
                 </button>
               </div>
 

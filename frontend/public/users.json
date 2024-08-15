@@ -30,7 +30,7 @@
     "stadt": "Bochum",
     "telefon": "0123456789",
     "email": "mehmet@gmail.com",
-    "passwort": "mehmet",
+    "passwort": "$2b$10$7Ra0UjzHNlx7nC5VKrRneOB92J.mhpC.MkKF62YgMtojXQk6XG87u",
     "stundenlohn": "13",
     "bild": {
       "src": "/_next/static/media/maler.f527288c.png",
@@ -40,5 +40,93 @@
       "blurWidth": 8,
       "blurHeight": 8
     }
+  },
+  {
+    "id": 3,
+    "vorname": "Maxim",
+    "nachname": "Piotrowski",
+    "geburtsdatum": "1987-07-15",
+    "kategorie": "Dachdecker/-in",
+    "straße": "Dresdenerstr 112",
+    "stadt": "Hannover",
+    "telefon": "0179456449",
+    "email": "maxim@gmail.com",
+    "passwort": "123",
+    "stundenlohn": "14.00",
+    "bild": {
+      "src": "/_next/static/media/dachdecker.6ee0abbf.png",
+      "height": 512,
+      "width": 512,
+      "blurDataURL": "/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdachdecker.6ee0abbf.png&w=8&q=70",
+      "blurWidth": 8,
+      "blurHeight": 8
+    },
+    "verified": false
+  },
+  {
+    "id": 4,
+    "vorname": "mahmut",
+    "nachname": "mehmet",
+    "geburtsdatum": "2000-01-11",
+    "kategorie": "Maurer/-in",
+    "straße": "test 1",
+    "stadt": "wettr",
+    "telefon": "123456789",
+    "email": "mahmut@gmail.com",
+    "hashed_password": "",
+    "stundenlohn": "12.50",
+    "bild": {
+      "src": "/_next/static/media/mauerer.dd488ec0.png",
+      "height": 512,
+      "width": 512,
+      "blurDataURL": "/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmauerer.dd488ec0.png&w=8&q=70",
+      "blurWidth": 8,
+      "blurHeight": 8
+    },
+    "verified": false
+  },
+  {
+    "id": 5,
+    "vorname": "khaled",
+    "nachname": "ww",
+    "geburtsdatum": "2000-11-11",
+    "kategorie": "Dachdecker/-in",
+    "straße": "dresedenerstr 111",
+    "stadt": "dresden",
+    "telefon": "1234567899",
+    "email": "khaled@gmail.com",
+    "hashed_password": "$2b$10$i3qbWM4z/nNU9qRGSzvQwu.tRasW0Nz76YhLZa.7/t7/DSyhs6AP.",
+    "stundenlohn": "12.50",
+    "bild": {
+      "src": "/_next/static/media/dachdecker.6ee0abbf.png",
+      "height": 512,
+      "width": 512,
+      "blurDataURL": "/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdachdecker.6ee0abbf.png&w=8&q=70",
+      "blurWidth": 8,
+      "blurHeight": 8
+    },
+    "verified": false
+  },
+  {
+    "id": 6,
+    "vorname": "wadawd",
+    "nachname": "wadwadwa",
+    "geburtsdatum": "2000-03-12",
+    "kategorie": "Dachdecker/-in",
+    "straße": "dwdadad",
+    "stadt": "wadad",
+    "telefon": "2358235728",
+    "email": "wad@gmail.com",
+    "hashed_password": "$2b$10$UcbTZDjqmprEBViwmaKKgOAc/Rmy/jbgKZ66MTWWZ3fUmBZ.M9kEW",
+    "stundenlohn": "12.50",
+    "bild": {
+      "src": "/_next/static/media/dachdecker.6ee0abbf.png",
+      "height": 512,
+      "width": 512,
+      "blurDataURL": "/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdachdecker.6ee0abbf.png&w=8&q=70",
+      "blurWidth": 8,
+      "blurHeight": 8
+    },
+    "verified": false
   }
 ]
