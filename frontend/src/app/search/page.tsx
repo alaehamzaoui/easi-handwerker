@@ -86,7 +86,7 @@ export default function Startseite() {
               onClick={() => handleCardClick(handwerker.id)}
               className="border border-gray-300 p-8 rounded-xl shadow-2xl bg-white transition transform hover:-translate-y-2 hover:shadow-3xl hover:bg-gray-200 cursor-pointer flex flex-col items-center"
             >
-              <img src={handwerker.bild} alt={handwerker.vorname} className="w-24 h-24 rounded-full mb-4" />
+              <Image src={handwerker.bild.src}  width={128} height={128} alt={handwerker.vorname} className="w-24 h-24 rounded-full mb-4" />
               <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Vorname:</strong> {handwerker.vorname}</p>
               <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Nachname:</strong> {handwerker.nachname}</p>
               <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Stadt:</strong> {handwerker.stadt}</p>

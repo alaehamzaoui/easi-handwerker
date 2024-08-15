@@ -1,8 +1,12 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
 import ArbeitszeitModal from '../../components/ArbeitszeitModal';
+import BenutzerDatenModal from '../../components/BenutzerDatenModal';
 import { FaClock, FaUser, FaHome } from 'react-icons/fa';
+import Image from 'next/image';
+import style from '../../styles/Dashboard.module.css';
 
 interface Arbeitszeit {
   tag: string;
@@ -19,13 +23,28 @@ interface Auftrag {
   anliegen: string;
 }
 
+interface BenutzerDaten {
+  vorname: string;
+  nachname: string;
+  email: string;
+  kategorie: string;
+  stadt: string;
+  straße: string;
+  telefon: string;
+  stundenlohn: string;
+  bild: { src: string };
+  id: string;
+}
+
 const Dashboard = () => {
   const [arbeitszeiten, setArbeitszeiten] = useState<Arbeitszeit[]>([]);
   const [auftraege, setAuftraege] = useState<Auftrag[]>([]);
   const [istModalOffen, setIstModalOffen] = useState(false);
+  const [istBenutzerDatenModalOffen, setIstBenutzerDatenModalOffen] = useState(false);
   const [istDunkelModus, setIstDunkelModus] = useState(false);
   const [istLaden, setIstLaden] = useState(true);
-  const [benutzerDaten, setBenutzerDaten] = useState<any>(null);
+  const [benutzerDaten, setBenutzerDaten] = useState<BenutzerDaten | null>(null);
+  const [istPasswortModalOffen, setIstPasswortModalOffen] = useState(false);
 
   const toggleTheme = () => {
     setIstDunkelModus(!istDunkelModus);
@@ -52,12 +71,11 @@ const Dashboard = () => {
         return res.json();
       })
       .then((data) => {
-        console.log('Auftragsdaten:', data); // Fügen Sie dies hinzu, um die abgerufenen Daten zu überprüfen
+        console.log('Auftragsdaten:', data); //abgerufenen Daten überprüfen
         setAuftraege(data);
       })
       .catch((err) => console.error('Fehler beim Abrufen der Aufträge:', err));
   };
-  
 
   useEffect(() => {
     const benutzerDatenString = sessionStorage.getItem('benutzer');
@@ -78,11 +96,27 @@ const Dashboard = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: benutzerDaten.email, workTimes: aktualisierteArbeitszeiten }),
+      body: JSON.stringify({ email: benutzerDaten?.email || '', workTimes: aktualisierteArbeitszeiten }),
     })
       .then((res) => res.json())
-      .then(() => fetchArbeitszeiten(benutzerDaten.email))
+      .then(() => fetchArbeitszeiten(benutzerDaten?.email || ''))
       .catch((err) => console.error('Fehler beim Aktualisieren der Arbeitszeiten:', err));
+  };
+
+  const handleUpdateBenutzerDaten = (aktualisierteDaten: BenutzerDaten) => {
+    fetch('/api/updateUserData', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(aktualisierteDaten),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setBenutzerDaten(aktualisierteDaten);
+        sessionStorage.setItem('benutzer', JSON.stringify(aktualisierteDaten));
+      })
+      .catch((err) => console.error('Fehler beim Aktualisieren der Benutzerdaten:', err));
   };
 
   if (istLaden) {
@@ -138,12 +172,22 @@ const Dashboard = () => {
         <main className="flex-grow container mx-auto p-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <button
-                className={`${istDunkelModus ? 'bg-gray-800 text-yellow-500' : 'bg-yellow-600 text-black'} py-2 px-4 rounded hover:bg-yellow-700 mb-4 flex items-center`}
-                onClick={() => setIstModalOffen(true)}
-              >
-                <FaClock className="mr-2" /> Zeit pflegen
-              </button>
+              <div className="profilbtn">
+                <button
+                  className={`${istDunkelModus ? 'bg-gray-800 text-yellow-500' : 'bg-yellow-600 text-black'} py-2 px-4 rounded hover:bg-yellow-700 mb-4 flex items-center`}
+                  onClick={() => setIstModalOffen(true)}
+                >
+                  <FaClock className="mr-2" /> Zeit pflegen
+                </button>
+
+                {/* Profil bearbeiten Button */}
+                <button
+                  className={`${istDunkelModus ? 'bg-gray-800 text-yellow-500' : 'bg-yellow-600 text-black'} py-2 px-4 rounded hover:bg-yellow-700 mb-4 flex items-center`}
+                  onClick={() => setIstBenutzerDatenModalOffen(true)}
+                >
+                  <FaUser className="mr-2" /> Profil bearbeiten
+                </button>
+              </div>
 
               {istModalOffen && (
                 <ArbeitszeitModal
@@ -154,11 +198,24 @@ const Dashboard = () => {
                   }}
                   onCancel={() => {
                     setIstModalOffen(false);
-                    fetchArbeitszeiten(benutzerDaten.email);
+                    fetchArbeitszeiten(benutzerDaten?.email || '');
                   }}
                 />
               )}
 
+            
+
+               {/* BenutzerDatenModal einfügen */}
+               {istBenutzerDatenModalOffen && (
+                <BenutzerDatenModal
+                  initialBenutzerDaten={benutzerDaten}
+                  onSave={(aktualisierteDaten) => {
+                    handleUpdateBenutzerDaten(aktualisierteDaten);
+                    setIstBenutzerDatenModalOffen(false);
+                  }}
+                  onCancel={() => setIstBenutzerDatenModalOffen(false)}
+                />
+              )}
               <table className={`${istDunkelModus ? 'bg-gray-900 text-white' : 'bg-white text-black'} table-auto w-full mt-4 shadow-md rounded text-center`}>
                 <thead className={`${istDunkelModus ? 'bg-gray-700' : 'bg-gray-200'}`}>
                   <tr>
@@ -177,6 +234,7 @@ const Dashboard = () => {
                   ))}
                 </tbody>
               </table>
+               
 
               {/* Anzeige der Aufträge */}
               <h2 className="text-2xl font-bold mt-8 mb-4">Ihre Aufträge</h2>
@@ -193,16 +251,19 @@ const Dashboard = () => {
 
             {benutzerDaten && (
               <div className={`${istDunkelModus ? 'bg-gray-900 text-white' : 'bg-white text-black'} shadow-md rounded p-4 text-center`}>
-                <img
+                <Image
                   className="w-32 h-32 rounded-full mx-auto mb-4"
-                  src={`${benutzerDaten.bild}`} 
+                  src={`${benutzerDaten.bild.src}`} 
                   alt="Persönliche Daten"
+                  width={128}
+                  height={128}
                 />
                 <h2 className={`${istDunkelModus ? 'text-yellow-500' : 'text-yellow-600'} text-xl font-bold`}>{`${benutzerDaten.vorname} ${benutzerDaten.nachname}`}</h2>
                 <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.kategorie}</p>
                 <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.stadt}</p>
                 <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.straße}</p>
                 <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.telefon}</p>
+                <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.stundenlohn}€</p>
               </div>
             )}
           </div>

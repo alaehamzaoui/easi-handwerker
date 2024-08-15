@@ -3,70 +3,29 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import benutzer from '../../../../public/users.json'; 
-import arbeitszeitenData from '../../../../public/worktimes.json'; 
+import arbeitszeiten from '../../../../public/workTimes.json'; 
 import Image from 'next/image';
 import logo from "../../../images/MiniMeister-Logo-white.png"; 
 import Modal from 'react-modal';
 import styles from '../../../styles/profile.module.css';
 import Popup from '../../../components/Popup';
 
-interface Arbeitszeit {
-  tag: string;
-  von: string;
-  bis: string;
-}
 
-type Arbeitszeiten = {
-  [email: string]: Arbeitszeit[];
-};
-const arbeitszeiten: Arbeitszeiten = arbeitszeitenData;
 
 const ProfilDetails = () => {
   const router = useRouter();
   const { id } = useParams();
-  interface Handwerker {
-    id: number;
-    vorname: string;
-    nachname: string;
-    geburtsdatum: string;
-    kategorie: string;
-    stadt: string;
-    telefon: string;
-    email: string;
-    passwort: string;
-    bild: string;
-  }
-  
-  const [handwerker, setHandwerker] = useState<Handwerker | undefined>(undefined);
-  const [arbeitsZeiten, setArbeitsZeiten] = useState([]);
-  const [vorhandeneBuchungen, setVorhandeneBuchungen] = useState<Arbeitszeit[]>([]);
 
-  const istZeitSlotReserviert = (tag: string, von: string, bis: string) => {
-    return vorhandeneBuchungen.some(
-      buchung => buchung.tag === tag && buchung.von === von && buchung.bis === bis
-    );
-  };
+  const [handwerker, setHandwerker] = useState(null);
+  const [arbeitsZeiten, setArbeitsZeiten] = useState([]);
 
   useEffect(() => {
     if (id) {
       const gefundenerHandwerker = benutzer.find(benutzer => benutzer.id === parseInt(id as string));
-      setHandwerker(gefundenerHandwerker as Handwerker); ;
+      setHandwerker(gefundenerHandwerker);
       if (gefundenerHandwerker && gefundenerHandwerker.email) {
         const benutzerArbeitsZeiten = arbeitszeiten[gefundenerHandwerker.email];
         setArbeitsZeiten(benutzerArbeitsZeiten || []);
-        // Abrufen der bestehenden Buchungen für den aktuellen Handwerker
-      fetch(`/api/auftrag?userId=${id}`)
-      .then(response => response.json())
-      .then(data => {
-        const vorhandeneBuchungen = data.map((buchung: any) => ({
-          tag: buchung.ausgewählterTag,
-          von: buchung.startZeit,
-          bis: buchung.endZeit
-        }));
-        setVorhandeneBuchungen(vorhandeneBuchungen);
-      })
-      .catch(error => console.error('Fehler beim Laden der bestehenden Buchungen:', error));
-   
       }
     }
   }, [id]);
@@ -107,16 +66,11 @@ const ProfilDetails = () => {
     const [startZeit, setStartZeit] = useState('');
     const [endZeit, setEndZeit] = useState('');
     
-
     const [popupNachricht, setPopupNachricht] = useState('');
     const [istPopupSichtbar, setIstPopupSichtbar] = useState(false);
     
     //Handleclick funktion um die Arbeitszeiten zu buchen
-    const handleClick = (  tagName: string, 
-      datum: Date, 
-      von: string, 
-      bis: string) => {
-      
+    const handleClick = (tagName, datum, von, bis) => {
       setAusgewählterTag(`${tagName}, ${datum.toLocaleDateString('de-DE')}`);
       setStartZeit(von);
       setEndZeit(bis);
@@ -193,8 +147,7 @@ const ProfilDetails = () => {
   }
 
   
-
-  const { vorname, nachname, stadt, kategorie, telefon, bild } = handwerker;
+  const { vorname, nachname, stadt, kategorie, telefon, stundenlohn, bild } = handwerker;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -214,10 +167,7 @@ const ProfilDetails = () => {
             {getNaechsteZweiWochen().map((datum, index) => {
                 const tagName = getTagName(datum);
                 const arbeitsZeit = arbeitsZeiten.find(az => az.tag === tagName);
-                 if (!arbeitsZeit || !arbeitsZeit.von || !arbeitsZeit.bis){ return null;}
-                 if (istZeitSlotReserviert(`${tagName}, ${datum.toLocaleDateString('de-DE')}`, arbeitsZeit.von, arbeitsZeit.bis)) {
-                  return null; // Verstecke diesen Zeit-Slot, wenn er bereits reserviert ist
-                }
+                 if (!arbeitsZeit || !arbeitsZeit.von || !arbeitsZeit.bis) return null;
                  return (
                     <div className="react-modals">
                         <button
@@ -327,20 +277,20 @@ const ProfilDetails = () => {
                  </div>}
                  
                   </div>
-
-                
                 );
               })}
             </div>
           </div>
           <div className="flex-1 flex flex-col items-center">
-            <img src={bild} alt={`${vorname} ${nachname}`} className="w-32 h-32 rounded-full mb-4" />
+            <Image src={bild.src} width={128} height={128} alt={`${vorname} ${nachname}`} className="w-32 h-32 rounded-full mb-4" />
+
             <h1 className="text-3xl font-bold">{`${vorname} ${nachname}`}</h1>
             <p className="text-gray-600 mb-4">{kategorie}</p>
             <div className="space-y-4">
               <p className="text-lg"><strong className="text-yellow-500">Stadt:</strong> {stadt}</p>
               <p className="text-lg"><strong className="text-yellow-500">Kategorie:</strong> {kategorie}</p>
               <p className="text-lg"><strong className="text-yellow-500">Telefonnummer:</strong> {telefon}</p>
+              <p className="text-lg"><strong className="text-yellow-500">Stundenlohn:</strong> {stundenlohn}€</p>
             </div>
           </div>
         </div>

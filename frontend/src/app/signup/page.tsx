@@ -17,6 +17,7 @@ export default function Anmeldung() {
     const [email, setEmail] = useState('');
     const [passwort, setPasswort] = useState('');
     const [passwortWiederholen, setPasswortWiederholen] = useState('');
+    const [stundenlohn, setStundenlohn] = useState('');
     const [popupNachricht, setPopupNachricht] = useState('');
     const [istPopupSichtbar, setIstPopupSichtbar] = useState(false);
 
@@ -43,7 +44,7 @@ export default function Anmeldung() {
     const handleAbsenden = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
-        if (!vorname || !nachname || !geburtsdatum || !kategorie || !straße || !stadt || !telefon || !email || !passwort || !passwortWiederholen) {
+        if (!vorname || !nachname || !geburtsdatum || !kategorie || !straße || !stadt || !telefon || !email || !passwort || !passwortWiederholen || !stundenlohn) {
             zeigePopup('Bitte füllen Sie alle Felder aus');
             return;
         }
@@ -70,7 +71,8 @@ export default function Anmeldung() {
             stadt,
             telefon,
             email,
-            passwort
+            passwort,
+            stundenlohn
         };
 
         const response = await fetch('/api/register', {
@@ -133,10 +135,12 @@ export default function Anmeldung() {
                         >
                             <option value="">Art der Ausbildung</option>
                             <option value="Maurer/-in">Maurer/-in</option>
-                            <option value="Zimmerer/Zimmerin">Zimmerer/Zimmerin</option>
                             <option value="Dachdecker/-in">Dachdecker/-in</option>
                             <option value="Friseur/-in">Friseur/-in</option>
-                            <option value="Kosmetiker/-in">Kosmetiker/-in</option>
+                            <option value="Elektriker/-in">Elektriker/-in</option>
+                            <option value="Maler/-in">Maler/-in</option>
+
+                            
                         </select>
                     </div>
                     <div className={styles.row}>
@@ -193,6 +197,17 @@ export default function Anmeldung() {
                             className={styles.input}
                         />
                     </div>
+                    <div className={styles.row}>
+                        <input
+                            type="number"
+                            id="stundendlohn"
+                            value={stundenlohn}
+                            placeholder='Stundenlohn'
+                            onChange={(e) => setStundenlohn(e.target.value)}
+                            className={styles.input}
+                        />
+                    </div>
+
                     <button type="submit" className={styles.button}>Registrieren</button>
                 </form>
                 <Link href="/login">

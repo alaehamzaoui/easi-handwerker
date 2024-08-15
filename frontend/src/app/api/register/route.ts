@@ -1,13 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import dachdecker from '../../../images/dachdecker.png';
+import maler from '../../../images/maler.png';
+import elektriker from '../../../images/elektiker.png';
+import friseur from '../../../images/friseur.png';
+import mauerer from '../../../images/mauerer.png';
+import { StaticImageData } from 'next/image';
 
 // Pfade zu den JSON-Dateien
-const benutzerDateiPfad = path.resolve(process.cwd(), 'public', 'users.json');
-const arbeitszeitenDateiPfad = path.resolve(process.cwd(), 'public', 'workTimes.json');
+const usersFilePath = path.resolve(process.cwd(), 'public', 'users.json');
+const workTimesFilePath = path.resolve(process.cwd(), 'public', 'workTimes.json');
 
 // Standard-Arbeitszeiten
-const standardArbeitszeiten = [
+const defaultWorkTimes = [
   { tag: 'Montag', von: '', bis: '' },
   { tag: 'Dienstag', von: '', bis: '' },
   { tag: 'Mittwoch', von: '', bis: '' },
@@ -28,26 +34,49 @@ export async function POST(req: NextRequest) {
     telefon,
     email,
     passwort,
+    stundenlohn,
     bild
-  } = await req.json();
+} = await req.json();
 
   // Benutzer lesen und hinzufügen
-  let benutzerDaten;
+  let usersData;
   try {
-    const daten = fs.readFileSync(benutzerDateiPfad, 'utf-8');
-    benutzerDaten = JSON.parse(daten);
+    const data = fs.readFileSync(usersFilePath, 'utf-8');
+    usersData = JSON.parse(data);
   } catch (error) {
     console.error('Fehler beim Lesen der Benutzerdatei:', error);
-    benutzerDaten = [];
+    usersData = [];
   }
 
   // Berechnung der neuen Benutzer-ID
-  const neueId = benutzerDaten.length > 0 ? Math.max(...benutzerDaten.map((benutzer: any) => benutzer.id || 0)) + 1 : 1;
-  const standardBild = "https://www.w3schools.com/howto/img_avatar.png"
+
+  
+  const newId = usersData.length > 0 ? Math.max(...usersData.map((user: any) => user.id || 0)) + 1 : 1;
+  //const defaultBild = '/images/dachdecker.png';
+var defaultBild: string | StaticImageData = '';
+  switch (kategorie) {
+    case 'Maler/-in':
+      defaultBild = maler;
+      break;
+    case 'Elektriker/-in':
+      defaultBild = elektriker;
+      break;
+    case 'Friseur/-in':
+      defaultBild = friseur;
+      break;
+    case 'Maurer/-in':
+      defaultBild = mauerer;
+      break;
+    case 'Dachdecker/-in':
+      defaultBild = dachdecker;
+      break;
+   
+  }
+
 
   // Neues Benutzerobjekt mit ID
-  const neuerBenutzer = {
-    id: neueId,
+  const newUser = {
+    id: newId,
     vorname,
     nachname,
     geburtsdatum,
@@ -57,36 +86,34 @@ export async function POST(req: NextRequest) {
     telefon,
     email,
     passwort,
-    bild: standardBild
+    stundenlohn,
+    bild: defaultBild
   };
-
-  benutzerDaten.push(neuerBenutzer);
-
+  usersData.push(newUser);
   try {
-    fs.writeFileSync(benutzerDateiPfad, JSON.stringify(benutzerDaten, null, 2), 'utf-8');
+    fs.writeFileSync(usersFilePath, JSON.stringify(usersData, null, 2), 'utf-8');
   } catch (error) {
     console.error('Fehler beim Schreiben der Benutzerdatei:', error);
-    return NextResponse.json({ fehler: 'Fehler beim Speichern des Benutzers' }, { status: 500 });
+    return NextResponse.json({ error: 'Fehler beim Speichern des Benutzers' }, { status: 500 });
   }
 
   // Arbeitszeiten für den neuen Benutzer hinzufügen
-  let arbeitszeitenDaten;
+  let workTimesData;
   try {
-    const daten = fs.readFileSync(arbeitszeitenDateiPfad, 'utf-8');
-    arbeitszeitenDaten = JSON.parse(daten);
+    const data = fs.readFileSync(workTimesFilePath, 'utf-8');
+    workTimesData = JSON.parse(data);
   } catch (error) {
     console.error('Fehler beim Lesen der Arbeitszeiten-Datei:', error);
-    arbeitszeitenDaten = {};
+    workTimesData = {};
   }
-
-  arbeitszeitenDaten[email] = standardArbeitszeiten;
-
+  
+  workTimesData[email] = defaultWorkTimes;
   try {
-    fs.writeFileSync(arbeitszeitenDateiPfad, JSON.stringify(arbeitszeitenDaten, null, 2), 'utf-8');
+    fs.writeFileSync(workTimesFilePath, JSON.stringify(workTimesData, null, 2), 'utf-8');
   } catch (error) {
     console.error('Fehler beim Schreiben der Arbeitszeiten-Datei:', error);
-    return NextResponse.json({ fehler: 'Fehler beim Speichern der Arbeitszeiten' }, { status: 500 });
+    return NextResponse.json({ error: 'Fehler beim Speichern der Arbeitszeiten' }, { status: 500 });
   }
 
-  return NextResponse.json({ nachricht: 'Benutzer erfolgreich registriert' });
+  return NextResponse.json({ message: 'Benutzer erfolgreich registriert' });
 }

@@ -1,167 +1,19 @@
 {
-  "Nutzer@mail.de": [
-    {
-      "tag": "Montag",
-      "von": "10:00",
-      "bis": "12:00"
-    },
-    {
-      "tag": "Dienstag",
-      "von": "08:00",
-      "bis": "11:00"
-    },
-    {
-      "tag": "Mittwoch",
-      "von": "09:30",
-      "bis": "12:30"
-    },
-    {
-      "tag": "Donnerstag",
-      "von": "08:55",
-      "bis": "12:00"
-    },
-    {
-      "tag": "Freitag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Samstag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Sonntag",
-      "von": "",
-      "bis": ""
-    }
-  ],
-  "Max@Muster.com": [
-    {
-      "tag": "Montag",
-      "von": "10:00",
-      "bis": "12:00"
-    },
-    {
-      "tag": "Dienstag",
-      "von": "15:00",
-      "bis": "16:00"
-    },
-    {
-      "tag": "Mittwoch",
-      "von": "10:40",
-      "bis": "12:10"
-    },
-    {
-      "tag": "Donnerstag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Freitag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Samstag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Sonntag",
-      "von": "",
-      "bis": ""
-    }
-  ],
-  "ilyas.errarhoute@stud.hs-bochum.de": [
-    {
-      "tag": "Montag",
-      "von": "10:00",
-      "bis": "12:00"
-    },
-    {
-      "tag": "Dienstag",
-      "von": "04:00",
-      "bis": "06:00"
-    },
-    {
-      "tag": "Mittwoch",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Donnerstag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Freitag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Samstag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Sonntag",
-      "von": "",
-      "bis": ""
-    }
-  ],
-  "kali@gmail.com": [
-    {
-      "tag": "Montag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Dienstag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Mittwoch",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Donnerstag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Freitag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Samstag",
-      "von": "",
-      "bis": ""
-    },
-    {
-      "tag": "Sonntag",
-      "von": "",
-      "bis": ""
-    }
-  ],
-  "hadi@gmail.com": [
+  "mehmet@gmail.com": [
     {
       "tag": "Montag",
       "von": "08:00",
-      "bis": "10:00"
+      "bis": "09:00"
     },
     {
       "tag": "Dienstag",
-      "von": "12:00",
-      "bis": "14:00"
+      "von": "",
+      "bis": ""
     },
     {
       "tag": "Mittwoch",
-      "von": "16:00",
-      "bis": "18:00"
+      "von": "",
+      "bis": ""
     },
     {
       "tag": "Donnerstag",
