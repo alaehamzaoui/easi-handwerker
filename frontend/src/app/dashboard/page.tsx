@@ -1,12 +1,11 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
+import { FaClock, FaUser, FaLifeRing } from 'react-icons/fa';
+import Image from 'next/image';
 import ArbeitszeitModal from '../../components/ArbeitszeitModal';
 import BenutzerDatenModal from '../../components/BenutzerDatenModal';
-import { FaClock, FaUser, FaHome } from 'react-icons/fa';
-import Image from 'next/image';
-import style from '../../styles/Dashboard.module.css';
+import SupportFormular from '../../components/SupportFormular';
 
 interface Arbeitszeit {
   tag: string;
@@ -42,40 +41,8 @@ const Dashboard = () => {
   const [auftraege, setAuftraege] = useState<Auftrag[]>([]);
   const [istModalOffen, setIstModalOffen] = useState(false);
   const [istBenutzerDatenModalOffen, setIstBenutzerDatenModalOffen] = useState(false);
-  const [istDunkelModus, setIstDunkelModus] = useState(false);
-  const [istLaden, setIstLaden] = useState(true);
+  const [istSupportPopupOffen, setIstSupportPopupOffen] = useState(false);
   const [benutzerDaten, setBenutzerDaten] = useState<BenutzerDaten | null>(null);
-
-  const toggleTheme = () => {
-    setIstDunkelModus(!istDunkelModus);
-  };
-
-  const logout = () => {
-    sessionStorage.removeItem('benutzer');
-    window.location.href = '/login';
-  };
-
-  const fetchArbeitszeiten = (email: string) => {
-    fetch(`/api/workTimes?email=${email}`)
-      .then((res) => res.json())
-      .then((data) => setArbeitszeiten(data))
-      .catch((err) => console.error('Fehler beim Abrufen der Arbeitszeiten:', err));
-  };
-
-  const fetchAuftraege = (userId: string) => {
-    fetch(`/api/auftrag?userId=${userId}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Fehler beim Abrufen der Aufträge');
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log('Auftragsdaten:', data); //abgerufenen Daten überprüfen
-        setAuftraege(data);
-      })
-      .catch((err) => console.error('Fehler beim Abrufen der Aufträge:', err));
-  };
 
   useEffect(() => {
     const benutzerDatenString = sessionStorage.getItem('benutzer');
@@ -86,9 +53,22 @@ const Dashboard = () => {
       setBenutzerDaten(benutzerDaten);
       fetchArbeitszeiten(benutzerDaten.email);
       fetchAuftraege(benutzerDaten.id);
-      setIstLaden(false);
     }
   }, []);
+
+  const fetchArbeitszeiten = (email: string) => {
+    fetch(`/api/workTimes?email=${email}`)
+      .then((res) => res.json())
+      .then((data) => setArbeitszeiten(data))
+      .catch((err) => console.error('Fehler beim Abrufen der Arbeitszeiten:', err));
+  };
+
+  const fetchAuftraege = (userId: string) => {
+    fetch(`/api/auftrag?userId=${userId}`)
+      .then((res) => res.json())
+      .then((data) => setAuftraege(data))
+      .catch((err) => console.error('Fehler beim Abrufen der Aufträge:', err));
+  };
 
   const handleUpdateArbeitszeit = (aktualisierteArbeitszeiten: Arbeitszeit[]) => {
     fetch('/api/workTimes', {
@@ -119,73 +99,48 @@ const Dashboard = () => {
       .catch((err) => console.error('Fehler beim Aktualisieren der Benutzerdaten:', err));
   };
 
-  if (istLaden) {
-    return null;
-  }
+  const handleShowSupportPopup = () => {
+    setIstSupportPopupOffen(true);
+  };
 
   return (
-    <div className={`${istDunkelModus ? 'bg-black text-yellow-500' : 'bg-gray-100 text-black'} min-h-screen flex flex-row`}>
-      <aside className={`${istDunkelModus ? 'bg-gray-800 text-white' : 'bg-yellow-600 text-black'} w-64 flex flex-col p-4`}>
-        <h1 className="text-3xl font-bold mb-8">MiniMeister</h1>
+    <div className="min-h-screen flex flex-row bg-gray-100 text-black">
+      <aside className="bg-yellow-600 w-64 flex flex-col p-6">
+        <h1 className="text-4xl font-bold mb-10">MiniMeister</h1>
         <nav>
           <ul>
             <li className="mb-4">
-              <a href="#" className="flex items-center">
-                <FaHome className="mr-2" /> Home
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="flex items-center">
-                <FaClock className="mr-2" /> Arbeitszeiten
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="flex items-center">
-                <FaUser className="mr-2" /> Profil
-              </a>
+              <button onClick={handleShowSupportPopup} className="flex items-center text-lg font-semibold hover:text-white transition-colors">
+                <FaLifeRing className="mr-2" /> Support
+              </button>
             </li>
           </ul>
         </nav>
       </aside>
 
       <div className="flex-grow flex flex-col">
-        <header className={`${istDunkelModus ? 'bg-gray-800 text-white' : 'bg-yellow-600 text-black'} p-4 flex justify-between items-center`}>
+        <header className="bg-yellow-600 p-6 flex justify-between items-center">
           {benutzerDaten && (
             <span className="text-2xl font-bold">{`Willkommen, ${benutzerDaten.vorname}`}</span>
           )}
-          <div className="flex items-center">
-            <button
-              onClick={logout}
-              className="ml-4 px-4 py-2 bg-yellow-500 white rounded hover:bg-yellow-400 transition"
-            >
-              Logout
-            </button>
-            <button
-              onClick={toggleTheme}
-              className="ml-4 px-4 py-2 bg-yellow-500 white rounded hover:bg-yellow-400 transition"
-            >
-              {istDunkelModus ? 'Licht Modus' : 'Dunkel Modus'}
-            </button>
-          </div>
         </header>
 
-        <main className="flex-grow container mx-auto p-4">
+        <main className="flex-grow container mx-auto p-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <div className="profilbtn">
+              <div className="flex space-x-4 mb-8">
                 <button
-                  className={`${istDunkelModus ? 'bg-gray-800 text-yellow-500' : 'bg-yellow-600 text-black'} py-2 px-4 rounded hover:bg-yellow-700 mb-4 flex items-center`}
+                  className="bg-yellow-600 text-black py-2 px-4 rounded hover:bg-yellow-700 flex items-center text-lg font-semibold transition-colors"
                   onClick={() => setIstModalOffen(true)}
                 >
-                  <FaClock className="mr-2" /> Zeit pflegen
+                  <FaClock className="mr-2" /> Arbeitszeiten bearbeiten
                 </button>
 
-                {/* Profil bearbeiten Button */}
                 <button
-                  className={`${istDunkelModus ? 'bg-gray-800 text-yellow-500' : 'bg-yellow-600 text-black'} py-2 px-4 rounded hover:bg-yellow-700 mb-4 flex items-center`}
+                  className="bg-yellow-600 text-black py-2 px-4 rounded hover:bg-yellow-700 flex items-center text-lg font-semibold transition-colors"
                   onClick={() => setIstBenutzerDatenModalOffen(true)}
                 >
-                  <FaUser className="mr-2" />  Persönliche Daten bearbeiten
+                  <FaUser className="mr-2" /> Persönliche Daten bearbeiten
                 </button>
               </div>
 
@@ -196,17 +151,11 @@ const Dashboard = () => {
                     handleUpdateArbeitszeit(aktualisierteArbeitszeiten);
                     setIstModalOffen(false);
                   }}
-                  onCancel={() => {
-                    setIstModalOffen(false);
-                    fetchArbeitszeiten(benutzerDaten?.email || '');
-                  }}
+                  onCancel={() => setIstModalOffen(false)}
                 />
               )}
 
-            
-
-               {/* BenutzerDatenModal einfügen */}
-               {istBenutzerDatenModalOffen && (
+              {istBenutzerDatenModalOffen && (
                 <BenutzerDatenModal
                   initialBenutzerDaten={benutzerDaten}
                   onSave={(aktualisierteDaten) => {
@@ -216,8 +165,9 @@ const Dashboard = () => {
                   onCancel={() => setIstBenutzerDatenModalOffen(false)}
                 />
               )}
-              <table className={`${istDunkelModus ? 'bg-gray-900 text-white' : 'bg-white text-black'} table-auto w-full mt-4 shadow-md rounded text-center`}>
-                <thead className={`${istDunkelModus ? 'bg-gray-700' : 'bg-gray-200'}`}>
+
+              <table className="bg-white table-auto w-full shadow-md rounded text-center">
+                <thead className="bg-gray-200">
                   <tr>
                     <th className="px-4 py-2">Tag</th>
                     <th className="px-4 py-2">Von</th>
@@ -226,7 +176,7 @@ const Dashboard = () => {
                 </thead>
                 <tbody>
                   {arbeitszeiten.map((arbeitszeit, index) => (
-                    <tr key={index} className={`${istDunkelModus ? 'border-t border-gray-700' : 'border-t'}`}>
+                    <tr key={index} className="border-t">
                       <td className="px-4 py-2">{arbeitszeit.tag}</td>
                       <td className="px-4 py-2">{arbeitszeit.von}</td>
                       <td className="px-4 py-2">{arbeitszeit.bis}</td>
@@ -234,9 +184,7 @@ const Dashboard = () => {
                   ))}
                 </tbody>
               </table>
-               
 
-              {/* Anzeige der Aufträge */}
               <h2 className="text-2xl font-bold mt-8 mb-4">Ihre Aufträge</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {auftraege.map((auftrag, index) => (
@@ -250,25 +198,42 @@ const Dashboard = () => {
             </div>
 
             {benutzerDaten && (
-              <div className={`${istDunkelModus ? 'bg-gray-900 text-white' : 'bg-white text-black'} shadow-md rounded p-4 text-center`}>
+              <div className="bg-white shadow-md rounded p-6 text-center">
                 <Image
                   className="w-32 h-32 rounded-full mx-auto mb-4"
-                  src={`${benutzerDaten.bild.src}`} 
+                  src={benutzerDaten.bild.src}
                   alt="Persönliche Daten"
                   width={128}
                   height={128}
                 />
-                <h2 className={`${istDunkelModus ? 'text-yellow-500' : 'text-yellow-600'} text-xl font-bold`}>{`${benutzerDaten.vorname} ${benutzerDaten.nachname}`}</h2>
-                <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.kategorie}</p>
-                <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.stadt}</p>
-                <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.straße}</p>
-                <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.telefon}</p>
-                <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.stundenlohn}€</p>
+                <h2 className="text-yellow-600 text-xl font-bold">{`${benutzerDaten.vorname} ${benutzerDaten.nachname}`}</h2>
+                <p className="text-gray-600">{benutzerDaten.kategorie}</p>
+                <p className="text-gray-600">{benutzerDaten.stadt}</p>
+                <p className="text-gray-600">{benutzerDaten.straße}</p>
+                <p className="text-gray-600">{benutzerDaten.telefon}</p>
+                <p className="text-gray-600">{benutzerDaten.stundenlohn}€</p>
               </div>
             )}
           </div>
         </main>
       </div>
+
+      
+      {istSupportPopupOffen && (
+        <div className="fixed inset-0 bg-gray-700 bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Support</h3>
+            <p className="text-gray-600 mb-4 text-center">Haben Sie Fragen oder benötigen Sie Hilfe? Kontaktieren Sie unseren Support!</p>
+            <SupportFormular />
+            <button 
+              onClick={() => setIstSupportPopupOffen(false)}
+              className="mt-4 bg-yellow-600 text-white py-2 px-4 rounded w-full hover:bg-yellow-500"
+            >
+              Schließen
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
