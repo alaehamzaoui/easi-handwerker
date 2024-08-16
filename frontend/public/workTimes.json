@@ -220,5 +220,42 @@
       "von": "",
       "bis": ""
     }
+  ],
+  "testMan@gmail.test": [
+    {
+      "tag": "Montag",
+      "von": "10:00",
+      "bis": "10:55"
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
   ]
 }

@@ -61,6 +61,10 @@ export default function Anmeldung() {
             zeigePopup('Bitte geben Sie eine gültige Email-Adresse ein');
             return;
         }
+        if (parseFloat(stundenlohn) < 12) {
+            zeigePopup(`Der Stundenlohn muss mindestens ${12} € betragen.`);
+            return;
+        }
 
         const benutzerdaten = {
             vorname,

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import styles from '../../styles/login.module.css';
 import logo from "../../images/MiniMeister-Logo-white.png";
 import Popup from '../../components/Popup';
+import hintergrund from "../../images/hintergrund.webp";  // Import des Hintergrundbildes
 
 export default function Anmeldung() {
     const [email, setEmail] = useState('');

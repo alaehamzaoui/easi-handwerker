@@ -128,5 +128,27 @@
       "blurHeight": 8
     },
     "verified": false
+  },
+  {
+    "id": 7,
+    "vorname": "TestMan",
+    "nachname": "Test",
+    "geburtsdatum": "2000-02-05",
+    "kategorie": "Maurer/-in",
+    "straße": "TestStraße",
+    "stadt": "Bochum",
+    "telefon": "555555",
+    "email": "testMan@gmail.test",
+    "passwort": "test",
+    "stundenlohn": "9",
+    "bild": {
+      "src": "/_next/static/media/mauerer.dd488ec0.png",
+      "height": 512,
+      "width": 512,
+      "blurDataURL": "/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmauerer.dd488ec0.png&w=8&q=70",
+      "blurWidth": 8,
+      "blurHeight": 8
+    },
+    "verified": false
   }
 ]
