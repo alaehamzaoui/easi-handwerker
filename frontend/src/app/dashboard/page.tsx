@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { FaClock, FaUser, FaLifeRing } from 'react-icons/fa';
+import { FaClock, FaUser, FaLifeRing, FaCheckCircle, FaTimesCircle, FaSignOutAlt } from 'react-icons/fa';
 import Image from 'next/image';
 import ArbeitszeitModal from '../../components/ArbeitszeitModal';
 import BenutzerDatenModal from '../../components/BenutzerDatenModal';
@@ -34,6 +34,7 @@ interface BenutzerDaten {
   stundenlohn: string;
   bild: { src: string };
   id: string;
+  verified: boolean; // Verifizierungsstatus
 }
 
 const Dashboard = () => {
@@ -103,6 +104,11 @@ const Dashboard = () => {
     setIstSupportPopupOffen(true);
   };
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('benutzer');
+    window.location.href = '/login';
+  };
+
   return (
     <div className="min-h-screen flex flex-row bg-gray-100 text-black">
       <aside className="bg-yellow-600 w-64 flex flex-col p-6">
@@ -123,50 +129,74 @@ const Dashboard = () => {
           {benutzerDaten && (
             <span className="text-2xl font-bold">{`Willkommen, ${benutzerDaten.vorname}`}</span>
           )}
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500 flex items-center transition-colors"
+          >
+            <FaSignOutAlt className="mr-2" /> Ausloggen
+          </button>
         </header>
 
         <main className="flex-grow container mx-auto p-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <div className="flex space-x-4 mb-8">
-                <button
-                  className="bg-yellow-600 text-black py-2 px-4 rounded hover:bg-yellow-700 flex items-center text-lg font-semibold transition-colors"
-                  onClick={() => setIstModalOffen(true)}
-                >
-                  <FaClock className="mr-2" /> Arbeitszeiten bearbeiten
-                </button>
+              {/* Benutzerkarte mit Verifizierungsstatus und Buttons */}
+              {benutzerDaten && (
+                <div className="bg-white shadow-md rounded p-6 mb-8 text-center relative">
+                  <Image
+                    className="w-32 h-32 rounded-full mx-auto mb-4"
+                    src={benutzerDaten.bild.src}
+                    alt="Persönliche Daten"
+                    width={128}
+                    height={128}
+                  />
+                  <h2 className="text-yellow-600 text-xl font-bold">{`${benutzerDaten.vorname} ${benutzerDaten.nachname}`}</h2>
+                  <p className="text-gray-600">{benutzerDaten.kategorie}</p>
+                  <p className="text-gray-600">{benutzerDaten.stadt}</p>
+                  <p className="text-gray-600">{benutzerDaten.straße}</p>
+                  <p className="text-gray-600">{benutzerDaten.telefon}</p>
+                  <p className="text-gray-600">{benutzerDaten.stundenlohn}€</p>
+                  <div className="flex items-center justify-center mt-4">
+                    {benutzerDaten.verified ? (
+                      <>
+                        <FaCheckCircle className="text-green-500 text-2xl mr-2" />
+                        <span className="text-green-500 font-semibold">Profil verifiziert</span>
+                      </>
+                    ) : (
+                      <>
+                        <FaTimesCircle className="text-red-500 text-2xl mr-2" />
+                        <span className="text-red-500 font-semibold">Profil nicht verifiziert</span>
+                      </>
+                    )}
+                  </div>
 
-                <button
-                  className="bg-yellow-600 text-black py-2 px-4 rounded hover:bg-yellow-700 flex items-center text-lg font-semibold transition-colors"
-                  onClick={() => setIstBenutzerDatenModalOffen(true)}
-                >
-                  <FaUser className="mr-2" /> Persönliche Daten bearbeiten
-                </button>
+                  {/* Buttons für Datenbearbeitung */}
+                  <div className="flex space-x-4 mt-8">
+                    <button
+                      className="bg-yellow-600 text-black py-2 px-4 rounded hover:bg-yellow-700 flex items-center text-lg font-semibold transition-colors"
+                      onClick={() => setIstBenutzerDatenModalOffen(true)}
+                    >
+                      <FaUser className="mr-2" /> Persönliche Daten bearbeiten
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Aufträge */}
+              <h2 className="text-2xl font-bold mt-8 mb-4">Ihre Aufträge</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                {auftraege.map((auftrag, index) => (
+                  <div key={index} className="border border-gray-300 p-4 rounded-lg shadow-sm bg-yellow-200 hover:bg-yellow-300 transition-colors">
+                    <p className="text-lg font-semibold">{auftrag.ausgewählterTag}</p>
+                    <p className="text-gray-700">{auftrag.startZeit} - {auftrag.endZeit}</p>
+                    <p className="text-gray-600">{auftrag.anliegen}</p>
+                  </div>
+                ))}
               </div>
 
-              {istModalOffen && (
-                <ArbeitszeitModal
-                  initialArbeitszeiten={arbeitszeiten}
-                  onSave={(aktualisierteArbeitszeiten) => {
-                    handleUpdateArbeitszeit(aktualisierteArbeitszeiten);
-                    setIstModalOffen(false);
-                  }}
-                  onCancel={() => setIstModalOffen(false)}
-                />
-              )}
-
-              {istBenutzerDatenModalOffen && (
-                <BenutzerDatenModal
-                  initialBenutzerDaten={benutzerDaten}
-                  onSave={(aktualisierteDaten) => {
-                    handleUpdateBenutzerDaten(aktualisierteDaten);
-                    setIstBenutzerDatenModalOffen(false);
-                  }}
-                  onCancel={() => setIstBenutzerDatenModalOffen(false)}
-                />
-              )}
-
-              <table className="bg-white table-auto w-full shadow-md rounded text-center">
+              {/* Arbeitszeiten */}
+              <h2 className="text-2xl font-bold mt-8 mb-4">Ihre Arbeitszeiten</h2>
+              <table className="bg-white table-auto w-full shadow-md rounded text-center mb-8">
                 <thead className="bg-gray-200">
                   <tr>
                     <th className="px-4 py-2">Tag</th>
@@ -185,40 +215,21 @@ const Dashboard = () => {
                 </tbody>
               </table>
 
-              <h2 className="text-2xl font-bold mt-8 mb-4">Ihre Aufträge</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {auftraege.map((auftrag, index) => (
-                  <div key={index} className="border border-gray-300 p-4 rounded-lg shadow-sm bg-yellow-200 hover:bg-yellow-300 transition-colors">
-                    <p className="text-lg font-semibold">{auftrag.ausgewählterTag}</p>
-                    <p className="text-gray-700">{auftrag.startZeit} - {auftrag.endZeit}</p>
-                    <p className="text-gray-600">{auftrag.anliegen}</p>
-                  </div>
-                ))}
+              {/* Button für Arbeitszeitenbearbeitung */}
+              <div className="flex space-x-4">
+                <button
+                  className="bg-yellow-600 text-black py-2 px-4 rounded hover:bg-yellow-700 flex items-center text-lg font-semibold transition-colors"
+                  onClick={() => setIstModalOffen(true)}
+                >
+                  <FaClock className="mr-2" /> Arbeitszeiten bearbeiten
+                </button>
               </div>
             </div>
-
-            {benutzerDaten && (
-              <div className="bg-white shadow-md rounded p-6 text-center">
-                <Image
-                  className="w-32 h-32 rounded-full mx-auto mb-4"
-                  src={benutzerDaten.bild.src}
-                  alt="Persönliche Daten"
-                  width={128}
-                  height={128}
-                />
-                <h2 className="text-yellow-600 text-xl font-bold">{`${benutzerDaten.vorname} ${benutzerDaten.nachname}`}</h2>
-                <p className="text-gray-600">{benutzerDaten.kategorie}</p>
-                <p className="text-gray-600">{benutzerDaten.stadt}</p>
-                <p className="text-gray-600">{benutzerDaten.straße}</p>
-                <p className="text-gray-600">{benutzerDaten.telefon}</p>
-                <p className="text-gray-600">{benutzerDaten.stundenlohn}€</p>
-              </div>
-            )}
           </div>
         </main>
       </div>
 
-      
+      {/* Support Popup */}
       {istSupportPopupOffen && (
         <div className="fixed inset-0 bg-gray-700 bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
@@ -233,6 +244,29 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Modals */}
+      {istModalOffen && (
+        <ArbeitszeitModal
+          initialArbeitszeiten={arbeitszeiten}
+          onSave={(aktualisierteArbeitszeiten) => {
+            handleUpdateArbeitszeit(aktualisierteArbeitszeiten);
+            setIstModalOffen(false);
+          }}
+          onCancel={() => setIstModalOffen(false)}
+        />
+      )}
+
+      {istBenutzerDatenModalOffen && (
+        <BenutzerDatenModal
+          initialBenutzerDaten={benutzerDaten}
+          onSave={(aktualisierteDaten) => {
+            handleUpdateBenutzerDaten(aktualisierteDaten);
+            setIstBenutzerDatenModalOffen(false);
+          }}
+          onCancel={() => setIstBenutzerDatenModalOffen(false)}
+        />
       )}
     </div>
   );
