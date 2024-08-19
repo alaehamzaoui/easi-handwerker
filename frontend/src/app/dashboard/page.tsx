@@ -64,7 +64,6 @@ const Dashboard = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log("Fetched work times:", data);
-        // Transform the response to fit your Arbeitszeit format
         const transformedArbeitszeiten = data.map((item: any) => ({
           tag: item.tag,
           von: item.von.Valid ? new Date(item.von.Time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
@@ -151,7 +150,7 @@ const Dashboard = () => {
 
               {istModalOffen && (
                 <ArbeitszeitModal
-                  initialArbeitszeiten={arbeitszeiten}  // Pass the fetched work times to the modal
+                  initialArbeitszeiten={arbeitszeiten}  
                   onSave={(aktualisierteArbeitszeiten) => {
                     handleUpdateArbeitszeit(aktualisierteArbeitszeiten);
                     setIstModalOffen(false);

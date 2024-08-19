@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from '../../styles/login.module.css';
@@ -7,6 +7,18 @@ import logo from "../../images/MiniMeister-Logo-white.png";
 import Popup from '../../components/Popup';
 
 export default function Anmeldung() {
+    const [sessionChecked, setSessionChecked] = useState(false);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            if (sessionStorage.getItem('token') && sessionStorage.getItem('email')) {
+                window.location.href = '/dashboard';
+            } else {
+                setSessionChecked(true); 
+            }
+        }
+    }, []);
+
     const [email, setEmail] = useState('');
     const [passwort, setPasswort] = useState('');
     const [popupNachricht, setPopupNachricht] = useState('');
@@ -46,6 +58,10 @@ export default function Anmeldung() {
             zeigePopup(`Login fehlgeschlagen: ${fehlerDaten.fehler}`);
         }
     };
+
+    if (!sessionChecked) {
+        return null; 
+    }
 
     return (
         <div className={styles.mainContainer}>

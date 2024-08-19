@@ -1,5 +1,5 @@
 "use client";
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from '../../styles/signup.module.css';
@@ -7,6 +7,18 @@ import logo from "../../images/MiniMeister-Logo-white.png";
 import Popup from '../../components/Popup';
 
 export default function Anmeldung() {
+    const [sessionChecked, setSessionChecked] = useState(false);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            if (sessionStorage.getItem('token') && sessionStorage.getItem('email')) {
+                window.location.href = '/dashboard';
+            } else {
+                setSessionChecked(true); 
+            }
+        }
+    }, []);
+
     const [vorname, setVorname] = useState('');
     const [nachname, setNachname] = useState('');
     const [geburtsdatum, setGeburtsdatum] = useState('');
@@ -77,7 +89,6 @@ export default function Anmeldung() {
             passwort
         };
 
-        alert 
         const response = await fetch('http://localhost:3005/handwerker', {
             method: 'POST',
             headers: {
@@ -94,6 +105,10 @@ export default function Anmeldung() {
             zeigePopup('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
         }
     };
+
+    if (!sessionChecked) {
+        return null; 
+    }
 
     return (
         <div className={styles.mainContainer}>
