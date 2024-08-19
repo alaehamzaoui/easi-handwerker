@@ -15,52 +15,82 @@ const Dashboard = () => {
   const [istModalOffen, setIstModalOffen] = useState(false);
   const [istDunkelModus, setIstDunkelModus] = useState(false);
   const [istLaden, setIstLaden] = useState(true);
+  const [email, setEmail] = useState(sessionStorage.getItem('email') ?? '');
+  const [token, setToken] = useState(sessionStorage.getItem('token') ?? '');
   const [benutzerDaten, setBenutzerDaten] = useState<any>(null);
+  const [vorname, setVorname] = useState("false");
+ 
 
   const toggleTheme = () => {
     setIstDunkelModus(!istDunkelModus);
-  };
-
+  }; 
   const logout = () => {
     sessionStorage.removeItem('email');
     sessionStorage.removeItem('token');
     window.location.href = '/login';
   };
 
-  const fetchArbeitszeiten = (email: string) => {
-    fetch(`/api/workTimes?email=${email}`)
+  const handleGetUser = () => {
+    fetch(`http://localhost:3005/handwerkerByEmail?email=${email}`)
       .then((res) => res.json())
-      .then((data) => setArbeitszeiten(data))
-      .catch((err) => console.error('Fehler beim Abrufen der Arbeitszeiten:', err));
+      .then((data) => {
+        setBenutzerDaten(data);
+        setVorname(data.vorname);
+        console.log(data);
+      });
   };
 
-  useEffect(() => {
-    const benutzerDatenString = sessionStorage.getItem('email');
-    if (!benutzerDatenString) {
-      window.location.href = '/login';
-    } else {
-      const benutzerDaten = JSON.parse(benutzerDatenString);
-      setBenutzerDaten(benutzerDaten);
-      fetchArbeitszeiten(benutzerDaten);
-      setIstLaden(false);
-    }
-  }, []);
-
-  /*const handleUpdateArbeitszeit = (aktualisierteArbeitszeiten: Arbeitszeit[]) => {
-    fetch('/api/workTimes', {
+  const handleUpdateArbeitszeit = (aktualisierteArbeitszeiten: Arbeitszeit[]) => {
+    console.log("Updating work times...");
+    fetch('http://localhost:3005/workTimes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: benutzerDaten.email, workTimes: aktualisierteArbeitszeiten }),
+      body: JSON.stringify({ email: email, workTimes: aktualisierteArbeitszeiten }),
     })
       .then((res) => res.json())
-      .then(() => fetchArbeitszeiten(benutzerDaten.email))
-      .catch((err) => console.error('Fehler beim Aktualisieren der Arbeitszeiten:', err));
-  };*/
+      .then(() => {
+        if (email) {
+          fetchArbeitszeiten(email);
+        }
+      })
+      .catch((err) => console.error('Error updating work times:', err));
+  };
+
+  const fetchArbeitszeiten = (email: string) => {
+    console.log("Fetching work times...");
+    fetch(`http://localhost:3005/workTimes?email=${email}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Fetched work times:", data);
+        // Transform the response to fit your Arbeitszeit format
+        const transformedArbeitszeiten = data.map((item: any) => ({
+          tag: item.tag,
+          von: item.von.Valid ? new Date(item.von.Time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
+          bis: item.bis.Valid ? new Date(item.bis.Time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
+        }));
+        setArbeitszeiten(transformedArbeitszeiten);
+        benutzerDaten.map((item: any) => {
+          setVorname(item.vorname);
+        });
+
+        console.log("Transformed work times:", transformedArbeitszeiten);
+      })
+      .catch((err) => console.error('Error loading work times:', err));
+  };
+
+  useEffect(() => {
+    if (!email || !token) {
+      window.location.href = '/login';
+    } 
+    handleGetUser();
+    fetchArbeitszeiten(email);
+    setIstLaden(false);
+  }, [email]);
 
   if (istLaden) {
-    return null;
+    return <div>Loading...</div>;
   }
 
   return (
@@ -90,8 +120,8 @@ const Dashboard = () => {
 
       <div className="flex-grow flex flex-col">
         <header className={`${istDunkelModus ? 'bg-gray-800 text-white' : 'bg-yellow-600 text-black'} p-4 flex justify-between items-center`}>
-          {benutzerDaten && (
-            <span className="text-2xl font-bold">{`Willkommen, ${benutzerDaten}`}</span>
+          {email && (
+            <span className="text-2xl font-bold">{`Willkommen, ${vorname}`}</span>
           )}
           <div className="flex items-center">
             <button
@@ -121,14 +151,16 @@ const Dashboard = () => {
 
               {istModalOffen && (
                 <ArbeitszeitModal
-                  initialArbeitszeiten={arbeitszeiten}
+                  initialArbeitszeiten={arbeitszeiten}  // Pass the fetched work times to the modal
                   onSave={(aktualisierteArbeitszeiten) => {
-                    //handleUpdateArbeitszeit(aktualisierteArbeitszeiten);
+                    handleUpdateArbeitszeit(aktualisierteArbeitszeiten);
                     setIstModalOffen(false);
                   }}
                   onCancel={() => {
                     setIstModalOffen(false);
-                    fetchArbeitszeiten(benutzerDaten.email);
+                    if (email) {
+                      fetchArbeitszeiten(email);
+                    }
                   }}
                 />
               )}
@@ -142,13 +174,13 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {/*arbeitszeiten.map((arbeitszeit, index) => (
+                  {arbeitszeiten.map((arbeitszeit, index) => (
                     <tr key={index} className={`${istDunkelModus ? 'border-t border-gray-700' : 'border-t'}`}>
                       <td className="px-4 py-2">{arbeitszeit.tag}</td>
                       <td className="px-4 py-2">{arbeitszeit.von}</td>
                       <td className="px-4 py-2">{arbeitszeit.bis}</td>
                     </tr>
-                  ))*/}
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -161,9 +193,9 @@ const Dashboard = () => {
                   alt="Persönliche Daten"
                 />
                 <h2 className={`${istDunkelModus ? 'text-yellow-500' : 'text-yellow-600'} text-xl font-bold`}>{`${benutzerDaten.vorname} ${benutzerDaten.nachname}`}</h2>
-                <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.kategorie}</p>
-                <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.stadt}</p>
-                <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.straße}</p>
+                <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.art}</p>
+                <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.straße} {benutzerDaten.hausnummer}</p>
+                <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.plz} {benutzerDaten.Stadt}</p>
                 <p className={`${istDunkelModus ? 'text-gray-400' : 'text-gray-600'}`}>{benutzerDaten.telefon}</p>
               </div>
             )}

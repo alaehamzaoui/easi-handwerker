@@ -27,9 +27,9 @@ type Handwerker struct {
 type CreateHandwerkerRequest struct {
 	Vorname      string `json:"vorname"`
 	Nachname     string `json:"nachname"`
-	Straße       string `json:"straße"`
 	Geburtsdatum string `json:"geburtsdatum"`
 	Art          string `json:"art"`
+	Straße       string `json:"straße"`
 	Hausnummer   string `json:"hausnummer"`
 	PLZ          int64  `json:"plz"`
 	Stadt        string `json:"Stadt"`
@@ -56,9 +56,9 @@ func NewHandwerker(vorname string, nachname string, Art string, geburtsdatum str
 	return &Handwerker{
 		Vorname:           vorname,
 		Nachname:          nachname,
+		Geburtsdatum:      geburtsdatumTime,
 		Art:               Art,
 		Straße:            straße,
-		Geburtsdatum:      geburtsdatumTime,
 		Hausnummer:        hausnummer,
 		PLZ:               plz,
 		Stadt:             stadt,

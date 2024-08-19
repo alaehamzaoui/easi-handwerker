@@ -22,7 +22,11 @@ func (s *APIServer) Run() {
 	handler := c.Handler(router)
 	router.HandleFunc("/hello", makeHTTPHandleFunc(s.handleHello))
 	router.HandleFunc("/handwerker", makeHTTPHandleFunc(s.handleHandwerker))
+	router.HandleFunc("/handwerkerByEmail", makeHTTPHandleFunc(s.GetHandwerkerByEmail))
+
 	router.HandleFunc("/login", makeHTTPHandleFunc(s.handleLogin))
+
+	router.HandleFunc("/workTimes", makeHTTPHandleFunc(s.handleWorkTimes))
 
 	log.Println("JSON API server running on port: ", s.listenAddr)
 	http.ListenAndServe(s.listenAddr, handler)
@@ -40,6 +44,11 @@ type Storage interface {
 	CreateVerification(*data.Verfication) error
 	GetVerification() ([]*data.Verfication, error)
 	UpdateVerification(string) error
+
+	GetWorkTimes() ([]*data.Worktimes, error)
+	CreateWorkTimes(*data.Worktimes) error
+	UpdateWorkTimes(*data.Worktimes) error
+	GetWorkTimesByEmail(email string) ([]*data.Worktimes, error)
 }
 
 type APIServer struct {

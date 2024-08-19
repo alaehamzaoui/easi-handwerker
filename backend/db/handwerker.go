@@ -7,17 +7,49 @@ import (
 )
 
 func (s *postgresStore) CreateHandwerker(handwerker *data.Handwerker) error {
-	query := " insert into handwerker (vorname, nachname, art , geburtsdatum,straße, hausnummer, plz, stadt, telefon, email, encryptedpassword, createdat) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
-
-	_, err := s.db.Query(query, handwerker.Vorname, handwerker.Nachname, handwerker.Art, handwerker.Geburtsdatum, handwerker.Straße, handwerker.Hausnummer, handwerker.PLZ, handwerker.Stadt, handwerker.Telefon, handwerker.Email, handwerker.EncryptedPassword, handwerker.CreatedAt)
+	quer := " insert into handwerker (vorname, nachname, art , geburtsdatum,straße, hausnummer, plz, stadt, telefon, email, encryptedpassword, createdat) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
+	_, err := s.db.Query(quer, handwerker.Vorname, handwerker.Nachname, handwerker.Art, handwerker.Geburtsdatum, handwerker.Straße, handwerker.Hausnummer, handwerker.PLZ, handwerker.Stadt, handwerker.Telefon, handwerker.Email, handwerker.EncryptedPassword, handwerker.CreatedAt)
 
 	if err != nil {
 		return err
 	}
+	query := "insert into worktimes (email, tag, von, bis) values ($1, $2, $3, $4)"
 
+	email := handwerker.Email
+	null := sql.NullTime{}
+	_, err = s.db.Query(query, email, "Montag", null, null)
+	if err != nil {
+		return err
+	}
+	_, err = s.db.Query(query, email, "Dienstag", null, null)
+	if err != nil {
+		return err
+	}
+	_, err = s.db.Query(query, email, "Mittwoch", null, null)
+	if err != nil {
+		return err
+	}
+	_, err = s.db.Query(query, email, "Donnerstag", null, null)
+	if err != nil {
+		return err
+	}
+	_, err = s.db.Query(query, email, "Freitag", null, null)
+	if err != nil {
+		return err
+	}
+	_, err = s.db.Query(query, email, "Samstag", null, null)
+	if err != nil {
+		return err
+	}
+	_, err = s.db.Query(query, email, "Sonntag", null, null)
+	if err != nil {
+		return err
+	}
 	return nil
 }
-
+func (s *postgresStore) UpdateHandwerker(*data.Handwerker) error {
+	panic("unimplemented")
+}
 func (s *postgresStore) DeleteHandwerker(int) error {
 	panic("noch nicht implementiert")
 }
@@ -46,10 +78,6 @@ func (s *postgresStore) GetHandwerkers() ([]*data.Handwerker, error) {
 	return handwerkers, nil
 }
 
-func (s *postgresStore) UpdateHandwerker(*data.Handwerker) error {
-	panic("noch nicht implementiert")
-}
-
 func (s *postgresStore) GetHandwerkerByEmail(email string) (*data.Handwerker, error) {
 	rows, err := s.db.Query("select * from handwerker where email = $1", email)
 
@@ -65,7 +93,7 @@ func (s *postgresStore) GetHandwerkerByEmail(email string) (*data.Handwerker, er
 
 func scanIntoHandwerker(rows *sql.Rows) (*data.Handwerker, error) {
 	handwerker := &data.Handwerker{}
-	err := rows.Scan(&handwerker.ID, &handwerker.Vorname, &handwerker.Art, &handwerker.Geburtsdatum, &handwerker.Nachname, &handwerker.Straße, &handwerker.Hausnummer, &handwerker.PLZ, &handwerker.Stadt, &handwerker.Telefon, &handwerker.Nummer, &handwerker.Email, &handwerker.EncryptedPassword, &handwerker.CreatedAt)
+	err := rows.Scan(&handwerker.ID, &handwerker.Vorname, &handwerker.Nachname, &handwerker.Geburtsdatum, &handwerker.Art, &handwerker.Straße, &handwerker.Hausnummer, &handwerker.PLZ, &handwerker.Stadt, &handwerker.Telefon, &handwerker.Nummer, &handwerker.Email, &handwerker.EncryptedPassword, &handwerker.CreatedAt)
 	if err != nil {
 		return nil, err
 	}

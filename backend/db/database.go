@@ -29,17 +29,18 @@ func (s *postgresStore) Init() error {
 	s.deleteAllTables()
 	//tabellen neu erstellen bei jedem Start
 	return s.CreateTables()
-	//return nil ist für den Test
+	return nil
 }
 func (s *postgresStore) deleteAllTables() {
 	fmt.Println("deleteAllTables() called")
 	s.db.Exec("drop table handwerker;")
-
+	s.db.Exec("drop table WorkTimes; ")
 }
 func (s *postgresStore) CreateTables() error {
 	fmt.Print("CreateTables() called")
-	query := `CREATE TABLE handwerker (
-			id SERIAL PRIMARY KEY,
+	query := `
+		CREATE TABLE handwerker (
+			id SERIAL unique,
 			vorname VARCHAR(50),
 			nachname VARCHAR(50),
 			geburtsdatum DATE,
@@ -50,10 +51,19 @@ func (s *postgresStore) CreateTables() error {
 			stadt VARCHAR(50),
 			telefon BIGINT,
 			nummer SERIAL,
-			email VARCHAR(100) UNIQUE,
+			email VARCHAR(100) PRIMARY KEY,
 			encryptedPassword VARCHAR(60),
-			createdAt TIMESTAMP
-		);`
+			createdAt TIMESTAMP);
+		
+		CREATE TABLE WorkTimes (
+			id SERIAL PRIMARY KEY,
+			email VARCHAR(255),
+			tag VARCHAR(50),
+			von TIME,
+			bis TIME,
+			FOREIGN KEY (email) REFERENCES handwerker(email)
+);
+`
 	_, err := s.db.Exec(query)
 	return err
 }

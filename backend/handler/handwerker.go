@@ -8,7 +8,6 @@ import (
 )
 
 func (s *APIServer) handleCreateHandwerker(w http.ResponseWriter, r *http.Request) error {
-
 	req := new(data.CreateHandwerkerRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
@@ -18,6 +17,7 @@ func (s *APIServer) handleCreateHandwerker(w http.ResponseWriter, r *http.Reques
 	if err != nil {
 		return err
 	}
+
 	if err := s.store.CreateHandwerker(handwerker); err != nil {
 		return err
 	}
@@ -32,6 +32,16 @@ func (s *APIServer) handleHandwerker(w http.ResponseWriter, r *http.Request) err
 		return s.handleCreateHandwerker(w, r)
 	}
 	return fmt.Errorf("unsupported method")
+}
+func (s *APIServer) GetHandwerkerByEmail(w http.ResponseWriter, r *http.Request) error {
+	email := r.URL.Query().Get("email")
+
+	handwerker, err := s.store.GetHandwerkerByEmail(email)
+	if err != nil {
+		return err
+	}
+	return WriteJSON(w, http.StatusOK, handwerker)
+
 }
 
 func (s *APIServer) handleGetHandwerker(w http.ResponseWriter, r *http.Request) error {

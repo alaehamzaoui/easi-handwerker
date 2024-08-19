@@ -36,8 +36,8 @@ export default function Anmeldung() {
             const daten = await response.json();
             console.log('Login erfolgreich:', daten.email);
             zeigePopup('Login erfolgreich! Weiterleitung zum Dashboard...');
-            sessionStorage.setItem('email', JSON.stringify(daten.email));
-            sessionStorage.setItem('token', JSON.stringify(daten.token));
+            sessionStorage.setItem('email', daten.email);
+            sessionStorage.setItem('token', daten.token);
             setTimeout(() => {
                 window.location.href = '/dashboard';
             }, 2000);
