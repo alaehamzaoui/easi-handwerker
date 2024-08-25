@@ -1,9 +1,9 @@
 {
-  "Nutzer@mail.de": [
+  "mehmet@gmail.com": [
     {
       "tag": "Montag",
-      "von": "10:00",
-      "bis": "12:00"
+      "von": "08:00",
+      "bis": "09:00"
     },
     {
       "tag": "Dienstag",
@@ -36,11 +36,11 @@
       "bis": ""
     }
   ],
-  "Max@Muster.com": [
+  "chris@gmail.com": [
     {
       "tag": "Montag",
-      "von": "10:00",
-      "bis": "12:00"
+      "von": "",
+      "bis": ""
     },
     {
       "tag": "Dienstag",
@@ -73,16 +73,16 @@
       "bis": ""
     }
   ],
-  "ilyas.errarhoute@stud.hs-bochum.de": [
+  "maxim@gmail.com": [
     {
       "tag": "Montag",
-      "von": "10:00",
-      "bis": "12:00"
+      "von": "",
+      "bis": ""
     },
     {
       "tag": "Dienstag",
-      "von": "04:00",
-      "bis": "06:00"
+      "von": "",
+      "bis": ""
     },
     {
       "tag": "Mittwoch",
@@ -110,11 +110,122 @@
       "bis": ""
     }
   ],
-  "kali@gmail.com": [
+  "mahmut@gmail.com": [
     {
       "tag": "Montag",
       "von": "",
       "bis": ""
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ],
+  "khaled@gmail.com": [
+    {
+      "tag": "Montag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ],
+  "wad@gmail.com": [
+    {
+      "tag": "Montag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Dienstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Mittwoch",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Donnerstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Freitag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Samstag",
+      "von": "",
+      "bis": ""
+    },
+    {
+      "tag": "Sonntag",
+      "von": "",
+      "bis": ""
+    }
+  ],
+  "testMan@gmail.test": [
+    {
+      "tag": "Montag",
+      "von": "10:00",
+      "bis": "10:55"
     },
     {
       "tag": "Dienstag",

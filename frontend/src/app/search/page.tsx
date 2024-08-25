@@ -1,13 +1,27 @@
 "use client";
-
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import benutzer from '../../../public/users.json'; 
 import logo from "../../images/MiniMeister-Logo-white.png";
+import malerbild from "../../images/maler.png";
+import elektrikerbild from "../../images/elektriker.png";
+
+// Mapping für Kategorien zu Bildern
+const handwerkerBilder = {
+  "Maler/-in": malerbild,
+  "Elektriker/-in": elektrikerbild,
+  // Füge weitere Bilder entsprechend hinzu
+};
+
+// Funktion zur Auswahl des passenden Bildes basierend auf der Kategorie
+const getBildForKategorie = (kategorie: string) => {
+  // Kategorie in Kleinbuchstaben umwandeln und die letzten 3 Zeichen entfernen
+  const key = kategorie.toLowerCase().slice(0, -3);
+  return handwerkerBilder[key] || logo; // Fallback-Bild, wenn keine Kategorie passt
+};
 
 interface Handwerker {
-  id: number;
+  id: number;  // Sicherstellen, dass die ID vorhanden ist
   vorname: string;
   nachname: string;
   stadt: string;
@@ -18,24 +32,38 @@ interface Handwerker {
 
 export default function Startseite() {
   const router = useRouter();
-
   const [kategorie, setKategorie] = useState('');
   const [stadt, setStadt] = useState('');
-  const [gefilterteHandwerker, setGefilterteHandwerker] = useState<Handwerker[]>(benutzer);
+  const [gefilterteHandwerker, setGefilterteHandwerker] = useState<Handwerker[]>([]);
 
   useEffect(() => {
-    const neueGefilterteHandwerker = benutzer.filter(handwerker =>
-      (kategorie === '' || handwerker.kategorie.toLowerCase().includes(kategorie.toLowerCase())) &&
-      (stadt === '' || handwerker.stadt.toLowerCase().includes(stadt.toLowerCase()))
-    );
-    setGefilterteHandwerker(neueGefilterteHandwerker);
+    const fetchHandwerker = async () => {
+      try {
+        const res = await fetch(`http://localhost:8080/searchHandwerker?kategorie=${kategorie}&stadt=${stadt}`);
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const data = await res.json();
+        console.log("Erhaltene Daten:", data);  // Überprüfen Sie die Datenstruktur hier
+        setGefilterteHandwerker(data);
+      } catch (error) {
+        console.error('Fehler beim Abrufen der Handwerker:', error);
+      }
+    };
+
+    fetchHandwerker();
   }, [kategorie, stadt]);
 
-  const eindeutigeKategorien = [...new Set(benutzer.map(handwerker => handwerker.kategorie))];
-  const eindeutigeStädte = [...new Set(benutzer.map(handwerker => handwerker.stadt))];
+  const eindeutigeKategorien = [...new Set(gefilterteHandwerker.map(handwerker => handwerker.kategorie))];
+  const eindeutigeStädte = [...new Set(gefilterteHandwerker.map(handwerker => handwerker.stadt))];
 
-  const handleCardClick = (id: number) => {
-    router.push(`/profile/${id}`);
+  const handleCardClick = (id?: number) => {
+    if (id !== undefined) {
+      console.log("Navigiere zu Handwerker mit ID:", id); // Überprüfen Sie, ob die ID korrekt ist
+      router.push(`/profile/${id}`);
+    } else {
+      console.error("Fehler: Handwerker-ID ist undefined");
+    }
   };
 
   return (
@@ -83,10 +111,18 @@ export default function Startseite() {
           {gefilterteHandwerker.map((handwerker) => (
             <div 
               key={handwerker.id} 
+              
               onClick={() => handleCardClick(handwerker.id)}
               className="border border-gray-300 p-8 rounded-xl shadow-2xl bg-white transition transform hover:-translate-y-2 hover:shadow-3xl hover:bg-gray-200 cursor-pointer flex flex-col items-center"
             >
-              <img src={handwerker.bild} alt={handwerker.vorname} className="w-24 h-24 rounded-full mb-4" />
+              <Image
+                src={getBildForKategorie(handwerker.kategorie)}
+                alt={handwerker.kategorie}
+                width={128}
+                height={128}
+                className="rounded-full"
+              />
+
               <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Vorname:</strong> {handwerker.vorname}</p>
               <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Nachname:</strong> {handwerker.nachname}</p>
               <p className="text-gray-800 text-lg"><strong className="text-yellow-500">Stadt:</strong> {handwerker.stadt}</p>

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Head from "next/head";
-import Link from "next/link"; // Importiere Link aus next/link
+import Link from "next/link";
 import Layout from "./layout";
 import styles from "../styles/Home.module.css";
 import Feature from "../components/Feature";
@@ -10,14 +10,14 @@ import icon1 from "../images/BenutzerfreundlicheIcon.png";
 import icon2 from "../images/ModernesDesignIcon.png";
 import icon3 from "../images/KostenübersichtIcon.png";
 import icon4 from "../images/VerfügbarkeitskalenderIcon.png";
-import easiLogo from "../images/firmenLogo_EASI (1).png"; // Importiere das Logo-Bild
+import easiLogo from "../images/firmenLogo_EASI (1).png";
 import React from "react";
 
-export default function Home() {
+const Home: React.FC = () => {
   return (
     <Layout>
       <Head>
-      <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <title>MiniMeister</title>
       </Head>
 
@@ -35,19 +35,32 @@ export default function Home() {
         <div className={styles.logoContainer}>
           <Image src={logo} alt="MiniMeister Logo" width={200} height={200} />
         </div>
-       
+
         <div className={styles.sloganContainer}>
           <h1>Handwerkliche Lösungen für Ihren Alltag</h1>
         </div>
 
         <div className={styles.buttonContainer}>
-          {/* Verwende Link-Komponente für die Navigation */}
-          <Link href="/login" className={styles.button}>
-            AZUBI
-          </Link>
-          <Link href="/search" className={styles.button}>
-            KUNDE
-          </Link>
+          <div className={styles.button}>
+            <Link href="/login" legacyBehavior>
+              <a>AZUBI</a>
+            </Link>
+            <div className={styles.overlay}>
+              <div className={styles.overlayText}>
+                Sind Sie ein Azubi Handwerker? Registrieren Sie sich bei uns und verdienen Sie Geld in Ihrer Freizeit in Ihrem Ausbildungsbereich.
+              </div>
+            </div>
+          </div>
+          <div className={styles.button}>
+            <Link href="/search" legacyBehavior>
+              <a>KUNDE</a>
+            </Link>
+            <div className={styles.overlay}>
+              <div className={styles.overlayText}>
+                Sind Sie ein Kunde auf der Suche nach einem zuverlässigen Azubi Handwerker? Finden Sie sofort Unterstützung für Ihre Projekte.
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -60,28 +73,28 @@ export default function Home() {
           <Feature imgSrc={icon4} title="Verfügbarkeitskalender" />
         </div>
       </main>
+
       <div className={styles.description}>
-          <h2>Willkommen bei 'MiniMeister'!</h2>
-          <p>
-            Wir verstehen die Herausforderungen, wenn es um kleine
-            Reparaturprojekte in Ihrer Wohnung geht. Die Suche nach bezahlbaren
-            Handwerkern kann schwierig sein, besonders wenn die großen
-            Meisterbetriebe zu teuer sind und das Ausbildungsgehalt begrenzt
-            ist. Mit 'MiniMeister' haben Sie die Lösung gefunden.
-            Unsere Webplattform vermittelt Handwerker-Azubis für einfache,
-            schnelle und kostengünstige Projekte direkt in Ihrer Nähe. Durch die
-            Nutzung von Internetrecherche finden Sie schnell verfügbare Azubis,
-            die auch während des Wochenendes arbeiten können.
-            Mit 'MiniMeister' finden Sie nicht nur schnelle Lösungen für Ihre
-            Reparaturen, sondern unterstützen auch die nächste Generation von
-            Handwerkern auf Ihrem Weg zur Meisterschaft. Besuchen Sie heute
-            noch unsere Plattform und entdecken Sie die Vorteile!
-          </p>
-        </div>
+        <h2>Willkommen bei 'MiniMeister'!</h2>
+        <p>
+          Wir verstehen die Herausforderungen, wenn es um kleine
+          Reparaturprojekte in Ihrer Wohnung geht. Die Suche nach bezahlbaren
+          Handwerkern kann schwierig sein, besonders wenn die großen
+          Meisterbetriebe zu teuer sind und das Ausbildungsgehalt begrenzt ist.
+          Mit 'MiniMeister' haben Sie die Lösung gefunden.
+          Unsere Webplattform vermittelt Handwerker-Azubis für einfache,
+          schnelle und kostengünstige Projekte direkt in Ihrer Nähe. Durch die
+          Nutzung von Internetrecherche finden Sie schnell verfügbare Azubis,
+          die auch während des Wochenendes arbeiten können.
+          Mit 'MiniMeister' finden Sie nicht nur schnelle Lösungen für Ihre
+          Reparaturen, sondern unterstützen auch die nächste Generation von
+          Handwerkern auf Ihrem Weg zur Meisterschaft. Besuchen Sie heute
+          noch unsere Plattform und entdecken Sie die Vorteile!
+        </p>
+      </div>
 
       <footer className={styles.footer}>
         <div className={styles.footerContainer}>
-          
           <div className={styles.footerBottom}>
             <div className={styles.footerLeft}>
               <div className={styles.footerAddress}>
@@ -102,4 +115,6 @@ export default function Home() {
       </footer>
     </Layout>
   );
-}
+};
+
+export default Home;

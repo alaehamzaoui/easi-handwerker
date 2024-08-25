@@ -1,5 +1,5 @@
-"use client";
-import { SetStateAction, useState } from 'react';
+"use client"
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from '../../styles/signup.module.css';
@@ -10,19 +10,18 @@ export default function Anmeldung() {
     const [vorname, setVorname] = useState('');
     const [nachname, setNachname] = useState('');
     const [geburtsdatum, setGeburtsdatum] = useState('');
-    const [art, setArt] = useState('');
+    const [kategorie, setKategorie] = useState('');
     const [straße, setStraße] = useState('');
-    const [hausnummer, setHausnummer] = useState('');
-    const [plz, setPlz] = useState('');
     const [stadt, setStadt] = useState('');
     const [telefon, setTelefon] = useState('');
     const [email, setEmail] = useState('');
     const [passwort, setPasswort] = useState('');
     const [passwortWiederholen, setPasswortWiederholen] = useState('');
+    const [stundenlohn, setStundenlohn] = useState('');
     const [popupNachricht, setPopupNachricht] = useState('');
     const [istPopupSichtbar, setIstPopupSichtbar] = useState(false);
 
-    const berechneAlter = (geburtsdatum: string | number | Date) => {
+    const berechneAlter = (geburtsdatum: string) => {
         const geburt = new Date(geburtsdatum);
         const heute = new Date();
         let alter = heute.getFullYear() - geburt.getFullYear();
@@ -33,7 +32,7 @@ export default function Anmeldung() {
         return alter;
     };
     
-    const zeigePopup = (nachricht: SetStateAction<string>) => {
+    const zeigePopup = (nachricht: string) => {
         setPopupNachricht(nachricht);
         setIstPopupSichtbar(true);
     };
@@ -45,7 +44,7 @@ export default function Anmeldung() {
     const handleAbsenden = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
-        if (!vorname || !nachname || !geburtsdatum || !art || !straße || !hausnummer || !plz || !stadt || !telefon || !email || !passwort || !passwortWiederholen) {
+        if (!vorname || !nachname || !geburtsdatum || !kategorie || !straße || !stadt || !telefon || !email || !passwort || !passwortWiederholen || !stundenlohn) {
             zeigePopup('Bitte füllen Sie alle Felder aus');
             return;
         }
@@ -62,45 +61,48 @@ export default function Anmeldung() {
             zeigePopup('Bitte geben Sie eine gültige Email-Adresse ein');
             return;
         }
+        if (parseFloat(stundenlohn) < 12) {
+            zeigePopup(`Der Stundenlohn muss mindestens ${12} € betragen.`);
+            return;
+        }
 
         const benutzerdaten = {
             vorname,
             nachname,
-            geburtsdatum: geburtsdatum + 'T00:00:00Z', 
-            art,
+            geburtsdatum,
+            kategorie,
             straße,
-            hausnummer,
-            plz: parseInt(plz, 10),
             stadt,
-            telefon: parseInt(telefon, 10),
+            telefon,
             email,
-            passwort
+            passwort,
+            stundenlohn: parseFloat(stundenlohn),  
         };
-
-        alert 
-        const response = await fetch('http://localhost:3005/handwerker', {
+        
+        const response = await fetch('http://localhost:8080/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(benutzerdaten),
         });
+        
+
         if (response.ok) {
             zeigePopup('Ihre Registrierung war erfolgreich!');
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 2000);
         } else {
-            zeigePopup('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
+            const errorData = await response.json();
+            zeigePopup(`Ein Fehler ist aufgetreten: ${errorData.error || 'Bitte versuchen Sie es erneut.'}`);
         }
+        
     };
 
     return (
         <div className={styles.mainContainer}>
             <Link href="/">
-                <div className={styles.logoContainer}>
-                    <Image src={logo} alt="Logo" width={200} height={200} />
-                </div>
+            <div className={styles.logoContainer}>
+                <Image src={logo} alt="Logo" width={200} height={200} />
+            </div>
             </Link>
             <div className={styles.container}>
                 <h1 className={`${styles.title} text-black text-4xl mb-7 tracking-wider leading-none`}><strong>Registrierung</strong></h1>
@@ -134,16 +136,18 @@ export default function Anmeldung() {
                         />
                         <select
                             id="kategorie"
-                            value={art}
-                            onChange={(e) => setArt(e.target.value)}
+                            value={kategorie}
+                            onChange={(e) => setKategorie(e.target.value)}
                             className={styles.input}
                         >
                             <option value="">Art der Ausbildung</option>
                             <option value="Maurer/-in">Maurer/-in</option>
-                            <option value="Zimmerer/Zimmerin">Zimmerer/Zimmerin</option>
                             <option value="Dachdecker/-in">Dachdecker/-in</option>
                             <option value="Friseur/-in">Friseur/-in</option>
-                            <option value="Kosmetiker/-in">Kosmetiker/-in</option>
+                            <option value="Elektriker/-in">Elektriker/-in</option>
+                            <option value="Maler/-in">Maler/-in</option>
+
+                            
                         </select>
                     </div>
                     <div className={styles.row}>
@@ -151,26 +155,8 @@ export default function Anmeldung() {
                             type="text"
                             id="straße"
                             value={straße}
-                            placeholder='Straße'
+                            placeholder='Straße & Hausnummer'
                             onChange={(e) => setStraße(e.target.value)}
-                            className={styles.input}
-                        />
-                        <input
-                            type="text"
-                            id="hausnummer"
-                            value={hausnummer}
-                            placeholder='Hausnummer'
-                            onChange={(e) => setHausnummer(e.target.value)}
-                            className={styles.input}
-                        />
-                    </div>
-                    <div className={styles.row}>
-                        <input
-                            type="text"
-                            id="plz"
-                            value={plz}
-                            placeholder='PLZ'
-                            onChange={(e) => setPlz(e.target.value)}
                             className={styles.input}
                         />
                         <input
@@ -218,6 +204,17 @@ export default function Anmeldung() {
                             className={styles.input}
                         />
                     </div>
+                    <div className={styles.row}>
+                        <input
+                            type="number"
+                            id="stundendlohn"
+                            value={stundenlohn}
+                            placeholder='Stundenlohn'
+                            onChange={(e) => setStundenlohn(e.target.value)}
+                            className={styles.input}
+                        />
+                    </div>
+
                     <button type="submit" className={styles.button}>Registrieren</button>
                 </form>
                 <Link href="/login">
