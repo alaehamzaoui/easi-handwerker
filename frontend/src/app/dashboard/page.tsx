@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { FaClock, FaUser, FaLifeRing, FaCheckCircle, FaTimesCircle, FaSignOutAlt } from 'react-icons/fa';
 import Image from 'next/image';
 import ArbeitszeitModal from '../../components/ArbeitszeitModal';
+import PersoenlicheDatenModal from '../../components/PersoenlicheDatenModal';
+import Popup from '../../components/Popup';  
 
 interface Arbeitszeit {
   tag: string;
@@ -20,7 +22,7 @@ interface Auftrag {
   anliegen: string;
 }
 
-interface BenutzerDaten {
+export interface BenutzerDaten {
   vorname: string;
   nachname: string;
   email: string;
@@ -42,6 +44,17 @@ const Dashboard = () => {
   const [istBenutzerDatenModalOffen, setIstBenutzerDatenModalOffen] = useState(false);
   const [istSupportPopupOffen, setIstSupportPopupOffen] = useState(false);
   const [benutzerDaten, setBenutzerDaten] = useState<BenutzerDaten | null>(null);
+  const [popupNachricht, setPopupNachricht] = useState('');
+  const [istPopupSichtbar, setIstPopupSichtbar] = useState(false);
+
+  const zeigePopup = (nachricht: string) => {
+    setPopupNachricht(nachricht);
+    setIstPopupSichtbar(true);
+};
+
+const schließePopup = () => {
+    setIstPopupSichtbar(false);
+};
 
   useEffect(() => {
     const benutzerDatenString = sessionStorage.getItem('benutzer');
@@ -89,12 +102,41 @@ const Dashboard = () => {
     window.location.href = '/login';
   };
 
+  const handleShowBenutzerDatenModal = () => {
+    setIstBenutzerDatenModalOffen(true);  
+  };
+
+  const handleUpdateBenutzerDaten = (aktualisierteBenutzerDaten: BenutzerDaten) => {
+    fetch('http://localhost:8080/updateUserData', {  
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(aktualisierteBenutzerDaten),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setBenutzerDaten(data);  
+        setIstBenutzerDatenModalOffen(false); 
+        zeigePopup('Daten wurden erfolgreich aktualisiert!'); 
+      })
+      .catch((err) => {
+        console.error('Fehler beim Aktualisieren der Benutzerdaten:', err);
+        zeigePopup('Bitte versuchen Sie es erneut.'); 
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-row bg-gray-100 text-black">
       <aside className="bg-yellow-600 w-64 flex flex-col p-6">
         <h1 className="text-4xl font-bold mb-10">MiniMeister</h1>
         <nav>
           <ul>
+          <li className="mb-4">
+              <button onClick={handleShowBenutzerDatenModal} className="flex items-center text-lg font-semibold hover:text-white transition-colors">
+                <FaUser className="mr-2" /> Daten bearbeiten
+              </button>
+            </li>
             <li className="mb-4">
               <button onClick={handleShowSupportPopup} className="flex items-center text-lg font-semibold hover:text-white transition-colors">
                 <FaLifeRing className="mr-2" /> Support
@@ -204,6 +246,16 @@ const Dashboard = () => {
           onCancel={() => setIstModalOffen(false)}
         />
       )}
+
+       {/* BenutzerDaten-Modal */}
+       {istBenutzerDatenModalOffen && benutzerDaten && (
+        <PersoenlicheDatenModal
+          initialBenutzerDaten={benutzerDaten}
+          onSave={handleUpdateBenutzerDaten}
+          onCancel={() => setIstBenutzerDatenModalOffen(false)}
+        />
+      )}
+      {istPopupSichtbar && <Popup message={popupNachricht} onClose={schließePopup} />}
     </div>
   );
 };
