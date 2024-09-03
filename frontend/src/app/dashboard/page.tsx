@@ -14,11 +14,14 @@ interface Arbeitszeit {
 }
 
 interface Auftrag {
-  auftragId: number;
+  user_id: number;
   name: string;
-  ausgewählterTag: string;
-  startZeit: string;
-  endZeit: string;
+  ausgewählter_tag: string;
+  straßehausnummer: string,
+  stadt_plz: string,
+  email: string,
+  start_zeit: string;
+  end_zeit: string;
   anliegen: string;
 }
 
@@ -33,7 +36,7 @@ export interface BenutzerDaten {
   telefon: string;
   stundenlohn: string;
   bild: string;
-  id: string;
+  id: number;
   verified: boolean;
 }
 
@@ -64,10 +67,22 @@ const schließePopup = () => {
       const benutzerDaten = JSON.parse(benutzerDatenString);
       setBenutzerDaten(benutzerDaten);
       fetchArbeitszeiten(benutzerDaten.email);
+      fetchAuftraege(benutzerDaten.id);
     }
   }, []);
 
- 
+  const fetchAuftraege = (user_id: number) => {
+    console.log("Fetching Aufträge for user_id:", user_id);  
+    fetch(`http://localhost:8080/api/aufträge?user_id=${user_id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Aufträge abgerufen:", data);  // Debugging
+        setAuftraege(data);
+      })
+      .catch((err) => console.error('Fehler beim Abrufen der Aufträge:', err));
+};
+
+
   const fetchArbeitszeiten = (email: string) => {
     fetch(`http://localhost:8080/workTimes?email=${email}`)
       .then((res) => res.json())
@@ -223,7 +238,7 @@ const schließePopup = () => {
 
                 
               </table>
-
+      
               {/* Button für Arbeitszeitenbearbeitung */}
               <div className="flex space-x-4">
                 <button
@@ -232,6 +247,21 @@ const schließePopup = () => {
                 >
                   <FaClock className="mr-2" /> Arbeitszeiten bearbeiten
                 </button>
+              </div>
+                            {/* Anzeige der Aufträge */}
+                            <h2 className="text-2xl font-bold mt-8 mb-4">Ihre Aufträge</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {auftraege.length > 0 ? (
+                  auftraege.map((auftrag, index) => (
+                    <div key={index} className="border border-gray-300 p-4 rounded-lg shadow-sm bg-yellow-200 hover:bg-yellow-300 transition-colors">
+                      <p className="text-lg font-semibold">{auftrag.ausgewählter_tag}</p>
+                      <p className="text-gray-700">{auftrag.start_zeit} - {auftrag.end_zeit}</p>
+                      <p className="text-gray-600">{auftrag.anliegen}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-600">Sie haben zurzeit keine Aufträge</p>
+                )}
               </div>
             </div>
           </div>
