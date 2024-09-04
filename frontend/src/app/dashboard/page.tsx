@@ -284,7 +284,13 @@ const schließePopup = () => {
         <ArbeitszeitModal
           initialArbeitszeiten={arbeitszeiten}
           onSave={handleUpdateArbeitszeit}
-          onCancel={() => setIstModalOffen(false)}
+          onCancel={
+            
+            () => { setIstModalOffen(false)
+              fetchArbeitszeiten(benutzerDaten.email)
+            }
+            
+          }
         />
       )}
 
