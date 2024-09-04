@@ -110,7 +110,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			"telefon":     user.Telefon,
 			"kategorie":   user.Kategorie,
 			"stundenlohn": user.Stundenlohn,
-			"bild":        user.Bild,
 		},
 	})
 }
