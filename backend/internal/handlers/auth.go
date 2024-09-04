@@ -33,15 +33,15 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	// URLs zu Bildern von einer externen Quelle
 	switch user.Kategorie {
 	case "Maler/-in":
-		user.Bild = "https://www.w3schools.com/howto/img_avatar.png"
+		user.Bild = "https://cdn0.iconfinder.com/data/icons/streamline-emoji-1/48/169-man-artist-1-512.png"
 	case "Elektriker/-in":
-		user.Bild = "https://www.w3schools.com/howto/img_avatar.png"
+		user.Bild = "https://cdn1.iconfinder.com/data/icons/man-profession-2/64/electrician-job-hire-avatar-512.png"
 	case "Friseur/-in":
-		user.Bild = "https://www.w3schools.com/howto/img_avatar.png"
+		user.Bild = "https://cdn0.iconfinder.com/data/icons/occupation-001-1/64/barber-hipster-occupation-avatar-512.png"
 	case "Maurer/-in":
-		user.Bild = "https://www.w3schools.com/howto/img_avatar.png"
+		user.Bild = "https://cdn4.iconfinder.com/data/icons/occupation-4-man-4/496/mason-bricklayer-brickwork-builder-construction-512.png"
 	case "Dachdecker/-in":
-		user.Bild = "https://www.w3schools.com/howto/img_avatar.png"
+		user.Bild = "https://cdn4.iconfinder.com/data/icons/roof-housetop-material-1/100/roofer_repair_roof_housetop_material_waterproof_temperature-512.png"
 	}
 
 	db.DB.Create(&user)
@@ -105,9 +105,11 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			"vorname":     user.Vorname,
 			"nachname":    user.Nachname,
 			"email":       user.Email,
+			"straße":      user.Straße,
+			"stadt":       user.Stadt,
+			"telefon":     user.Telefon,
 			"kategorie":   user.Kategorie,
 			"stundenlohn": user.Stundenlohn,
-			"verified":    user.Verified,
 		},
 	})
 }

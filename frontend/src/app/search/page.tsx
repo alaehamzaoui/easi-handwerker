@@ -5,19 +5,27 @@ import Image from 'next/image';
 import logo from "../../images/MiniMeister-Logo-white.png";
 import malerbild from "../../images/maler.png";
 import elektrikerbild from "../../images/elektriker.png";
+import mauererbild from "../../images/mauerer.png";
+import dachdeckerbild from "../../images/dachdecker.png";
+import friseurbild from "../../images/friseur.png";
+
+
 
 // Mapping für Kategorien zu Bildern
 const handwerkerBilder = {
   "Maler/-in": malerbild,
   "Elektriker/-in": elektrikerbild,
-  // Füge weitere Bilder entsprechend hinzu
+  "Maurer/-in": mauererbild,
+  "Dachdecker/-in": dachdeckerbild,
+  "Friseur/-in": friseurbild,
+
 };
 
 // Funktion zur Auswahl des passenden Bildes basierend auf der Kategorie
 const getBildForKategorie = (kategorie: string) => {
   // Kategorie in Kleinbuchstaben umwandeln und die letzten 3 Zeichen entfernen
-  const key = kategorie.toLowerCase().slice(0, -3);
-  return handwerkerBilder[key] || logo; // Fallback-Bild, wenn keine Kategorie passt
+  //const key = kategorie.toLowerCase().slice(0, -3);
+  return handwerkerBilder[kategorie] || logo; // Fallback-Bild, wenn keine Kategorie passt
 };
 
 interface Handwerker {
@@ -59,7 +67,7 @@ export default function Startseite() {
 
   const handleCardClick = (id?: number) => {
     if (id !== undefined) {
-      console.log("Navigiere zu Handwerker mit ID:", id); // Überprüfen Sie, ob die ID korrekt ist
+      console.log("Navigiere zu Handwerker mit ID:", id); // Überprüfe, ob die ID korrekt ist
       router.push(`/profile/${id}`);
     } else {
       console.error("Fehler: Handwerker-ID ist undefined");
@@ -115,8 +123,8 @@ export default function Startseite() {
               onClick={() => handleCardClick(handwerker.id)}
               className="border border-gray-300 p-8 rounded-xl shadow-2xl bg-white transition transform hover:-translate-y-2 hover:shadow-3xl hover:bg-gray-200 cursor-pointer flex flex-col items-center"
             >
-              <Image
-                src={getBildForKategorie(handwerker.kategorie)}
+              <img
+                src={handwerker.bild}
                 alt={handwerker.kategorie}
                 width={128}
                 height={128}

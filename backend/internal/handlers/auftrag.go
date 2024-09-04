@@ -30,14 +30,22 @@ func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAufträgeHandler(w http.ResponseWriter, r *http.Request) {
-	var aufträge []models.Auftrag
+	userID := r.URL.Query().Get("user_id")
+    if userID == "" {
+        http.Error(w, "User ID erforderlich", http.StatusBadRequest)
+        return
+    }
 
-	if err := db.DB.Find(&aufträge).Error; err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(map[string]string{"error": "Fehler beim Abrufen der Aufträge"})
-		return
-	}
+    var aufträge []models.Auftrag
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(aufträge)
+    if err := db.DB.Where("user_id = ?", userID).Find(&aufträge).Error; err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        json.NewEncoder(w).Encode(map[string]string{"error": "Fehler beim Abrufen der Aufträge"})
+        return
+    }
+
+    log.Println("Abgerufene Aufträge:", aufträge)  // Pour vérifier ce qui est récupéré
+
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(aufträge)
 }

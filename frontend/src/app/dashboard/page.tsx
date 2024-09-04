@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { FaClock, FaUser, FaLifeRing, FaCheckCircle, FaTimesCircle, FaSignOutAlt } from 'react-icons/fa';
 import Image from 'next/image';
 import ArbeitszeitModal from '../../components/ArbeitszeitModal';
+import PersoenlicheDatenModal from '../../components/PersoenlicheDatenModal';
+import Popup from '../../components/Popup';  
 
 interface Arbeitszeit {
   tag: string;
@@ -12,15 +14,18 @@ interface Arbeitszeit {
 }
 
 interface Auftrag {
-  auftragId: number;
+  user_id: number;
   name: string;
-  ausgewählterTag: string;
-  startZeit: string;
-  endZeit: string;
+  ausgewählter_tag: string;
+  straßehausnummer: string,
+  stadt_plz: string,
+  email: string,
+  start_zeit: string;
+  end_zeit: string;
   anliegen: string;
 }
 
-interface BenutzerDaten {
+export interface BenutzerDaten {
   vorname: string;
   nachname: string;
   email: string;
@@ -31,7 +36,7 @@ interface BenutzerDaten {
   telefon: string;
   stundenlohn: string;
   bild: string;
-  id: string;
+  id: number;
   verified: boolean;
 }
 
@@ -42,6 +47,19 @@ const Dashboard = () => {
   const [istBenutzerDatenModalOffen, setIstBenutzerDatenModalOffen] = useState(false);
   const [istSupportPopupOffen, setIstSupportPopupOffen] = useState(false);
   const [benutzerDaten, setBenutzerDaten] = useState<BenutzerDaten | null>(null);
+  const [popupNachricht, setPopupNachricht] = useState('');
+  const [istPopupSichtbar, setIstPopupSichtbar] = useState(false);
+  const [istAuftragModalOffen, setIstAuftragModalOffen] = useState(false);
+  const [ausgewählterAuftrag, setAusgewählterAuftrag] = useState<Auftrag | null>(null);
+
+  const zeigePopup = (nachricht: string) => {
+    setPopupNachricht(nachricht);
+    setIstPopupSichtbar(true);
+};
+
+const schließePopup = () => {
+    setIstPopupSichtbar(false);
+};
 
   useEffect(() => {
     const benutzerDatenString = sessionStorage.getItem('benutzer');
@@ -51,10 +69,22 @@ const Dashboard = () => {
       const benutzerDaten = JSON.parse(benutzerDatenString);
       setBenutzerDaten(benutzerDaten);
       fetchArbeitszeiten(benutzerDaten.email);
+      fetchAuftraege(benutzerDaten.id);
     }
   }, []);
 
- 
+  const fetchAuftraege = (user_id: number) => {
+    console.log("Fetching Aufträge for user_id:", user_id);  
+    fetch(`http://localhost:8080/api/aufträge?user_id=${user_id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Aufträge abgerufen:", data);  // Debugging
+        setAuftraege(data);
+      })
+      .catch((err) => console.error('Fehler beim Abrufen der Aufträge:', err));
+};
+
+
   const fetchArbeitszeiten = (email: string) => {
     fetch(`http://localhost:8080/workTimes?email=${email}`)
       .then((res) => res.json())
@@ -89,12 +119,46 @@ const Dashboard = () => {
     window.location.href = '/login';
   };
 
+  const handleShowBenutzerDatenModal = () => {
+    setIstBenutzerDatenModalOffen(true);  
+  };
+
+  const handleShowAuftragModal = (auftrag: Auftrag) => {
+    setAusgewählterAuftrag(auftrag);
+    setIstAuftragModalOffen(true);
+  };
+
+  const handleUpdateBenutzerDaten = (aktualisierteBenutzerDaten: BenutzerDaten) => {
+    fetch('http://localhost:8080/updateUserData', {  
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(aktualisierteBenutzerDaten),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setBenutzerDaten(data);  
+        setIstBenutzerDatenModalOffen(false); 
+        zeigePopup('Daten wurden erfolgreich aktualisiert!'); 
+      })
+      .catch((err) => {
+        console.error('Fehler beim Aktualisieren der Benutzerdaten:', err);
+        zeigePopup('Bitte versuchen Sie es erneut.'); 
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-row bg-gray-100 text-black">
       <aside className="bg-yellow-600 w-64 flex flex-col p-6">
         <h1 className="text-4xl font-bold mb-10">MiniMeister</h1>
         <nav>
           <ul>
+          <li className="mb-4">
+              <button onClick={handleShowBenutzerDatenModal} className="flex items-center text-lg font-semibold hover:text-white transition-colors">
+                <FaUser className="mr-2" /> Daten bearbeiten
+              </button>
+            </li>
             <li className="mb-4">
               <button onClick={handleShowSupportPopup} className="flex items-center text-lg font-semibold hover:text-white transition-colors">
                 <FaLifeRing className="mr-2" /> Support
@@ -123,7 +187,7 @@ const Dashboard = () => {
               {/* Benutzerkarte mit Verifizierungsstatus und Buttons */}
               {benutzerDaten && (
                 <div className="bg-white shadow-md rounded p-6 mb-8 text-center relative">
-                  <Image
+                  <img
                     className="w-32 h-32 rounded-full mx-auto mb-4"
                     src={benutzerDaten?.bild}  // Verwende externe Bild-URLs
                     alt="Persönliche Daten"
@@ -181,7 +245,7 @@ const Dashboard = () => {
 
                 
               </table>
-
+      
               {/* Button für Arbeitszeitenbearbeitung */}
               <div className="flex space-x-4">
                 <button
@@ -190,6 +254,25 @@ const Dashboard = () => {
                 >
                   <FaClock className="mr-2" /> Arbeitszeiten bearbeiten
                 </button>
+              </div>
+                                          {/* Aufträge */}
+              <h2 className="text-2xl font-bold mt-8 mb-4">Ihre Aufträge</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {auftraege.length > 0 ? (
+                  auftraege.map((auftrag, index) => (
+                    <div
+                      key={index}
+                      className="border border-gray-300 p-4 rounded-lg shadow-sm bg-yellow-200 hover:bg-yellow-300 transition-colors cursor-pointer"
+                      onClick={() => handleShowAuftragModal(auftrag)}
+                    >
+                      <p className="text-lg font-semibold">{auftrag.ausgewählter_tag}</p>
+                      <p className="text-gray-700">{auftrag.start_zeit} - {auftrag.end_zeit}</p>
+                      <p className="text-gray-600">{auftrag.anliegen}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-600">Sie haben zurzeit keine Aufträge</p>
+                )}
               </div>
             </div>
           </div>
@@ -204,6 +287,37 @@ const Dashboard = () => {
           onCancel={() => setIstModalOffen(false)}
         />
       )}
+
+       {/* BenutzerDaten-Modal */}
+       {istBenutzerDatenModalOffen && benutzerDaten && (
+        <PersoenlicheDatenModal
+          initialBenutzerDaten={benutzerDaten}
+          onSave={handleUpdateBenutzerDaten}
+          onCancel={() => setIstBenutzerDatenModalOffen(false)}
+        />
+      )}
+
+      {/* Auftrags-Modal */}
+      {istAuftragModalOffen && ausgewählterAuftrag && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex justify-center items-center">
+          <div className="bg-white p-6 rounded shadow-lg max-w-md w-full">
+            <h2 className="text-2xl font-bold mb-4">Auftragsdetails</h2>
+            <p className="mb-2"><strong>Datum:</strong> {ausgewählterAuftrag.ausgewählter_tag}</p>
+            <p className="mb-2"><strong>Zeit:</strong> {ausgewählterAuftrag.start_zeit} - {ausgewählterAuftrag.end_zeit}</p>
+            <p className="mb-2"><strong>Anliegen:</strong> {ausgewählterAuftrag.anliegen}</p>
+            <p className="mb-2"><strong>Adresse:</strong> {ausgewählterAuftrag.straßehausnummer}, {ausgewählterAuftrag.stadt_plz}</p>
+            <p className="mb-2"><strong>E-Mail:</strong> {ausgewählterAuftrag.email}</p>
+            <button
+              className="bg-yellow-600 text-white p-2 rounded"
+              onClick={() => setIstAuftragModalOffen(false)}
+            >
+              Schließen
+            </button>
+          </div>
+        </div>
+      )}
+
+      {istPopupSichtbar && <Popup message={popupNachricht} onClose={schließePopup} />}
     </div>
   );
 };

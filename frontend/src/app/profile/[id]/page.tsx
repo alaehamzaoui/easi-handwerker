@@ -5,6 +5,29 @@ import Image from 'next/image';
 import logo from "../../../images/MiniMeister-Logo-white.png";
 import styles from '../../../styles/profile.module.css';
 import Popup from '../../../components/Popup';
+import malerbild from "../../../images/maler.png";
+import elektrikerbild from "../../../images/elektriker.png";
+import mauererbild from "../../../images/mauerer.png";
+import dachdeckerbild from "../../../images/dachdecker.png";
+import friseurbild from "../../../images/friseur.png";
+
+
+// Mapping für Kategorien zu Bildern
+const handwerkerBilder = {
+  "Maler/-in": malerbild,
+  "Elektriker/-in": elektrikerbild,
+  "Maurer/-in": mauererbild,
+  "Dachdecker/-in": dachdeckerbild,
+  "Friseur/-in": friseurbild,
+
+};
+
+// Funktion zur Auswahl des passenden Bildes basierend auf der Kategorie
+const getBildForKategorie = (kategorie: string) => {
+  // Kategorie in Kleinbuchstaben umwandeln und die letzten 3 Zeichen entfernen
+  //const key = kategorie.toLowerCase().slice(0, -3);
+  return handwerkerBilder[kategorie] || logo; // Fallback-Bild, wenn keine Kategorie passt
+};
 interface Arbeitszeit {
   tag: string;
   von: string;
@@ -305,7 +328,7 @@ const buchen = async (e: React.FormEvent) => {
             </div>
           </div>
           <div className="flex-1 flex flex-col items-center">
-            <Image src={""} width={128} height={128} alt={`${vorname} ${nachname}`} className="w-32 h-32 rounded-full mb-4" />
+            <img src={bild} width={128} height={128} alt={`${vorname} ${nachname}`} className="w-32 h-32 rounded-full mb-4" />
             <h1 className="text-3xl font-bold">{`${vorname} ${nachname}`}</h1>
             <p className="text-gray-600 mb-4">{kategorie}</p>
             <div className="space-y-4">
