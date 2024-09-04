@@ -31,6 +31,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	user.Passwort = string(hashedPassword)
 
 	// URLs zu Bildern von einer externen Quelle
+	//neue Bilder hier
 	switch user.Kategorie {
 	case "Maler/-in":
 		user.Bild = "https://i.imgur.com/z9qawA7.png"
