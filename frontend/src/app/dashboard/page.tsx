@@ -180,7 +180,7 @@ const schließePopup = () => {
               {/* Benutzerkarte mit Verifizierungsstatus und Buttons */}
               {benutzerDaten && (
                 <div className="bg-white shadow-md rounded p-6 mb-8 text-center relative">
-                  <Image
+                  <img
                     className="w-32 h-32 rounded-full mx-auto mb-4"
                     src={benutzerDaten?.bild}  // Verwende externe Bild-URLs
                     alt="Persönliche Daten"

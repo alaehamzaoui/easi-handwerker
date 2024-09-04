@@ -90,6 +90,9 @@ export default function Anmeldung() {
 
         if (response.ok) {
             zeigePopup('Ihre Registrierung war erfolgreich!');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
         } else {
             const errorData = await response.json();
             zeigePopup(`Ein Fehler ist aufgetreten: ${errorData.error || 'Bitte versuchen Sie es erneut.'}`);
