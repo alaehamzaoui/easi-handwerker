@@ -49,6 +49,8 @@ const Dashboard = () => {
   const [benutzerDaten, setBenutzerDaten] = useState<BenutzerDaten | null>(null);
   const [popupNachricht, setPopupNachricht] = useState('');
   const [istPopupSichtbar, setIstPopupSichtbar] = useState(false);
+  const [istAuftragModalOffen, setIstAuftragModalOffen] = useState(false);
+  const [ausgewählterAuftrag, setAusgewählterAuftrag] = useState<Auftrag | null>(null);
 
   const zeigePopup = (nachricht: string) => {
     setPopupNachricht(nachricht);
@@ -119,6 +121,11 @@ const schließePopup = () => {
 
   const handleShowBenutzerDatenModal = () => {
     setIstBenutzerDatenModalOffen(true);  
+  };
+
+  const handleShowAuftragModal = (auftrag: Auftrag) => {
+    setAusgewählterAuftrag(auftrag);
+    setIstAuftragModalOffen(true);
   };
 
   const handleUpdateBenutzerDaten = (aktualisierteBenutzerDaten: BenutzerDaten) => {
@@ -248,12 +255,16 @@ const schließePopup = () => {
                   <FaClock className="mr-2" /> Arbeitszeiten bearbeiten
                 </button>
               </div>
-                            {/* Anzeige der Aufträge */}
-                            <h2 className="text-2xl font-bold mt-8 mb-4">Ihre Aufträge</h2>
+                                          {/* Aufträge */}
+              <h2 className="text-2xl font-bold mt-8 mb-4">Ihre Aufträge</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {auftraege.length > 0 ? (
+                {auftraege.length > 0 ? (
                   auftraege.map((auftrag, index) => (
-                    <div key={index} className="border border-gray-300 p-4 rounded-lg shadow-sm bg-yellow-200 hover:bg-yellow-300 transition-colors">
+                    <div
+                      key={index}
+                      className="border border-gray-300 p-4 rounded-lg shadow-sm bg-yellow-200 hover:bg-yellow-300 transition-colors cursor-pointer"
+                      onClick={() => handleShowAuftragModal(auftrag)}
+                    >
                       <p className="text-lg font-semibold">{auftrag.ausgewählter_tag}</p>
                       <p className="text-gray-700">{auftrag.start_zeit} - {auftrag.end_zeit}</p>
                       <p className="text-gray-600">{auftrag.anliegen}</p>
@@ -285,6 +296,27 @@ const schließePopup = () => {
           onCancel={() => setIstBenutzerDatenModalOffen(false)}
         />
       )}
+
+      {/* Auftrags-Modal */}
+      {istAuftragModalOffen && ausgewählterAuftrag && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex justify-center items-center">
+          <div className="bg-white p-6 rounded shadow-lg max-w-md w-full">
+            <h2 className="text-2xl font-bold mb-4">Auftragsdetails</h2>
+            <p className="mb-2"><strong>Datum:</strong> {ausgewählterAuftrag.ausgewählter_tag}</p>
+            <p className="mb-2"><strong>Zeit:</strong> {ausgewählterAuftrag.start_zeit} - {ausgewählterAuftrag.end_zeit}</p>
+            <p className="mb-2"><strong>Anliegen:</strong> {ausgewählterAuftrag.anliegen}</p>
+            <p className="mb-2"><strong>Adresse:</strong> {ausgewählterAuftrag.straßehausnummer}, {ausgewählterAuftrag.stadt_plz}</p>
+            <p className="mb-2"><strong>E-Mail:</strong> {ausgewählterAuftrag.email}</p>
+            <button
+              className="bg-yellow-600 text-white p-2 rounded"
+              onClick={() => setIstAuftragModalOffen(false)}
+            >
+              Schließen
+            </button>
+          </div>
+        </div>
+      )}
+
       {istPopupSichtbar && <Popup message={popupNachricht} onClose={schließePopup} />}
     </div>
   );
