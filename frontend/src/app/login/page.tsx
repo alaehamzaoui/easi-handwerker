@@ -46,7 +46,8 @@ export default function Anmeldung() {
             // JWT-Token im localStorage speichern
             sessionStorage.setItem('token', daten.token);
             sessionStorage.setItem('benutzer', JSON.stringify(daten.benutzer));
-    
+            
+            alert(daten.benutzer.verified);
             setTimeout(() => {
                 window.location.href = '/dashboard';
             }, 2000);

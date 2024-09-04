@@ -107,6 +107,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			"email":       user.Email,
 			"kategorie":   user.Kategorie,
 			"stundenlohn": user.Stundenlohn,
+			"verified":    user.Verified,
 		},
 	})
 }
