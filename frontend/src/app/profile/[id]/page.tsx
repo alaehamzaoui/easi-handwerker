@@ -56,7 +56,7 @@ const ProfilDetails = () => {
       fetch(`http://localhost:8080/handwerker/${id}`)
         .then(response => {
           if (!response.ok) {
-            throw new Error('Handwerker nicht gefunden');
+         //   throw new Error('Handwerker nicht gefunden');
           }
           return response.json();
         })
