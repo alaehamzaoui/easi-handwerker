@@ -47,7 +47,7 @@ export default function Anmeldung() {
             sessionStorage.setItem('token', daten.token);
             sessionStorage.setItem('benutzer', JSON.stringify(daten.benutzer));
             
-            alert(daten.benutzer.verified);
+            //alert(daten.benutzer.verified);
             setTimeout(() => {
                 window.location.href = '/dashboard';
             }, 2000);
