@@ -25,14 +25,14 @@ func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Speichere den Auftrag in der Datenbank
+	// Auftrag in der Datenbank speichern hier
 	if err := db.DB.Create(&auftrag).Error; err != nil {
 		log.Println("Fehler beim Speichern des Auftrags:", err)
 		http.Error(w, "Fehler beim Speichern des Auftrags", http.StatusInternalServerError)
 		return
 	}
 
-	// Generiere die PDF-Rechnung
+	//  PDF-Rechnung wird hier erstellt
 	pdf, err := erstelleRechnungPDF(auftrag)
 	if err != nil {
 		log.Println("Fehler beim Erstellen der PDF-Rechnung:", err)
@@ -59,7 +59,7 @@ func sendeAuftragsbestaetigungMitAnhang(auftrag models.Auftrag, pdfData []byte) 
 	mailer.SetHeader("To", auftrag.Email)
 	mailer.SetHeader("Subject", "Auftragsbestätigung und Rechnung")
 
-	// Setze den E-Mail-Inhalt
+	// hier können wir den Inhalt der E-Mail bearbeiten
 	body := fmt.Sprintf(`
 		Sehr geehrte/r %s,
 
@@ -80,16 +80,15 @@ func sendeAuftragsbestaetigungMitAnhang(auftrag models.Auftrag, pdfData []byte) 
 
 	mailer.SetBody("text/plain", body)
 
-	// Füge die PDF-Rechnung als Anhang hinzu
+	// PDF-Rechnung als Anhang hinzu
 	mailer.Attach("Rechnung.pdf", gomail.SetCopyFunc(func(w io.Writer) error {
 		_, err := w.Write(pdfData)
 		return err
 	}))
 
-	// SMTP-Einstellungen
+	// SMTP-Einstellungen für unseren E-Mail-Server
 	dialer := gomail.NewDialer("smtp.gmail.com", 587, "info.minimeister@gmail.com", "jzafrboycrqjlifs")
 
-	// Sende die E-Mail
 	if err := dialer.DialAndSend(mailer); err != nil {
 		return err
 	}
@@ -97,13 +96,13 @@ func sendeAuftragsbestaetigungMitAnhang(auftrag models.Auftrag, pdfData []byte) 
 	return nil
 }
 
-// Funktion zum Erstellen der PDF-Rechnung
+// ich erstelle die pdf Rechnung hier
 func erstelleRechnungPDF(auftrag models.Auftrag) ([]byte, error) {
 	pdf := gopdf.GoPdf{}
 	pdf.Start(gopdf.Config{PageSize: *gopdf.PageSizeA4})
 	pdf.AddPage()
 
-	// Schriftart hinzufügen
+	// Schriftart wird hier bearbeitet und auch größe
 	err := pdf.AddTTFFont("arial", "assets/fonts/arial.ttf")
 	if err != nil {
 		return nil, err
@@ -113,14 +112,14 @@ func erstelleRechnungPDF(auftrag models.Auftrag) ([]byte, error) {
 		return nil, err
 	}
 
-	// Fügen das Logo
+	//  Logo von assets/images/logo.png wird hier hinzugefügt
 	err = pdf.Image("assets/images/logo.png", 200, 10, nil) // Positioniere das Bild solen wir hier ändern
 	if err != nil {
 		return nil, err
 	}
 	pdf.Br(70) // Platz für das Bild
 
-	// Beispielinhalt der PDF
+	// Beispielinhalt der PDF , soll aber noch bearbeitet werden
 	pdf.Cell(nil, "Rechnung")
 	pdf.Br(50)
 	pdf.Cell(nil, fmt.Sprintf("Auftragnehmer: %s", auftrag.Name))
@@ -156,7 +155,7 @@ func GetAufträgeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("Abgerufene Aufträge:", aufträge) // Pour vérifier ce qui est récupéré
+	log.Println("Abgerufene Aufträge:", aufträge)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(aufträge)
