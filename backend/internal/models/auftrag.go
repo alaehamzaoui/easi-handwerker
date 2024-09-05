@@ -14,4 +14,5 @@ type Auftrag struct {
 	AusgewählterTag  string `json:"ausgewählter_tag"`
 	StartZeit        string `json:"start_zeit"`
 	EndZeit          string `json:"end_zeit"`
+	Status           string `json:"status"`
 }

@@ -24,6 +24,7 @@ func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Ungültige Daten", http.StatusBadRequest)
 		return
 	}
+	auftrag.Status = "Neu"
 
 	// Auftrag in der Datenbank speichern hier
 	if err := db.DB.Create(&auftrag).Error; err != nil {
