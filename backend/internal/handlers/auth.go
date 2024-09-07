@@ -48,14 +48,15 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	db.DB.Create(&user)
 
 	defaultWorkTimes := []models.WorkTime{
-		{UserID: user.ID, Tag: "Montag", Von: "", Bis: ""},
-		{UserID: user.ID, Tag: "Dienstag", Von: "", Bis: ""},
-		{UserID: user.ID, Tag: "Mittwoch", Von: "", Bis: ""},
-		{UserID: user.ID, Tag: "Donnerstag", Von: "", Bis: ""},
-		{UserID: user.ID, Tag: "Freitag", Von: "", Bis: ""},
-		{UserID: user.ID, Tag: "Samstag", Von: "", Bis: ""},
-		{UserID: user.ID, Tag: "Sonntag", Von: "", Bis: ""},
+		{UserID: user.ID, Tag: "Montag", Von: "", Bis: "", Gebucht: false},
+		{UserID: user.ID, Tag: "Dienstag", Von: "", Bis: "", Gebucht: false},
+		{UserID: user.ID, Tag: "Mittwoch", Von: "", Bis: "", Gebucht: false},
+		{UserID: user.ID, Tag: "Donnerstag", Von: "", Bis: "", Gebucht: false},
+		{UserID: user.ID, Tag: "Freitag", Von: "", Bis: "", Gebucht: false},
+		{UserID: user.ID, Tag: "Samstag", Von: "", Bis: "", Gebucht: false},
+		{UserID: user.ID, Tag: "Sonntag", Von: "", Bis: "", Gebucht: false},
 	}
+
 	db.DB.Create(&defaultWorkTimes)
 
 	w.WriteHeader(http.StatusCreated)

@@ -16,7 +16,7 @@ func main() {
 	db.ConnectDB()
 
 	db.DB.AutoMigrate(&models.User{}, &models.WorkTime{}, &models.Auftrag{})
-	//clearTables()
+	clearTables()
 
 	r := mux.NewRouter()
 
@@ -27,6 +27,7 @@ func main() {
 	r.HandleFunc("/searchHandwerker", handlers.SearchHandwerkerHandler).Methods("GET")
 	r.HandleFunc("/handwerker/verify/{id}", handlers.VerifyHandwerkerHandler).Methods("POST")
 	r.HandleFunc("/handwerker/notverify/{id}", handlers.NotVerifyHandwerkerHandler).Methods("POST")
+	r.HandleFunc("/gebucht/{id}/{tag}", handlers.HandleGebuchtWert).Methods("POST")
 	r.HandleFunc("/api/auftrag", handlers.CreateAuftragHandler).Methods("POST")
 	r.HandleFunc("/api/aufträge", handlers.GetAufträgeHandler).Methods("GET")
 

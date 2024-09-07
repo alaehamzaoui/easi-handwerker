@@ -52,7 +52,7 @@ const Home: React.FC = () => {
             </div>
           </div>
           <div className={styles.button}>
-            <Link href="/search" legacyBehavior>
+            <Link href="/Suche" legacyBehavior>
               <a>KUNDE</a>
             </Link>
             <div className={styles.overlay}>

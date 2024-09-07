@@ -90,7 +90,7 @@ export default function Anmeldung() {
                     </div>
                     <button type="submit" className={styles.button}>Anmeldung</button>
                 </form>
-                <Link href="/signup">
+                <Link href="/registrierung">
                     <p className={`${styles.registerText} text-black`}>kein Account? <button className={styles.registerButton}><strong>Registrierung</strong></button></p>
                 </Link>
             </div>

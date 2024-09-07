@@ -4,7 +4,10 @@ import (
 	"backend/internal/db"
 	"backend/internal/models"
 	"encoding/json"
+	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"gorm.io/gorm"
 )
@@ -102,4 +105,32 @@ func UpdateWorkTimesHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"message": "Arbeitszeiten erfolgreich aktualisiert"})
+}
+
+func HandleGebuchtWert(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	//log.Println("wurde gerufen")
+	tag := vars["tag"]
+
+	log.Println(id)
+	//tag = "Montag"
+	log.Println(tag, "alo")
+
+	//var arbeitzeit models.WorkTime
+	/*
+		if err := db.DB.Where("user_id = ? AND tag = ? ", id, tag).Error; err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(map[string]string{"error": "Handwerler nicht gefunden"})
+			return
+		}
+		arbeitzeit.Gebucht = true */
+	//db.Model(&arbeitzeit{}).Where("id = ? AND age = ?", 5, 30).Updates(ar{Name: "new_name", Age: new_age})
+
+	db.DB.Model(&models.WorkTime{}).Where("tag = ? AND user_id = ?", tag, id).Updates(models.WorkTime{Gebucht: true})
+	//db.DB.Save(&arbeitzeit)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "Gebucht variable updated "})
+
 }
