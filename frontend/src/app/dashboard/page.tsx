@@ -78,7 +78,7 @@ const schließePopup = () => {
     fetch(`http://localhost:8080/api/aufträge?user_id=${user_id}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("Aufträge abgerufen:", data);  // Debugging
+       // console.log("Aufträge abgerufen:", data);  // Debugging
         setAuftraege(data);
       })
       .catch((err) => console.error('Fehler beim Abrufen der Aufträge:', err));
@@ -284,7 +284,13 @@ const schließePopup = () => {
         <ArbeitszeitModal
           initialArbeitszeiten={arbeitszeiten}
           onSave={handleUpdateArbeitszeit}
-          onCancel={() => setIstModalOffen(false)}
+          onCancel={
+            
+            () => { setIstModalOffen(false)
+              fetchArbeitszeiten(benutzerDaten.email)
+            }
+            
+          }
         />
       )}
 
@@ -296,6 +302,7 @@ const schließePopup = () => {
           onCancel={() => setIstBenutzerDatenModalOffen(false)}
         />
       )}
+          {/* hier ist das Modal */}
 
       {/* Auftrags-Modal */}
       {istAuftragModalOffen && ausgewählterAuftrag && (
