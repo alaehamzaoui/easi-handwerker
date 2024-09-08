@@ -29,7 +29,6 @@ func main() {
 	r.HandleFunc("/handwerker/notverify/{id}", handlers.NotVerifyHandwerkerHandler).Methods("POST")
 	r.HandleFunc("/api/auftrag", handlers.CreateAuftragHandler).Methods("POST")
 	r.HandleFunc("/api/aufträge", handlers.GetAufträgeHandler).Methods("GET")
-
 	r.HandleFunc("/handwerker/{id}", handlers.HandwerkerDetailsHandler).Methods("GET")
 	r.HandleFunc("/updateUserData", handlers.UpdateUserDataHandler).Methods("POST")
 

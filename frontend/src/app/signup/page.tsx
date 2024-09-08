@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,10 +18,11 @@ export default function Anmeldung() {
     const [passwort, setPasswort] = useState('');
     const [passwortWiederholen, setPasswortWiederholen] = useState('');
     const [stundenlohn, setStundenlohn] = useState('');
+    const [vertrag, setVertrag] = useState(null);
     const [popupNachricht, setPopupNachricht] = useState('');
     const [istPopupSichtbar, setIstPopupSichtbar] = useState(false);
 
-    const berechneAlter = (geburtsdatum: string) => {
+    const berechneAlter = (geburtsdatum) => {
         const geburt = new Date(geburtsdatum);
         const heute = new Date();
         let alter = heute.getFullYear() - geburt.getFullYear();
@@ -32,7 +33,7 @@ export default function Anmeldung() {
         return alter;
     };
     
-    const zeigePopup = (nachricht: string) => {
+    const zeigePopup = (nachricht) => {
         setPopupNachricht(nachricht);
         setIstPopupSichtbar(true);
     };
@@ -41,10 +42,20 @@ export default function Anmeldung() {
         setIstPopupSichtbar(false);
     };
 
-    const handleAbsenden = async (e: { preventDefault: () => void; }) => {
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file && file.type !== 'application/pdf') {
+            zeigePopup('Bitte laden Sie nur PDF-Dateien hoch.');
+            e.target.value = ''; 
+            return;
+        }
+        setVertrag(file);
+    };
+
+    const handleAbsenden = async (e) => {
         e.preventDefault();
 
-        if (!vorname || !nachname || !geburtsdatum || !kategorie || !straße || !stadt || !telefon || !email || !passwort || !passwortWiederholen || !stundenlohn) {
+        if (!vorname || !nachname || !geburtsdatum || !kategorie || !straße || !stadt || !telefon || !email || !passwort || !passwortWiederholen || !stundenlohn || !vertrag) {
             zeigePopup('Bitte füllen Sie alle Felder aus');
             return;
         }
@@ -66,27 +77,28 @@ export default function Anmeldung() {
             return;
         }
 
-        const benutzerdaten = {
-            vorname,
-            nachname,
-            geburtsdatum,
-            kategorie,
-            straße,
-            stadt,
-            telefon,
-            email,
-            passwort,
-            stundenlohn: parseFloat(stundenlohn),  
-        };
-        
+        if (vertrag && vertrag.size > 10 * 1024 * 1024) {
+            zeigePopup('Die Datei ist größer als 10 MB. Bitte laden Sie eine kleinere Datei hoch.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("vorname", vorname);
+        formData.append("nachname", nachname);
+        formData.append("geburtsdatum", geburtsdatum);
+        formData.append("kategorie", kategorie);
+        formData.append("straße", straße);
+        formData.append("stadt", stadt);
+        formData.append("telefon", telefon);
+        formData.append("email", email);
+        formData.append("passwort", passwort);
+        formData.append("stundenlohn", stundenlohn);
+        formData.append("vertrag", vertrag);
+
         const response = await fetch('http://localhost:8080/register', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(benutzerdaten),
+            body: formData,
         });
-        
 
         if (response.ok) {
             zeigePopup('Ihre Registrierung war erfolgreich!');
@@ -97,7 +109,6 @@ export default function Anmeldung() {
             const errorData = await response.json();
             zeigePopup(`Ein Fehler ist aufgetreten: ${errorData.error || 'Bitte versuchen Sie es erneut.'}`);
         }
-        
     };
 
     return (
@@ -149,8 +160,6 @@ export default function Anmeldung() {
                             <option value="Friseur/-in">Friseur/-in</option>
                             <option value="Elektriker/-in">Elektriker/-in</option>
                             <option value="Maler/-in">Maler/-in</option>
-
-                            
                         </select>
                     </div>
                     <div className={styles.row}>
@@ -217,7 +226,18 @@ export default function Anmeldung() {
                             className={styles.input}
                         />
                     </div>
-
+                    <div className={styles.row}>
+                         <label htmlFor="vertrag" className={styles.label}>Vertrag (PDF max 10 Mb) :</label>
+                    </div>
+                    <div className={styles.row}>
+                        <input
+                            type="file"
+                            id="vertrag"
+                            accept="application/pdf"
+                            onChange={handleFileChange}
+                            className={styles.input}
+                        />
+                    </div>
                     <button type="submit" className={styles.button}>Registrieren</button>
                 </form>
                 <Link href="/login">

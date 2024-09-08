@@ -17,12 +17,13 @@ interface BenutzerDaten {
   bild: string;
   id: string;
   verified: boolean;
+  vertrag: string;
 }
 
 const Admin = () => {
   const [handwerkers, setHandwerkers] = useState<BenutzerDaten[]>([]);
   const [isadmin, setAdmin] = useState<BenutzerDaten | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showPDF, setShowPDF] = useState(false);
   const [selectedHandwerker, setSelectedHandwerker] = useState<BenutzerDaten | null>(null);
 
   useEffect(() => {
@@ -53,12 +54,12 @@ const Admin = () => {
     window.location.href = '/login';
   };
 
-  const handleIconClick = (handwerker: BenutzerDaten) => {
+  const handlePDFClick = (handwerker: BenutzerDaten) => {
     setSelectedHandwerker(handwerker);
-    setShowModal(true);
+    setShowPDF(true);
   };
 
-  const handleConfirm = () => {
+  const handleVerify = () => {
     if (selectedHandwerker) {
       const apiUrl = selectedHandwerker.verified
         ? `http://localhost:8080/handwerker/notverify/${selectedHandwerker.id}`
@@ -76,18 +77,19 @@ const Admin = () => {
                   : handwerker
               )
             );
+            setShowPDF(false);
           } else {
             console.error('Error updating verification status:', response.statusText);
           }
         })
         .catch((error) => console.error('Error making verification request:', error));
     }
-
-    setShowModal(false);
   };
 
-  const handleCancel = () => {
-    setShowModal(false);
+  const handleCloseModal = (e: any) => {
+    if (e.target.classList.contains("modal-overlay")) {
+      setShowPDF(false);
+    }
   };
 
   return (
@@ -129,6 +131,7 @@ const Admin = () => {
                     <th className="px-4 py-2">Nachname</th>
                     <th className="px-4 py-2">Kategorie</th>
                     <th className="px-4 py-2">Verifiziert</th>
+                    <th className="px-4 py-2">Vertrag</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -140,16 +143,24 @@ const Admin = () => {
                         <td className="px-4 py-2">{handwerker.kategorie}</td>
                         <td className="px-4 py-2 flex justify-center items-center">
                           {handwerker.verified ? (
-                            <FaCheckCircle className="text-green-500 text-2xl cursor-pointer" onClick={() => handleIconClick(handwerker)} />
+                            <FaCheckCircle className="text-green-500 text-2xl" />
                           ) : (
-                            <FaTimesCircle className="text-red-500 text-2xl cursor-pointer" onClick={() => handleIconClick(handwerker)} />
+                            <FaTimesCircle className="text-red-500 text-2xl" />
                           )}
+                        </td>
+                        <td className="px-4 py-2">
+                          <button
+                            onClick={() => handlePDFClick(handwerker)}
+                            className="text-blue-500 underline"
+                          >
+                            Vertrag anzeigen
+                          </button>
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={4} className="px-4 py-2">Keine Handwerker gefunden.</td>
+                      <td colSpan={5} className="px-4 py-2">Keine Handwerker gefunden.</td>
                     </tr>
                   )}
                 </tbody>
@@ -158,24 +169,35 @@ const Admin = () => {
           </div>
         </main>
       </div>
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-lg text-center">
-            <p>Möchten Sie den Handwerker verifizieren?</p>
-            <div className="flex justify-center space-x-4 mt-4">
-              <button
-                onClick={handleConfirm}
-                className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700"
-              >
-                Ja
-              </button>
-              <button
-                onClick={handleCancel}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-              >
-                Nein
-              </button>
-            </div>
+
+      {showPDF && selectedHandwerker?.vertrag && (
+        <div
+          className="modal-overlay fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 "
+          onClick={handleCloseModal}
+        >
+          <div className="bg-white p-6 rounded shadow-lg text-center relative  pt-10 mt-10">
+            <button
+              onClick={() => setShowPDF(false)}
+              className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded-full hover:bg-red-700 transition"
+            >
+              ✕
+            </button>
+            <iframe
+              src={`data:application/pdf;base64,${selectedHandwerker.vertrag}`}
+              width="1200"
+              height="800"
+              className="border-2"
+            ></iframe>
+            <button
+              onClick={handleVerify}
+              className={`${
+                selectedHandwerker.verified ? 'bg-red-600' : 'bg-green-600'
+              } text-white px-4 py-2 rounded mt-4 hover:${
+                selectedHandwerker.verified ? 'bg-red-700' : 'bg-green-700'
+              } transition`}
+            >
+              {selectedHandwerker.verified ? 'Verifizierung aufheben' : 'Vertrag bestätigen & verifizieren'}
+            </button>
           </div>
         </div>
       )}
