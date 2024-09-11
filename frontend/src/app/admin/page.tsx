@@ -136,7 +136,6 @@ const Admin = () => {
           {selectedPage === 'Handwerkers' ? (
             <>
               <h2 className="text-2xl font-bold mt-8 mb-4">Handwerker Liste</h2>
-              {/* Handwerker table logic here */}
             </>
           ) : (
             <>
