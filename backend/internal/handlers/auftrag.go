@@ -104,7 +104,7 @@ func erstelleRechnungPDF(auftrag models.Auftrag) ([]byte, error) {
 	pdf.AddPage()
 
 	// Schriftart wird hier bearbeitet und auch größe
-	err := pdf.AddTTFFont("arial", "assets/fonts/arial.ttf")
+	err := pdf.AddTTFFont("arial", "../assets/fonts/ARIAL.TTF")
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +114,7 @@ func erstelleRechnungPDF(auftrag models.Auftrag) ([]byte, error) {
 	}
 
 	//  Logo von assets/images/logo.png wird hier hinzugefügt
-	err = pdf.Image("assets/images/logo.png", 200, 10, nil) // Positioniere das Bild solen wir hier ändern
+	err = pdf.Image("../assets/images/logo.png", 200, 10, nil) // Positioniere das Bild solen wir hier ändern
 	if err != nil {
 		return nil, err
 	}

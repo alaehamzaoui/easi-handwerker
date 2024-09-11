@@ -42,8 +42,8 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", gorillaHandlers.CORS(corsOpts, corsMethods, corsHeaders)(r)))
 }
 func clearTables() {
-	db.DB.Exec("DELETE FROM users")
+	/*db.DB.Exec("DELETE FROM users")
 	db.DB.Exec("DELETE FROM work_times")
 	db.DB.Exec("DELETE FROM auftrags")
-	log.Println("Alle Tabellen wurden geleert.")
+	log.Println("Alle Tabellen wurden geleert.")*/
 }
