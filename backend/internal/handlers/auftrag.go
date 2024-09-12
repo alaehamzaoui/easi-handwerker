@@ -18,7 +18,6 @@ import (
 
 func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 	var auftrag models.Auftrag
-
 	if err := json.NewDecoder(r.Body).Decode(&auftrag); err != nil {
 		log.Println("Fehler beim Dekodieren der Anfrage:", err)
 		http.Error(w, "Ungültige Daten", http.StatusBadRequest)
@@ -30,6 +29,13 @@ func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 	if err := db.DB.Create(&auftrag).Error; err != nil {
 		log.Println("Fehler beim Speichern des Auftrags:", err)
 		http.Error(w, "Fehler beim Speichern des Auftrags", http.StatusInternalServerError)
+		return
+	}
+
+	var handwerker models.User
+	if err := db.DB.Where("id = ?", auftrag.UserID).First(&handwerker).Error; err != nil {
+		log.Println("Fehler beim Abrufen des Handwerkers:", err)
+		http.Error(w, "Auftrag gespeichert, aber Fehler beim Abrufen des Handwerkers", http.StatusInternalServerError)
 		return
 	}
 
@@ -48,8 +54,50 @@ func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := sendeBestaetigungAnHandwerker(auftrag, handwerker); err != nil {
+		log.Println("Fehler beim Senden der Auftragsbestätigung an den Handwerker:", err)
+		http.Error(w, "Auftrag gespeichert, aber Fehler beim Senden der Bestätigungs-E-Mail", http.StatusInternalServerError)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"message": "Auftrag erfolgreich gespeichert und E-Mail gesendet"})
+	json.NewEncoder(w).Encode(map[string]string{"message": "Auftrag erfolgreich gespeichert und E-Mails gesendet"})
+}
+
+// email zu Handwerker
+func sendeBestaetigungAnHandwerker(auftrag models.Auftrag, handwerker models.User) error {
+	mailer := gomail.NewMessage()
+
+	// Setze den Absender, Empfänger und den Betreff
+	mailer.SetHeader("From", "info.minimeister@gmail.com")
+	mailer.SetHeader("To", handwerker.Email)
+	mailer.SetHeader("Subject", "Neuen Auftrag erhalten")
+
+	// hier können wir den Inhalt der E-Mail bearbeiten
+	body := fmt.Sprintf(`
+		Sehr geehrte/r Frau/Herr %s,
+
+		Sie wurden für einen neuen Auftrag reserviert.
+
+		-Name des Kunde: %s 
+		-Ort: %s 
+		
+		Genauere Informationen zu dieser Buchung finden Sie in Ihrem Dashboard.
+
+		Mit freundlichen Grüßen,
+		Team EASI
+	`, handwerker.Nachname, auftrag.Name, auftrag.StadtPLZ)
+
+	mailer.SetBody("text/plain", body)
+
+	// SMTP-Einstellungen für unseren E-Mail-Server
+	dialer := gomail.NewDialer("smtp.gmail.com", 587, "info.minimeister@gmail.com", "jzafrboycrqjlifs")
+
+	if err := dialer.DialAndSend(mailer); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func sendeAuftragsbestaetigungMitAnhang(auftrag models.Auftrag, pdfData []byte) error {
