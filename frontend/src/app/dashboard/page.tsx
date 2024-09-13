@@ -14,12 +14,14 @@ interface Arbeitszeit {
 }
 
 interface Auftrag {
+  id: number,
   user_id: number;
   name: string;
   ausgewählter_tag: string;
   straßehausnummer: string,
   stadt_plz: string,
   email: string,
+  telefon: string,
   start_zeit: string;
   end_zeit: string;
   anliegen: string;
@@ -72,6 +74,25 @@ const schließePopup = () => {
       fetchAuftraege(benutzerDaten.id);
     }
   }, []);
+
+
+  async function handleAuftragStornieren(id: number) {
+    try {
+      const response = await fetch(`http://localhost:8080/auftrag/${id}/stornieren`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        zeigePopup('Auftrag erfolgreich gelöscht');
+        fetchAuftraege(benutzerDaten?.id || 0); 
+      } else {
+        zeigePopup('Fehler bei der Stornierung des Auftrags');
+      }
+    } catch (error) {
+      console.error('Fehler:', error);
+      zeigePopup('Fehler bei der Stornierung des Auftrags');
+    }
+  }
+
 
   const fetchAuftraege = (user_id: number) => {
     console.log("Fetching Aufträge for user_id:", user_id);  
@@ -313,13 +334,20 @@ const schließePopup = () => {
             <p className="mb-2"><strong>Zeit:</strong> {ausgewählterAuftrag.start_zeit} - {ausgewählterAuftrag.end_zeit}</p>
             <p className="mb-2"><strong>Anliegen:</strong> {ausgewählterAuftrag.anliegen}</p>
             <p className="mb-2"><strong>Adresse:</strong> {ausgewählterAuftrag.straßehausnummer}, {ausgewählterAuftrag.stadt_plz}</p>
-            <p className="mb-2"><strong>E-Mail:</strong> {ausgewählterAuftrag.email}</p>
+            <p className="mb-2"><strong>Telefonnummer:</strong> {ausgewählterAuftrag.telefon}</p>
+            <p className="mb-5"><strong>E-Mail:</strong> {ausgewählterAuftrag.email}</p>
             <button
-              className="bg-yellow-600 text-white p-2 rounded"
+              className="bg-yellow-600 text-white p-2 rounded mr-11"
               onClick={() => setIstAuftragModalOffen(false)}
             >
               Schließen
             </button>
+            <button
+          className="bg-red-600 text-white p-2 rounded "
+          onClick={()=>{if (ausgewählterAuftrag) handleAuftragStornieren(ausgewählterAuftrag.id);}}
+        >
+          Auftrag stornieren
+        </button>
           </div>
         </div>
       )}

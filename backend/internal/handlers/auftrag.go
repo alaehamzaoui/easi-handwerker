@@ -14,6 +14,8 @@ import (
 
 	"github.com/signintech/gopdf"
 	gomail "gopkg.in/mail.v2"
+
+	"github.com/gorilla/mux"
 )
 
 func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
@@ -64,6 +66,119 @@ func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "Auftrag erfolgreich gespeichert und E-Mails gesendet"})
 }
 
+func DeleteAuftragHandler(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	var auftrag models.Auftrag
+	if err := db.DB.Where("id = ?", id).First(&auftrag).Error; err != nil {
+		log.Println("Fehler beim Abrufen des Auftrags:", err)
+		http.Error(w, "Auftrag nicht gefunden", http.StatusNotFound)
+		return
+	}
+
+	if err := db.DB.Delete(&auftrag).Error; err != nil {
+		log.Println("Fehler beim Löschen des Auftrags:", err)
+		http.Error(w, "Fehler beim Löschen des Auftrags", http.StatusInternalServerError)
+		return
+	}
+
+	var handwerker models.User
+	if err := db.DB.Where("id = ?", auftrag.UserID).First(&handwerker).Error; err != nil {
+		log.Println("Fehler beim Abrufen des Handwerkers:", err)
+		http.Error(w, "Fehler beim Abrufen des Handwerkers", http.StatusInternalServerError)
+		return
+	}
+
+	// Senden Stornierungsbestätigung
+	if err := sendeStornierungsBestaetigungAnHandwerker(auftrag, handwerker); err != nil {
+		log.Println("Fehler beim Senden der Stornierungsbestätigung an den Handwerker:", err)
+		http.Error(w, "Fehler beim Senden der Stornierungsbestätigung an den Handwerker", http.StatusInternalServerError)
+		return
+	}
+
+	if err := sendeStornierungsBestaetigungAnKunde(auftrag, handwerker); err != nil {
+		log.Println("Fehler beim Senden der Stornierungsbestätigung an den Kunde:", err)
+		http.Error(w, "Fehler beim Senden der Stornierungsbestätigung an den Kunde", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"message": "Auftrag erfolgreich gelöscht"})
+}
+
+func sendeStornierungsBestaetigungAnHandwerker(auftrag models.Auftrag, handwerker models.User) error {
+	mailer := gomail.NewMessage()
+
+	// Setze den Absender, Empfänger und den Betreff
+	mailer.SetHeader("From", "info.minimeister@gmail.com")
+	mailer.SetHeader("To", handwerker.Email)
+	mailer.SetHeader("Subject", "Stornierung des Auftrags erfolgreich")
+
+	// hier können wir den Inhalt der E-Mail bearbeiten
+	body := fmt.Sprintf(`
+		Sehr geehrte/r Frau/Herr %s,
+
+		Ihren Auftrag mit den Daten: 
+
+		-Name des Kunde: %s 
+		-Ort: %s 
+		
+		wurde erfolgreich storniert.
+
+		Mit freundlichen Grüßen,
+		Team EASI
+	`, handwerker.Nachname, auftrag.Name, auftrag.StadtPLZ)
+
+	mailer.SetBody("text/plain", body)
+
+	// SMTP-Einstellungen für unseren E-Mail-Server
+	dialer := gomail.NewDialer("smtp.gmail.com", 587, "info.minimeister@gmail.com", "jzafrboycrqjlifs")
+
+	if err := dialer.DialAndSend(mailer); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func sendeStornierungsBestaetigungAnKunde(auftrag models.Auftrag, handwerker models.User) error {
+	mailer := gomail.NewMessage()
+
+	// Setze den Absender, Empfänger und den Betreff
+	mailer.SetHeader("From", "info.minimeister@gmail.com")
+	mailer.SetHeader("To", auftrag.Email)
+	mailer.SetHeader("Subject", "ihre Buchung wurde storniert")
+
+	// hier können wir den Inhalt der E-Mail bearbeiten
+	body := fmt.Sprintf(`
+		Sehr geehrte/r Frau/Herr %s,
+
+		leider müssen wir Sie darüber informieren, dass Herr/Frau %s den Termin storniert hat, den Sie gebucht hatten. Hier sind die Details der Stornierung:
+
+		-Handwerker: %s %s
+		-Kategorie: %s
+		-Datum: %s 
+		-Uhrzeit: %s - %s
+		
+		Gerne können Sie über unsere App nach einer alternativen Buchungsmöglichkeit suchen. Falls Sie Fragen haben oder Unterstützung benötigen, stehen wir Ihnen selbstverständlich jederzeit zur Verfügung.
+
+		Mit freundlichen Grüßen,
+		Team EASI
+	`, auftrag.Name, handwerker.Nachname, handwerker.Vorname, handwerker.Nachname, handwerker.Kategorie, auftrag.AusgewählterTag, auftrag.StartZeit, auftrag.EndZeit)
+	mailer.SetBody("text/plain", body)
+
+	// SMTP-Einstellungen für unseren E-Mail-Server
+	dialer := gomail.NewDialer("smtp.gmail.com", 587, "info.minimeister@gmail.com", "jzafrboycrqjlifs")
+
+	if err := dialer.DialAndSend(mailer); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // email zu Handwerker
 func sendeBestaetigungAnHandwerker(auftrag models.Auftrag, handwerker models.User) error {
 	mailer := gomail.NewMessage()
@@ -77,16 +192,17 @@ func sendeBestaetigungAnHandwerker(auftrag models.Auftrag, handwerker models.Use
 	body := fmt.Sprintf(`
 		Sehr geehrte/r Frau/Herr %s,
 
-		Sie wurden für einen neuen Auftrag reserviert.
+		wir freuen uns, Ihnen mitzuteilen, dass Sie für einen neuen Auftrag reserviert wurden. Hier die wichtigsten Informationen:
 
 		-Name des Kunde: %s 
 		-Ort: %s 
+		-Anliegen: %s
 		
 		Genauere Informationen zu dieser Buchung finden Sie in Ihrem Dashboard.
 
 		Mit freundlichen Grüßen,
 		Team EASI
-	`, handwerker.Nachname, auftrag.Name, auftrag.StadtPLZ)
+	`, handwerker.Nachname, auftrag.Name, auftrag.StadtPLZ, auftrag.Anliegen)
 
 	mailer.SetBody("text/plain", body)
 

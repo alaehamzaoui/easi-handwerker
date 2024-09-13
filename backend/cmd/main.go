@@ -33,9 +33,10 @@ func main() {
 
 	r.HandleFunc("/handwerker/{id}", handlers.HandwerkerDetailsHandler).Methods("GET")
 	r.HandleFunc("/updateUserData", handlers.UpdateUserDataHandler).Methods("POST")
+	r.HandleFunc("/auftrag/{id}/stornieren", handlers.DeleteAuftragHandler).Methods("DELETE")
 
 	corsOpts := gorillaHandlers.AllowedOrigins([]string{"http://localhost:3000"})
-	corsMethods := gorillaHandlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"})
+	corsMethods := gorillaHandlers.AllowedMethods([]string{"GET", "POST", "DELETE", "OPTIONS"})
 	corsHeaders := gorillaHandlers.AllowedHeaders([]string{"Content-Type"})
 
 	log.Println("server starten auf port 8080") //
