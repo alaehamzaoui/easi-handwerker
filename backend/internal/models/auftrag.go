@@ -4,6 +4,7 @@ import "gorm.io/gorm"
 
 type Auftrag struct {
 	gorm.Model
+	ID uint `json:"id" gorm:"primaryKey"`
 	UserID           uint   `json:"user_id"`
 	Name             string `json:"name"`
 	StraßeHausnummer string `json:"straßehausnummer"`

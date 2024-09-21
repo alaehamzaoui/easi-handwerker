@@ -16,24 +16,128 @@ import (
 	gomail "gopkg.in/mail.v2"
 )
 
+func sendeBewertungsLink(auftrag models.Auftrag) error {
+    mailer := gomail.NewMessage()
+    mailer.SetHeader("From", "info.minimeister@gmail.com")
+    mailer.SetHeader("To", auftrag.Email)
+    mailer.SetHeader("Subject", "Vielen Dank für Ihre Buchung – Bitte bewerten Sie uns!")
+
+    bewertungsLink := fmt.Sprintf("http://localhost:3000/bewertung?auftrag_id=%d", auftrag.ID)
+
+    body := fmt.Sprintf(`
+        Sehr geehrte/r %s,
+
+        Ihr Auftrag wurde abgeschlossen. Bitte nehmen Sie sich einen Moment Zeit, uns zu bewerten:
+
+        Bewertung abgeben: %s
+
+        Mit freundlichen Grüßen,
+        MiniMeister Team
+    `, auftrag.Name, bewertungsLink)
+
+    mailer.SetBody("text/plain", body)
+
+    dialer := gomail.NewDialer("smtp.gmail.com", 587, "info.minimeister@gmail.com", "jzafrboycrqjlifs")
+    if err := dialer.DialAndSend(mailer); err != nil {
+        return err
+    }
+    return nil
+}
+
+
+func MarkAuftragAsDone(w http.ResponseWriter, r *http.Request) {
+	var requestData struct {
+		AuftragID uint `json:"auftrag_id"`
+	}
+
+	// Entpacke die Anfrage und hole den Auftrag basierend auf der AuftragID
+	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
+		http.Error(w, "Ungültige Anfrage", http.StatusBadRequest)
+		return
+	}
+
+	var auftrag models.Auftrag
+	if err := db.DB.First(&auftrag, requestData.AuftragID).Error; err != nil {
+		log.Println("Fehler beim Abrufen des Auftrags:", err)
+		http.Error(w, "Auftrag nicht gefunden", http.StatusNotFound)
+		return
+	}
+
+	// Setze den Status des Auftrags auf 'done'
+	auftrag.Status = "done"
+	if err := db.DB.Save(&auftrag).Error; err != nil {
+		log.Println("Fehler beim Aktualisieren des Auftrags:", err)
+		http.Error(w, "Fehler beim Aktualisieren des Auftrags", http.StatusInternalServerError)
+		return
+	}
+
+	// Arbeitszeit freigeben (gebucht = false)
+	// Debugging: Überprüfe die Werte, die wir verwenden
+	log.Printf("Debug: Freigabe der Arbeitszeit für UserID=%d, Tag=%s, Von=%s, Bis=%s\n", auftrag.UserID, auftrag.AusgewählterTag, auftrag.StartZeit, auftrag.EndZeit)
+
+	/*// Aktualisiere die Arbeitszeit, setze gebucht = false
+	result := db.DB.Model(&models.WorkTime{}).
+		Where("user_id = ? AND tag = ? AND von = ? AND bis = ?", auftrag.UserID, auftrag.AusgewählterTag, auftrag.StartZeit, auftrag.EndZeit).
+		Update("gebucht", false)
+
+	// Überprüfen, ob die Arbeitszeit gefunden wurde
+	if result.RowsAffected == 0 {
+		log.Println("Fehler: Keine passende Arbeitszeit gefunden für den Auftrag")
+		http.Error(w, "Fehler beim Freigeben der Arbeitszeit", http.StatusInternalServerError)
+		return
+	}
+
+	if result.Error != nil {
+		log.Println("Fehler beim Freigeben der Arbeitszeit:", result.Error)
+		http.Error(w, "Fehler beim Freigeben der Arbeitszeit", http.StatusInternalServerError)
+		return
+	}*/
+
+	// Sende Bewertungslink per E-Mail
+	if err := sendeBewertungsLink(auftrag); err != nil {
+		log.Println("Fehler beim Senden der Bewertungs-E-Mail:", err)
+		http.Error(w, "Auftrag gespeichert, aber Fehler beim Senden der Bewertungs-E-Mail", http.StatusInternalServerError)
+		return
+	}
+
+	// Antwort senden
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(auftrag)
+}
+
 func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 	var auftrag models.Auftrag
+	log.Println("Auftrag erstellen Handler aufgerufen") // Debugging-Log
 
+	// Dekodieren der Anfrage
 	if err := json.NewDecoder(r.Body).Decode(&auftrag); err != nil {
 		log.Println("Fehler beim Dekodieren der Anfrage:", err)
 		http.Error(w, "Ungültige Daten", http.StatusBadRequest)
 		return
 	}
+
+	// Überprüfen, ob bereits ein nicht abgeschlossener Auftrag mit der gleichen Zeit und am gleichen Tag existiert
+	var bestehenderAuftrag models.Auftrag
+	err := db.DB.Where("user_id = ? AND ausgewählter_tag = ? AND ((start_zeit <= ? AND end_zeit > ?) OR (start_zeit < ? AND end_zeit >= ?)) AND status != 'done'",
+		auftrag.UserID, auftrag.AusgewählterTag, auftrag.StartZeit, auftrag.StartZeit, auftrag.EndZeit, auftrag.EndZeit).First(&bestehenderAuftrag).Error
+
+	if err == nil {
+		log.Println("Konflikt: Es gibt bereits einen nicht abgeschlossenen Auftrag zur selben Zeit am selben Tag.")
+		http.Error(w, "Ein Auftrag zur gleichen Zeit am gleichen Tag existiert bereits und ist nicht abgeschlossen.", http.StatusConflict)
+		return
+	}
+
+	// Speichern des neuen Auftrags
 	auftrag.Status = "Neu"
 
-	// Auftrag in der Datenbank speichern hier
+	// Auftrag in der Datenbank speichern
 	if err := db.DB.Create(&auftrag).Error; err != nil {
 		log.Println("Fehler beim Speichern des Auftrags:", err)
 		http.Error(w, "Fehler beim Speichern des Auftrags", http.StatusInternalServerError)
 		return
 	}
 
-	//  PDF-Rechnung wird hier erstellt
+	// PDF-Rechnung wird erstellt
 	pdf, err := erstelleRechnungPDF(auftrag)
 	if err != nil {
 		log.Println("Fehler beim Erstellen der PDF-Rechnung:", err)
@@ -51,6 +155,7 @@ func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"message": "Auftrag erfolgreich gespeichert und E-Mail gesendet"})
 }
+
 
 func sendeAuftragsbestaetigungMitAnhang(auftrag models.Auftrag, pdfData []byte) error {
 	mailer := gomail.NewMessage()
@@ -142,22 +247,20 @@ func erstelleRechnungPDF(auftrag models.Auftrag) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 func GetAufträgeHandler(w http.ResponseWriter, r *http.Request) {
-	userID := r.URL.Query().Get("user_id")
-	if userID == "" {
-		http.Error(w, "User ID erforderlich", http.StatusBadRequest)
-		return
-	}
+    userID := r.URL.Query().Get("user_id")
+    if userID == "" {
+        http.Error(w, "User ID erforderlich", http.StatusBadRequest)
+        return
+    }
 
-	var aufträge []models.Auftrag
+    var aufträge []models.Auftrag
 
-	if err := db.DB.Where("user_id = ?", userID).Find(&aufträge).Error; err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(map[string]string{"error": "Fehler beim Abrufen der Aufträge"})
-		return
-	}
+    if err := db.DB.Where("user_id = ?", userID).Find(&aufträge).Error; err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        json.NewEncoder(w).Encode(map[string]string{"error": "Fehler beim Abrufen der Aufträge"})
+        return
+    }
 
-	//log.Println("Abgerufene Aufträge:", aufträge)
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(aufträge)
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(aufträge)
 }

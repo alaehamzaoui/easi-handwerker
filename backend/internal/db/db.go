@@ -10,7 +10,7 @@ import (
 var DB *gorm.DB
 
 func ConnectDB() {
-	connStr := "user=easidev dbname=postgres password=easinoteasi host=localhost sslmode=disable"
+	connStr := "user=postgres dbname=postgres password=easinoteasi host=localhost sslmode=disable"
 	var err error
 	DB, err = gorm.Open(postgres.Open(connStr), &gorm.Config{})
 	if err != nil {
