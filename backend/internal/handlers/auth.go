@@ -4,7 +4,9 @@ import (
 	"backend/internal/db"
 	"backend/internal/models"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -24,14 +26,40 @@ type Claims struct {
 }
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		http.Error(w, "Unable to parse form", http.StatusBadRequest)
+		return
+	}
 	var user models.User
-	json.NewDecoder(r.Body).Decode(&user)
+	user.Vorname = r.FormValue("vorname")
+	user.Nachname = r.FormValue("nachname")
+	user.Geburtsdatum = r.FormValue("geburtsdatum")
+	user.Kategorie = r.FormValue("kategorie")
+	user.Straße = r.FormValue("straße")
+	user.Stadt = r.FormValue("stadt")
+	user.Telefon = r.FormValue("telefon")
+	user.Email = r.FormValue("email")
+	user.Passwort = r.FormValue("passwort")
+	user.Stundenlohn, _ = strconv.ParseFloat(r.FormValue("stundenlohn"), 64)
 
+	file, handler, err := r.FormFile("vertrag")
+	if err != nil {
+		http.Error(w, "Unable to upload Vertrag PDF", http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	fileBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		http.Error(w, "Unable to read Vertrag file", http.StatusInternalServerError)
+		return
+	}
+	user.Vertrag = fileBytes
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Passwort), bcrypt.DefaultCost)
 	user.Passwort = string(hashedPassword)
 
 	// URLs zu Bildern von einer externen Quelle
-	//neue Bilder hier
 	switch user.Kategorie {
 	case "Maler/-in":
 		user.Bild = "https://i.imgur.com/z9qawA7.png"
@@ -60,8 +88,9 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	db.DB.Create(&defaultWorkTimes)
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]string{"message": "Benutzer erfolgreich registriert"})
+	json.NewEncoder(w).Encode(map[string]string{"message": "Benutzer erfolgreich registriert", "file_name": handler.Filename})
 }
+
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var creds Credentials
 	err := json.NewDecoder(r.Body).Decode(&creds)

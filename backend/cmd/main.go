@@ -15,7 +15,7 @@ import (
 func main() {
 	db.ConnectDB()
 
-	db.DB.AutoMigrate(&models.User{}, &models.WorkTime{}, &models.Auftrag{}, &models.Bewertung{})
+	db.DB.AutoMigrate(&models.User{}, &models.WorkTime{}, &models.Auftrag{}, &models.Bewertung{}, &models.Anfrage{})
 	clearTables()
 
 	r := mux.NewRouter()
@@ -37,6 +37,8 @@ func main() {
 
 	r.HandleFunc("/handwerker/{id}", handlers.HandwerkerDetailsHandler).Methods("GET")
 	r.HandleFunc("/updateUserData", handlers.UpdateUserDataHandler).Methods("POST")
+	r.HandleFunc("/CreateRequest", handlers.CreateRequestHandler).Methods("POST")
+	r.HandleFunc("/GetRequests", handlers.GetRequestsHandler).Methods("GET")
 
 	corsOpts := gorillaHandlers.AllowedOrigins([]string{"http://localhost:3000"})
 	corsMethods := gorillaHandlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"})
@@ -47,9 +49,9 @@ func main() {
 }
 func clearTables() {
 	/*
-	db.DB.Exec("DELETE FROM users")
-	db.DB.Exec("DELETE FROM work_times")
-	db.DB.Exec("DELETE FROM auftrags")
-	log.Println("Alle Tabellen wurden geleert.")*/
+		db.DB.Exec("DELETE FROM users")
+		db.DB.Exec("DELETE FROM work_times")
+		db.DB.Exec("DELETE FROM auftrags")
+		log.Println("Alle Tabellen wurden geleert.")*/
 	log.Println("Alle Tabellen wurden nicht geleert.")
 }

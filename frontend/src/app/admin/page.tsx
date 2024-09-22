@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { FaCheckCircle, FaTimesCircle, FaSignOutAlt, FaLifeRing } from 'react-icons/fa';
-import Image from 'next/image';
+import { FaCheckCircle, FaTimesCircle, FaSignOutAlt, FaLifeRing, FaHammer } from 'react-icons/fa';
 
 interface BenutzerDaten {
   vorname: string;
@@ -17,13 +16,26 @@ interface BenutzerDaten {
   bild: string;
   id: string;
   verified: boolean;
+  vertrag: string;
+}
+
+interface SupportRequest {
+  ID: number;
+  email: string;
+  betreff: string;
+  anfrage: string;
+  geantwortet: boolean;
+  CreatedAt: string;
 }
 
 const Admin = () => {
   const [handwerkers, setHandwerkers] = useState<BenutzerDaten[]>([]);
+  const [supportRequests, setSupportRequests] = useState<SupportRequest[]>([]);
   const [isadmin, setAdmin] = useState<BenutzerDaten | null>(null);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedHandwerker, setSelectedHandwerker] = useState<BenutzerDaten | null>(null);
+  const [selectedPage, setSelectedPage] = useState<'Handwerkers' | 'Support'>('Handwerkers');
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<SupportRequest | null>(null);
+  const [antwortText, setAntwortText] = useState('');
 
   useEffect(() => {
     const isadmin = sessionStorage.getItem('isadmin');
@@ -36,8 +48,12 @@ const Admin = () => {
   }, []);
 
   useEffect(() => {
-    fetchHandwerkers();
-  }, []);
+    if (selectedPage === 'Handwerkers') {
+      fetchHandwerkers();
+    } else if (selectedPage === 'Support') {
+      fetchSupportRequests();
+    }
+  }, [selectedPage]);
 
   const fetchHandwerkers = () => {
     fetch('http://localhost:8080/searchHandwerker')
@@ -48,46 +64,35 @@ const Admin = () => {
       .catch((error) => console.error('Error fetching handwerkers:', error));
   };
 
+  const fetchSupportRequests = () => {
+    fetch('http://localhost:8080/GetRequests')
+      .then((response) => response.json())
+      .then((data) => {
+        setSupportRequests(data);
+      })
+      .catch((error) => console.error('Error fetching support requests:', error));
+  };
+
   const handleLogout = () => {
     sessionStorage.removeItem('isadmin');
     window.location.href = '/login';
   };
 
-  const handleIconClick = (handwerker: BenutzerDaten) => {
-    setSelectedHandwerker(handwerker);
-    setShowModal(true);
+  const handleAntwortPopup = (request: SupportRequest) => {
+    setSelectedRequest(request);
+    setShowPopup(true);
   };
 
-  const handleConfirm = () => {
-    if (selectedHandwerker) {
-      const apiUrl = selectedHandwerker.verified
-        ? `http://localhost:8080/handwerker/notverify/${selectedHandwerker.id}`
-        : `http://localhost:8080/handwerker/verify/${selectedHandwerker.id}`;
-
-      fetch(apiUrl, {
-        method: 'POST',
-      })
-        .then((response) => {
-          if (response.ok) {
-            setHandwerkers((prevHandwerkers) =>
-              prevHandwerkers.map((handwerker) =>
-                handwerker.id === selectedHandwerker.id
-                  ? { ...handwerker, verified: !handwerker.verified }
-                  : handwerker
-              )
-            );
-          } else {
-            console.error('Error updating verification status:', response.statusText);
-          }
-        })
-        .catch((error) => console.error('Error making verification request:', error));
+  const handleClosePopup = (e: any) => {
+    if (e.target.classList.contains('popup-overlay')) {
+      setShowPopup(false);
     }
-
-    setShowModal(false);
   };
 
-  const handleCancel = () => {
-    setShowModal(false);
+  const handleSendAntwort = () => {
+    if (selectedRequest) {
+     alert ("Email wurde gesendet");
+    }
   };
 
   return (
@@ -96,8 +101,19 @@ const Admin = () => {
         <h1 className="text-4xl font-bold mb-10">MiniMeister</h1>
         <nav>
           <ul>
-            <li className="mb-4">
-              <button className="flex items-center text-lg font-semibold hover:text-white transition-colors">
+            <li className={`mb-4 ${selectedPage === 'Handwerkers' ? 'font-bold text-white' : ''}`}>
+              <button
+                className="flex items-center text-lg font-semibold hover:text-white transition-colors"
+                onClick={() => setSelectedPage('Handwerkers')}
+              >
+                <FaHammer className="mr-2" /> Handwerkers
+              </button>
+            </li>
+            <li className={`mb-4 ${selectedPage === 'Support' ? 'font-bold text-white' : ''}`}>
+              <button
+                className="flex items-center text-lg font-semibold hover:text-white transition-colors"
+                onClick={() => setSelectedPage('Support')}
+              >
                 <FaLifeRing className="mr-2" /> Support
               </button>
             </li>
@@ -107,9 +123,7 @@ const Admin = () => {
 
       <div className="flex-grow flex flex-col">
         <header className="bg-yellow-600 p-6 flex justify-between items-center">
-          {isadmin && (
-            <span className="text-2xl font-bold">{`${isadmin.email}`}</span>
-          )}
+          {isadmin && <span className="text-2xl font-bold">{`${isadmin.email}`}</span>}
           <button
             onClick={handleLogout}
             className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500 flex items-center transition-colors"
@@ -119,63 +133,111 @@ const Admin = () => {
         </header>
 
         <main className="flex-grow container mx-auto p-6">
-          <h2 className="text-2xl font-bold mt-8 mb-4">Handwerker Liste</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-3">
-              <table className="bg-white table-auto w-full shadow-md rounded text-center mb-8">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="px-4 py-2">Vorname</th>
-                    <th className="px-4 py-2">Nachname</th>
-                    <th className="px-4 py-2">Kategorie</th>
-                    <th className="px-4 py-2">Verifiziert</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {handwerkers.length > 0 ? (
-                    handwerkers.map((handwerker) => (
-                      <tr key={handwerker.id} className="border-t">
-                        <td className="px-4 py-2">{handwerker.vorname}</td>
-                        <td className="px-4 py-2">{handwerker.nachname}</td>
-                        <td className="px-4 py-2">{handwerker.kategorie}</td>
-                        <td className="px-4 py-2 flex justify-center items-center">
-                          {handwerker.verified ? (
-                            <FaCheckCircle className="text-green-500 text-2xl cursor-pointer" onClick={() => handleIconClick(handwerker)} />
-                          ) : (
-                            <FaTimesCircle className="text-red-500 text-2xl cursor-pointer" onClick={() => handleIconClick(handwerker)} />
-                          )}
-                        </td>
+          {selectedPage === 'Handwerkers' ? (
+            <>
+              <h2 className="text-2xl font-bold mt-8 mb-4">Handwerker Liste</h2>
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl font-bold mt-8 mb-4">Support Anfragen</h2>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-3">
+                  <table className="bg-white table-auto w-full shadow-md rounded text-center mb-8">
+                    <thead className="bg-gray-200">
+                      <tr>
+                        <th className="px-4 py-2">ID</th>
+                        <th className="px-4 py-2">Handwerker Email</th>
+                        <th className="px-4 py-2">Betreff</th>
+                        <th className="px-4 py-2">Erstellt am</th>
+                        <th className="px-4 py-2">Geantwortet</th>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={4} className="px-4 py-2">Keine Handwerker gefunden.</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                    </thead>
+                    <tbody>
+                      {supportRequests.length > 0 ? (
+                        supportRequests.map((request, index) => (
+                          <tr key={index} className="border-t">
+                            <td className="px-4 py-2">{request.ID}</td>
+                            <td className="px-4 py-2">{request.email}</td>
+                            <td className="px-4 py-2">{request.betreff}</td>
+                            <td className="px-4 py-2">{new Date(request.CreatedAt).toLocaleDateString()}</td>
+                            <td className="px-4 py-2">
+                                {request.geantwortet ? (
+                                <FaCheckCircle className="text-green-500 text-2xl mx-auto" />
+                                ) : (
+                                <button
+                                  onClick={() => handleAntwortPopup(request)}
+                                  className="text-blue-500 underline mx-auto"
+                                >
+                                  Antwort senden
+                                </button>
+                                )}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={5} className="px-4 py-2">Keine Anfragen vorhanden.</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          )}
         </main>
       </div>
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-lg text-center">
-            <p>Möchten Sie den Handwerker verifizieren?</p>
-            <div className="flex justify-center space-x-4 mt-4">
+
+      {showPopup && selectedRequest && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 popup-overlay" onClick={handleClosePopup}>
+          <div className="bg-white p-6 rounded shadow-lg text-left w-2/3 max-w-2xl relative">
+            <button
+              onClick={() => setShowPopup(false)}
+              className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded-full hover:bg-red-700 transition"
+            >
+              ✕
+            </button>
+            <h3 className="text-xl font-bold mb-4">Support Anfrage</h3>
+
+            <div className="mb-4">
+              <label className="block font-semibold">Email:</label>
+              <input
+                type="text"
+                className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
+                value={selectedRequest.email}
+                readOnly
+              />
+            </div>
+
+
+            <div className="mb-4">
+              <label className="block font-semibold">Anfrage:</label>
+              <textarea
+                className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
+                value={selectedRequest.anfrage}
+                readOnly
+              />
+            </div>
+
+            <div className="mb-4">    
+              <label className="block font-semibold">Antwort:</label>
+              <textarea
+                className="w-full h-64 p-2 border rounded"
+                placeholder="Antwort eingeben"
+                value={antwortText}
+                onChange={(e) => setAntwortText(e.target.value)}
+              />
+            </div>
+
+            <div className="flex justify-end">
               <button
-                onClick={handleConfirm}
-                className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700"
+                onClick={handleSendAntwort}
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
               >
-                Ja
-              </button>
-              <button
-                onClick={handleCancel}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-              >
-                Nein
+                Antwort Email senden
               </button>
             </div>
+
           </div>
         </div>
       )}
