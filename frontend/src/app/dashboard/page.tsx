@@ -74,6 +74,16 @@ const Dashboard = () => {
   const [ausgewählterAuftrag, setAusgewählterAuftrag] =
     useState<Auftrag | null>(null);
   const [bewertungen, setBewertungen] = useState<Bewertung[]>([]);
+    const [zeigeAlleAuftraege, setZeigeAlleAuftraege] = useState(false);
+
+  const handleShowAllAuftraege = () => {
+    setZeigeAlleAuftraege(true);
+  };
+
+const handleHideAllAuftraege = () => {
+  setZeigeAlleAuftraege(false);
+};
+
 
   const zeigePopup = (nachricht: string) => {
     setPopupNachricht(nachricht);
@@ -219,7 +229,7 @@ const Dashboard = () => {
     })
       .then((res) => res.json())
       .then((updatedAuftrag) => {
-        zeigePopup('Auftrag erfolgreich als "done" markiert.');
+        zeigePopup('Auftrag erfolgreich als abgeschlossen markiert.');
         setIstAuftragModalOffen(false);
 
         // Aktualisiere die Auftragsliste mit dem neuen Status
@@ -248,6 +258,15 @@ const Dashboard = () => {
                 <FaUser className="mr-2" /> Daten bearbeiten
               </button>
             </li>
+            <li className="mb-4">
+           <button
+  onClick={() => {
+    window.location.href = '/auftraege';}}
+  className="flex items-center text-lg font-semibold hover:text-white transition-colors"
+>
+  <FaCheckCircle className="mr-2" /> Aufträge
+</button>
+      </li>
             <li className="mb-4">
               <button
                 onClick={handleShowSupportPopup}
@@ -353,7 +372,7 @@ const Dashboard = () => {
                   <FaClock className="mr-2" /> Arbeitszeiten bearbeiten
                 </button>
               </div>
-              {/* Aufträge */}
+             {/* Aufträge 
               <h2 className="text-2xl font-bold mt-8 mb-4">Ihre Aufträge</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {auftraege.length > 0 ? (
@@ -386,8 +405,9 @@ const Dashboard = () => {
                   <p className="text-gray-600">
                     Sie haben zurzeit keine Aufträge
                   </p>
-                )}
-              </div>
+                )
+          
+              </div>*/}
             </div>
           </div>
         </main>
@@ -415,7 +435,7 @@ const Dashboard = () => {
       )}
       {/* hier ist das Modal */}
 
-      {/* Auftrags-Modal */}
+      {/* Auftrags-Modal 
       {istAuftragModalOffen && ausgewählterAuftrag && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex justify-center items-center">
           <div className="bg-white p-6 rounded shadow-lg max-w-md w-full">
@@ -489,11 +509,11 @@ const Dashboard = () => {
 
       {istBestätigungsModalOffen && (
         <BestaetigungsModal
-          message="Sind Sie sicher, dass Sie diesen Auftrag als 'done' markieren möchten?"
+          message="Sind Sie sicher, dass Sie diesen Auftrag als abgeschlossen markieren möchten?"
           onConfirm={handleConfirmMarkDone}
           onCancel={() => setIstBestätigungsModalOffen(false)}
         />
-      )}
+      )}*/}
 
       {istPopupSichtbar && (
         <Popup message={popupNachricht} onClose={schließePopup} />
