@@ -169,6 +169,7 @@ const Dashboard = () => {
   };
 
   const handleShowSupportPopup = () => {
+    alert("Support Popup anzeigen");
     setIstSupportPopupOffen(true);
   };
 
