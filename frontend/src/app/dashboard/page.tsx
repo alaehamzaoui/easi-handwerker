@@ -83,7 +83,9 @@ const schließePopup = () => {
       });
       if (response.ok) {
         zeigePopup('Auftrag erfolgreich gelöscht');
-        window.location.reload();
+        setTimeout(function() {
+          window.location.reload(); 
+      }, 2000);
         fetchAuftraege(benutzerDaten?.id || 0); 
       } else {
         zeigePopup('Fehler bei der Stornierung des Auftrags');
