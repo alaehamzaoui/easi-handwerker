@@ -46,5 +46,5 @@ func clearTables() {
 	/*db.DB.Exec("DELETE FROM users")
 	db.DB.Exec("DELETE FROM work_times")
 	db.DB.Exec("DELETE FROM auftrags")
-	log.Println("Alle Tabellen wurden geleert.")*/
+	log.Println("Alle Tabellen wurden geleert.") */
 }

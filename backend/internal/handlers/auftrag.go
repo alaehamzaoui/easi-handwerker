@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"bytes"
 
@@ -27,6 +28,8 @@ func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	auftrag.Status = "Neu"
 
+	//reservierungdatum speichern
+	auftrag.Reservierungsdatum = time.Now()
 	// Auftrag in der Datenbank speichern hier
 	if err := db.DB.Create(&auftrag).Error; err != nil {
 		log.Println("Fehler beim Speichern des Auftrags:", err)
@@ -75,6 +78,13 @@ func DeleteAuftragHandler(w http.ResponseWriter, r *http.Request) {
 	if err := db.DB.Where("id = ?", id).First(&auftrag).Error; err != nil {
 		log.Println("Fehler beim Abrufen des Auftrags:", err)
 		http.Error(w, "Auftrag nicht gefunden", http.StatusNotFound)
+		return
+	}
+
+	//überprüft ob die 48 Stunden abgelaufen sind
+	zeitseitreservierung := time.Since(auftrag.Reservierungsdatum).Hours()
+	if zeitseitreservierung > 48 {
+		http.Error(w, "Die Stornierungsfrist von 48 Stunden ist abgelaufen", http.StatusBadRequest)
 		return
 	}
 
