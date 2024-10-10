@@ -1,120 +1,50 @@
-import Image from "next/image";
-import Head from "next/head";
-import Link from "next/link";
-import Layout from "./layout";
-import styles from "../styles/Home.module.css";
-import Feature from "../components/Feature";
-import logo from "../images/MiniMeister-Logo-white.png";
-import background from "../images/hintergrundbildschwarzgelb.png";
-import icon1 from "../images/BenutzerfreundlicheIcon.png";
-import icon2 from "../images/ModernesDesignIcon.png";
-import icon3 from "../images/KostenübersichtIcon.png";
-import icon4 from "../images/VerfügbarkeitskalenderIcon.png";
-import easiLogo from "../images/firmenLogo_EASI (1).png";
-import React from "react";
+// pages/index.tsx
+import Head from 'next/head';
+import Slider from '@/components/Slider';
+import GridSection from '@/components/GridSection';
+import StyledParagraph from '@/components/StyledParagraph';
+import mini from "../images/Mini.png";
+import meister from "../images/Meister.png";
+import handw from "../images/handw.png";
+import styles from '../styles/Home.module.css';
+import FeaturesKomponent from '@/components/FeaturesKomponent';
+import AdvantagesSection from '@/components/AdvantagesSection';
 
-const Home: React.FC = () => {
+export default function Home() {
   return (
-    <Layout>
+    <>
       <Head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <title>MiniMeister</title>
+        <title>My Landing Page</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
-      <header className={styles.header}>
-        <div className={styles.backgroundImageContainer}>
-          <Image
-            src={background}
-            alt="Background Foto"
-            layout="fill"
-            objectFit="cover"
-            objectPosition="center"
-          />
-        </div>
+      <Slider />
+      <AdvantagesSection/>
+      <FeaturesKomponent />
 
-        <div className={styles.logoContainer}>
-          <Image src={logo} alt="MiniMeister Logo" width={200} height={200} />
-        </div>
-
-        <div className={styles.sloganContainer}>
-          <h1>Handwerkliche Lösungen für Ihren Alltag</h1>
-        </div>
-
-        <div className={styles.buttonContainer}>
-          <div className={styles.button}>
-            <Link href="/login" legacyBehavior>
-              <a>AZUBI</a>
-            </Link>
-            <div className={styles.overlay}>
-              <div className={styles.overlayText}>
-                Sind Sie ein Azubi Handwerker? Registrieren Sie sich bei uns und verdienen Sie Geld in Ihrer Freizeit in Ihrem Ausbildungsbereich.
+      <div className={styles.headerContainer}>
+      <div className={styles.banner}>
+            <div className={styles.product}>
+              <div className={styles.soda} />
               </div>
+              <div className={styles.handwerker}>
+              <img src={handw.src} alt="handwerker" />
             </div>
-          </div>
-          <div className={styles.button}>
-            <Link href="/Suche" legacyBehavior>
-              <a>KUNDE</a>
-            </Link>
-            <div className={styles.overlay}>
-              <div className={styles.overlayText}>
-                Sind Sie ein Kunde auf der Suche nach einem zuverlässigen Azubi Handwerker? Finden Sie sofort Unterstützung für Ihre Projekte.
+            <div className={styles.rock}>
+              <img src={mini.src} alt="rock" />
+             
+              <img src={meister.src} alt="rock" />
+            </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </header>
 
-      <main className={styles.main}>
-        <h3 className="ueberschrift">Was bieten wir an?</h3>
-        <div className={styles.features}>
-          <Feature imgSrc={icon1} title="Benutzerfreundliche Suche" />
-          <Feature imgSrc={icon2} title="Modernes Design" />
-          <Feature imgSrc={icon3} title="Kostenübersicht" />
-          <Feature imgSrc={icon4} title="Verfügbarkeitskalender" />
-        </div>
-      </main>
+</div>
 
-      <div className={styles.description}>
-        <h2>Willkommen bei 'MiniMeister'!</h2>
-        <p>
-          Wir verstehen die Herausforderungen, wenn es um kleine
-          Reparaturprojekte in Ihrer Wohnung geht. Die Suche nach bezahlbaren
-          Handwerkern kann schwierig sein, besonders wenn die großen
-          Meisterbetriebe zu teuer sind und das Ausbildungsgehalt begrenzt ist.
-          Mit 'MiniMeister' haben Sie die Lösung gefunden.
-          Unsere Webplattform vermittelt Handwerker-Azubis für einfache,
-          schnelle und kostengünstige Projekte direkt in Ihrer Nähe. Durch die
-          Nutzung von Internetrecherche finden Sie schnell verfügbare Azubis,
-          die auch während des Wochenendes arbeiten können.
-          Mit 'MiniMeister' finden Sie nicht nur schnelle Lösungen für Ihre
-          Reparaturen, sondern unterstützen auch die nächste Generation von
-          Handwerkern auf Ihrem Weg zur Meisterschaft. Besuchen Sie heute
-          noch unsere Plattform und entdecken Sie die Vorteile!
-        </p>
-      </div>
+      <StyledParagraph />
+     
 
-      <footer className={styles.footer}>
-        <div className={styles.footerContainer}>
-          <div className={styles.footerBottom}>
-            <div className={styles.footerLeft}>
-              <div className={styles.footerAddress}>
-                <p className={styles.footerHeading}>Adresse</p>
-                <p>Am Hochschulcampus 1</p>
-                <p>44801 Bochum</p>
-              </div>
-              <div className={styles.footerSocial}>
-                <p className={styles.footerHeading}>Social Media</p>
-                <p>Instagram</p>
-              </div>
-            </div>
-            <div className={styles.footerLogo}>
-              <Image src={easiLogo} alt="EASI Logo" width={100} height={50} />
-            </div>
-          </div>
-        </div>
+      <footer style={{ padding: '20px', textAlign: 'center', backgroundColor: '#333', color: '#fff' }}>
+        &copy; 2024 Curva sud.
       </footer>
-    </Layout>
+    </>
   );
-};
-
-export default Home;
+}

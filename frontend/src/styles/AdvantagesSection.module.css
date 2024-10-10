@@ -1,0 +1,42 @@
+/* styles/AdvantagesSection.module.css */
+
+.advantagesContainer {
+  position: relative;
+  padding: 60px 20px;
+  background-color: #f4f4f4;
+  overflow: hidden; /* Ensure the cubes don't overflow the container */
+
+}
+
+.advantagesShape {
+  margin-top: 10%;
+  margin-bottom: 10%;
+  position: relative;
+  background: linear-gradient(135deg, #333, #ffcc00);
+  color: #fff;
+  padding: 40px;
+  border-radius: 30px;
+  text-align: center;
+  z-index: 2; /* Ensure content is above the cubes */
+}
+
+.advantagesShape h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.advantagesShape p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: auto;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Position cubes behind the text */
+  pointer-events: none; /* Ensure the canvas doesn't interfere with user interactions */
+}
