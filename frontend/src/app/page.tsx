@@ -2,13 +2,13 @@
 import Head from 'next/head';
 import Slider from '@/components/Slider';
 import GridSection from '@/components/GridSection';
-import StyledParagraph from '@/components/StyledParagraph';
+import EndeParagraph from '@/components/EndeParagraph';
 import mini from "../images/Mini.png";
 import meister from "../images/Meister.png";
 import handw from "../images/handw.png";
 import styles from '../styles/Home.module.css';
 import FeaturesKomponent from '@/components/FeaturesKomponent';
-import AdvantagesSection from '@/components/AdvantagesSection';
+import VorteileSection from '@/components/VorteileSection';
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
       </Head>
 
       <Slider />
-      <AdvantagesSection/>
+      <VorteileSection/>
       <FeaturesKomponent />
 
       <div className={styles.headerContainer}>
@@ -39,11 +39,11 @@ export default function Home() {
 
 </div>
 
-      <StyledParagraph />
+      <EndeParagraph />
      
 
       <footer style={{ padding: '20px', textAlign: 'center', backgroundColor: '#333', color: '#fff' }}>
-        &copy; 2024 Curva sud.
+        &copy; 2024 Easi team.
       </footer>
     </>
   );

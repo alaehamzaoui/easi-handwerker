@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import styles from '@/styles/AdvantagesSection.module.css';
+import styles from '@/styles/VorteileSection.module.css';
 import FeaturesKomponent from './FeaturesKomponent'; // Importiere die FeaturesKomponent
 
 export default function AdvantagesSection() {
@@ -63,9 +63,9 @@ export default function AdvantagesSection() {
       <div ref={canvasRef} className={styles.canvas}></div>
       <div className={styles.advantagesShape}>
 
-        <h2>Alo ?</h2>
+        <h2>Gemeinsam schaffen wir mehr</h2>
         <p>
-          Lorum Ispum nch ka kaskas do msüda
+        Unterstützen Sie junge Talente und lassen Sie sich gleichzeitig bei Ihren Projekten von angehenden Profis helfen.
         </p>
       </div>
     </div>

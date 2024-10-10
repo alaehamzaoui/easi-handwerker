@@ -1,36 +1,42 @@
 .featuresContainer {
-    position: relative;
-    padding: 100px 20px; /* Mehr Platz von oben und unten */
-    background-color: #fff; /* Weißer Hintergrund */
-    overflow: hidden; /* Verhindert, dass Elemente überlaufen */
+  position: relative;
+  padding: 100px 20px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  align-items: center;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.featureItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.icon {
+  font-size: 60px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.featureItem p {
+  font-size: 1.2rem;
+  margin-top: 10px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Media Queries für Tablet und Handy, um den zweiten Absatz auszublenden */
+@media (max-width: 768px) {
+  .hideOnMobile {
+    display: none;
   }
-  
-  .featuresGrid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Drei gleichmäßige Spalten */
-    justify-items: center; /* Zentriert die Icons horizontal */
-    align-items: center; /* Zentriert die Icons vertikal */
-    gap: 40px; /* Abstand zwischen den einzelnen Grid-Elementen */
-    margin-top: 40px;
-  }
-  
-  .featureItem {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .icon {
-    font-size: 60px; /* Größe der Icons */
-    margin-bottom: 10px;
-    color: #333; /* Setze die Icon-Farbe auf Dunkelgrau */
-  }
-  
-  .featureItem p {
-    font-size: 1.2rem; /* Schriftgröße für die Beschreibung */
-    margin-top: 10px;
-    font-weight: 500; /* Etwas fettere Schrift für bessere Lesbarkeit */
-    color: #333; /* Dunklerer Text für bessere Lesbarkeit */
-  }
-  
+}

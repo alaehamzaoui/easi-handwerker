@@ -21,17 +21,18 @@ export default function Slider() {
 
   const slides = [
     {
-      title: "Als Azubi Anmelden",
-      description: "Freizeite angeben um Aufträge in Ihre Nähe zu bekommen",
-      buttonText: "Registeri",
+      title: "Als Azubi registrieren",
+      description: "Geben Sie Ihre Verfügbarkeit an, um Aufträge in Ihrer Nähe zu erhalten.",
+      buttonText: "Registrieren",
       buttonLink: "/login",
     },
     {
-      title: "Als Kunde Suchen",
-      description: "Azubi Handwerker in Ihre Nähe suchen für Felxibler und gunstger Reparature",
-      buttonText: "3bad",
+      title: "Als Kunde suchen",
+      description: "Finden Sie Azubi-Handwerker in Ihrer Nähe für flexible und kostengünstige Reparaturen.",
+      buttonText: "Suchen",
       buttonLink: "/Suche",
-    },
+    }
+    ,
   ];
 
   const handleSlideChange = (index: number) => {
@@ -49,6 +50,7 @@ export default function Slider() {
             <img src={logo.src} alt="Mini Meister" className={styles.logo} />
             <div   onMouseEnter={() => setIstHovered(true)}   // Stop the slide on hover
               onMouseLeave={() => setIstHovered(false)}  >
+                <div className={styles.block}>
             <h2
               onMouseEnter={() => setIstHovered(true)}   // Stop the slide on hover
               onMouseLeave={() => setIstHovered(false)} >{slide.title}</h2>
@@ -65,6 +67,7 @@ export default function Slider() {
             >
               {slide.buttonText}
             </a>
+            </div>
           </div>
         ))}
       </div>

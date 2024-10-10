@@ -1,26 +1,26 @@
-"use client"; // Markiere die Komponente als Client-Komponente
+"use client";
 
-import { FaCouch, FaDollarSign, FaRocket } from 'react-icons/fa'; // Icons aus react-icons
-import styles from '@/styles/FeaturesKomponent.module.css'; // Importiere das CSS
+import { FaHeadset, FaBalanceScale, FaClock } from 'react-icons/fa';
+import styles from '@/styles/FeaturesKomponent.module.css';
 
 export default function FeaturesKomponent() {
   return (
     <div className={styles.featuresContainer}>
       <div className={styles.featuresGrid}>
         <div className={styles.featureItem}>
-          <FaCouch className={styles.icon} /> {/* Icon für "Bequem" */}
-          <p>Bequem</p>
-          <p>Erleben Sie Komfort bei jedem Schritt.</p>
+          <FaHeadset className={styles.icon} />
+          <p>Kundenservice</p>
+          <p className={styles.hideOnMobile}>Unser Team steht Ihnen jederzeit zur Verfügung.</p>
         </div>
         <div className={styles.featureItem}>
-          <FaDollarSign className={styles.icon} /> {/* Icon für "Optimaler Preis" */}
-          <p>Optimaler Preis</p>
-          <p>Beste Preis-Leistung, auf die Sie sich verlassen können.</p>
+          <FaBalanceScale className={styles.icon} />
+          <p>Faire Preise</p>
+          <p className={styles.hideOnMobile}>Transparente Preise, die Ihre Erwartungen übertreffen.</p>
         </div>
         <div className={styles.featureItem}>
-          <FaRocket className={styles.icon} /> {/* Icon für "Schnell" */}
-          <p>Schnell</p>
-          <p>Schnell und effizient, ohne Kompromisse bei der Qualität.</p>
+          <FaClock className={styles.icon} />
+          <p>Flexibilität</p>
+          <p className={styles.hideOnMobile}>Wir passen uns Ihrem Zeitplan an.</p>
         </div>
       </div>
     </div>
