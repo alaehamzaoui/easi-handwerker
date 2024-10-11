@@ -8,7 +8,7 @@ import elektrikerbild from "../../images/elektriker.png";
 import mauererbild from "../../images/mauerer.png";
 import dachdeckerbild from "../../images/dachdecker.png";
 import friseurbild from "../../images/friseur.png";
-
+import styles from '../../styles/Suche.module.css';
 
 
 // Mapping für Kategorien zu Bildern
@@ -78,7 +78,7 @@ export default function Startseite() {
     <div className="min-h-screen flex flex-col">
       <header className="bg-yellow-500 text-gray-800 p-4 flex items-center relative" style={{ height: '100px' }}>
         <div className="absolute left-0 top-0 bg-black h-full p-4 flex items-center cursor-pointer" onClick={() => router.push('/')}>
-          <Image src={logo} alt="Logo" width={100} height={100} />
+          <Image src={logo} alt="Logo" width={200} height={200}  className={styles.logo}/>
         </div>
       </header>
       <main className="flex-grow bg-gray-100 text-gray-800 p-8">
