@@ -42,7 +42,7 @@
   font-weight: bold;
   border-radius: 5px;
   transition: background-color 0.3s;
-  margin-bottom: -15%;
+  margin-bottom: 10%;
 }
 
 .button:hover {
@@ -54,6 +54,7 @@
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
+
  
 }
 
@@ -81,17 +82,22 @@
   margin-top: 40%;
   position: relative;
 }
+@media (max-width: 1550px) {
+  .controls {
+    display: none; 
+  }
+}
+
 
 @media (max-width: 768px) {
   .controls {
     display: none; 
   }
 
-  .button {
-    margin-bottom: 50%;
-  }
+
   .logo{
     margin-top: 5%;
+    margin-bottom: 50%;
   }
 }
 
@@ -100,9 +106,7 @@
     display: none;
   }
 
-  .button {
-    margin-bottom: 50%; 
-  }
+
   .logo{
     margin-top: 5%;
   }

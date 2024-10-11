@@ -47,9 +47,9 @@ export default function Slider() {
       >
         {slides.map((slide, index) => (
           <div key={index} className={styles.slide}>
-            <img src={logo.src} alt="Mini Meister" className={styles.logo} />
-            <div   onMouseEnter={() => setIstHovered(true)}   // Stop the slide on hover
-              onMouseLeave={() => setIstHovered(false)}  >
+
+            <img  src={logo.src} alt="Mini Meister" className={styles.logo}  />
+            
                 <div className={styles.block}>
             <h2
               onMouseEnter={() => setIstHovered(true)}   // Stop the slide on hover
@@ -67,7 +67,7 @@ export default function Slider() {
             >
               {slide.buttonText}
             </a>
-            </div>
+         
           </div>
         ))}
       </div>
