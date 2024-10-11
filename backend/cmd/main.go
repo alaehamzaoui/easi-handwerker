@@ -25,9 +25,9 @@ func main() {
 	r.HandleFunc("/workTimes", handlers.GetWorkTimesHandler).Methods("GET")
 	r.HandleFunc("/workTimes", handlers.UpdateWorkTimesHandler).Methods("POST")
 	r.HandleFunc("/searchHandwerker", handlers.SearchHandwerkerHandler).Methods("GET")
+	r.HandleFunc("/api/auftrag", handlers.CreateAuftragHandler).Methods("POST")
+	r.HandleFunc("/api/aufträge", handlers.GetAufträgeHandler).Methods("GET")
 	r.HandleFunc("/handwerker/{id}", handlers.HandwerkerDetailsHandler).Methods("GET")
-
-	r.HandleFunc("/gebucht/{id}/{tag}", handlers.HandleGebuchtWert).Methods("POST")
 	r.HandleFunc("/updateUserData", handlers.UpdateUserDataHandler).Methods("POST")
 
 	corsOpts := gorillaHandlers.AllowedOrigins([]string{"http://localhost:3000"})
@@ -38,9 +38,9 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", gorillaHandlers.CORS(corsOpts, corsMethods, corsHeaders)(r)))
 }
 func clearTables() {
-
 	db.DB.Exec("DELETE FROM users")
 	db.DB.Exec("DELETE FROM work_times")
 	db.DB.Exec("DELETE FROM auftrags")
+	db.DB.Exec("DELETE FROM anfrages")
 	log.Println("Alle Tabellen wurden geleert.")
 }
