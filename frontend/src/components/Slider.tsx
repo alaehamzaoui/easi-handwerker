@@ -1,4 +1,4 @@
-"use client"; // Mark the component as a Client Component
+"use client"; 
 
 import { useState, useEffect } from 'react';
 import styles from '@/styles/Slider.module.css';
@@ -7,15 +7,15 @@ import logo from '@/images/MiniMeister-Logo-white.png';
 export default function Slider() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [IstHovered, setIstHovered] = useState(false);
-  const slideCount = 2; // Total number of slides
+  const slideCount = 2; 
 
   useEffect(() => {
     if (!IstHovered) {
       const interval = setInterval(() => {
         setActiveSlide((prev) => (prev + 1) % slideCount);
-      }, 2500); // Change slide every 2.5 seconds
+      }, 2500); 
 
-      return () => clearInterval(interval); // Cleanup interval on unmount
+      return () => clearInterval(interval); 
     }
   }, [IstHovered]);
 
@@ -50,20 +50,21 @@ export default function Slider() {
 
             <img  src={logo.src} alt="Mini Meister" className={styles.logo}  />
             
-                <div className={styles.block}>
+                <div className={styles.block}   onMouseEnter={() => setIstHovered(true)}   
+              onMouseLeave={() => setIstHovered(false)}  >
             <h2
-              onMouseEnter={() => setIstHovered(true)}   // Stop the slide on hover
+              onMouseEnter={() => setIstHovered(true)}   
               onMouseLeave={() => setIstHovered(false)} >{slide.title}</h2>
             <p
-              onMouseEnter={() => setIstHovered(true)}   // Stop the slide on hover
+              onMouseEnter={() => setIstHovered(true)}  
               onMouseLeave={() => setIstHovered(false)} >{slide.description}</p>
 
             </div>
             <a
               href={slide.buttonLink}
               className={styles.button}
-              onMouseEnter={() => setIstHovered(true)}   // Stop the slide on hover
-              onMouseLeave={() => setIstHovered(false)}  // Resume the slide on leave
+              onMouseEnter={() => setIstHovered(true)}   
+              onMouseLeave={() => setIstHovered(false)}  
             >
               {slide.buttonText}
             </a>
