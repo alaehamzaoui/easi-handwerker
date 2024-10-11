@@ -8,12 +8,8 @@ import (
 	"net/http"
 	"time"
 
-	"bytes"
-
 	"fmt"
-	"io"
 
-	"github.com/signintech/gopdf"
 	gomail "gopkg.in/mail.v2"
 
 	"github.com/gorilla/mux"
@@ -28,9 +24,8 @@ func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	auftrag.Status = "Neu"
 
-	//reservierungdatum speichern
 	auftrag.Reservierungsdatum = time.Now()
-	// Auftrag in der Datenbank speichern hier
+
 	if err := db.DB.Create(&auftrag).Error; err != nil {
 		log.Println("Fehler beim Speichern des Auftrags:", err)
 		http.Error(w, "Fehler beim Speichern des Auftrags", http.StatusInternalServerError)
@@ -44,16 +39,7 @@ func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//  PDF-Rechnung wird hier erstellt
-	pdf, err := erstelleRechnungPDF(auftrag)
-	if err != nil {
-		log.Println("Fehler beim Erstellen der PDF-Rechnung:", err)
-		http.Error(w, "Auftrag gespeichert, aber Fehler beim Erstellen der Rechnung", http.StatusInternalServerError)
-		return
-	}
-
-	// E-Mail senden
-	if err := sendeAuftragsbestaetigungMitAnhang(auftrag, pdf); err != nil {
+	if err := sendeAuftragsbestaetigungOhneAnhang(auftrag); err != nil {
 		log.Println("Fehler beim Senden der Auftragsbestätigung:", err)
 		http.Error(w, "Auftrag gespeichert, aber Fehler beim Senden der Bestätigungs-E-Mail", http.StatusInternalServerError)
 		return
@@ -70,7 +56,6 @@ func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteAuftragHandler(w http.ResponseWriter, r *http.Request) {
-
 	vars := mux.Vars(r)
 	id := vars["id"]
 
@@ -81,7 +66,6 @@ func DeleteAuftragHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//überprüft ob die 48 Stunden abgelaufen sind
 	zeitseitreservierung := time.Since(auftrag.Reservierungsdatum).Hours()
 	if zeitseitreservierung > 48 {
 		http.Error(w, "Die Stornierungsfrist von 48 Stunden ist abgelaufen", http.StatusBadRequest)
@@ -101,7 +85,6 @@ func DeleteAuftragHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Senden Stornierungsbestätigung
 	if err := sendeStornierungsBestaetigungAnHandwerker(auftrag, handwerker); err != nil {
 		log.Println("Fehler beim Senden der Stornierungsbestätigung an den Handwerker:", err)
 		http.Error(w, "Fehler beim Senden der Stornierungsbestätigung an den Handwerker", http.StatusInternalServerError)
@@ -121,19 +104,17 @@ func DeleteAuftragHandler(w http.ResponseWriter, r *http.Request) {
 func sendeStornierungsBestaetigungAnHandwerker(auftrag models.Auftrag, handwerker models.User) error {
 	mailer := gomail.NewMessage()
 
-	// Setze den Absender, Empfänger und den Betreff
 	mailer.SetHeader("From", "info.minimeister@gmail.com")
 	mailer.SetHeader("To", handwerker.Email)
 	mailer.SetHeader("Subject", "Stornierung des Auftrags erfolgreich")
 
-	// hier können wir den Inhalt der E-Mail bearbeiten
 	body := fmt.Sprintf(`
 		Sehr geehrte/r Frau/Herr %s,
 
 		Ihren Auftrag mit den Daten: 
 
-		-Name des Kunde: %s 
-		-Ort: %s 
+		- Name des Kunde: %s 
+		- Ort: %s 
 		
 		wurde erfolgreich storniert.
 
@@ -143,7 +124,6 @@ func sendeStornierungsBestaetigungAnHandwerker(auftrag models.Auftrag, handwerke
 
 	mailer.SetBody("text/plain", body)
 
-	// SMTP-Einstellungen für unseren E-Mail-Server
 	dialer := gomail.NewDialer("smtp.gmail.com", 587, "info.minimeister@gmail.com", "jzafrboycrqjlifs")
 
 	if err := dialer.DialAndSend(mailer); err != nil {
@@ -156,30 +136,28 @@ func sendeStornierungsBestaetigungAnHandwerker(auftrag models.Auftrag, handwerke
 func sendeStornierungsBestaetigungAnKunde(auftrag models.Auftrag, handwerker models.User) error {
 	mailer := gomail.NewMessage()
 
-	// Setze den Absender, Empfänger und den Betreff
 	mailer.SetHeader("From", "info.minimeister@gmail.com")
 	mailer.SetHeader("To", auftrag.Email)
-	mailer.SetHeader("Subject", "ihre Buchung wurde storniert")
+	mailer.SetHeader("Subject", "Ihre Buchung wurde storniert")
 
-	// hier können wir den Inhalt der E-Mail bearbeiten
 	body := fmt.Sprintf(`
 		Sehr geehrte/r Frau/Herr %s,
 
 		leider müssen wir Sie darüber informieren, dass Herr/Frau %s den Termin storniert hat, den Sie gebucht hatten. Hier sind die Details der Stornierung:
 
-		-Handwerker: %s %s
-		-Kategorie: %s
-		-Datum: %s 
-		-Uhrzeit: %s - %s
+		- Handwerker: %s %s
+		- Kategorie: %s
+		- Datum: %s 
+		- Uhrzeit: %s - %s
 		
 		Gerne können Sie über unsere App nach einer alternativen Buchungsmöglichkeit suchen. Falls Sie Fragen haben oder Unterstützung benötigen, stehen wir Ihnen selbstverständlich jederzeit zur Verfügung.
 
 		Mit freundlichen Grüßen,
 		Team EASI
 	`, auftrag.Name, handwerker.Nachname, handwerker.Vorname, handwerker.Nachname, handwerker.Kategorie, auftrag.AusgewählterTag, auftrag.StartZeit, auftrag.EndZeit)
+
 	mailer.SetBody("text/plain", body)
 
-	// SMTP-Einstellungen für unseren E-Mail-Server
 	dialer := gomail.NewDialer("smtp.gmail.com", 587, "info.minimeister@gmail.com", "jzafrboycrqjlifs")
 
 	if err := dialer.DialAndSend(mailer); err != nil {
@@ -189,24 +167,21 @@ func sendeStornierungsBestaetigungAnKunde(auftrag models.Auftrag, handwerker mod
 	return nil
 }
 
-// email zu Handwerker
 func sendeBestaetigungAnHandwerker(auftrag models.Auftrag, handwerker models.User) error {
 	mailer := gomail.NewMessage()
 
-	// Setze den Absender, Empfänger und den Betreff
 	mailer.SetHeader("From", "info.minimeister@gmail.com")
 	mailer.SetHeader("To", handwerker.Email)
 	mailer.SetHeader("Subject", "Neuen Auftrag erhalten")
 
-	// hier können wir den Inhalt der E-Mail bearbeiten
 	body := fmt.Sprintf(`
 		Sehr geehrte/r Frau/Herr %s,
 
 		wir freuen uns, Ihnen mitzuteilen, dass Sie für einen neuen Auftrag reserviert wurden. Hier die wichtigsten Informationen:
 
-		-Name des Kunde: %s 
-		-Ort: %s 
-		-Anliegen: %s
+		- Name des Kunde: %s 
+		- Ort: %s 
+		- Anliegen: %s
 		
 		Genauere Informationen zu dieser Buchung finden Sie in Ihrem Dashboard.
 
@@ -216,7 +191,6 @@ func sendeBestaetigungAnHandwerker(auftrag models.Auftrag, handwerker models.Use
 
 	mailer.SetBody("text/plain", body)
 
-	// SMTP-Einstellungen für unseren E-Mail-Server
 	dialer := gomail.NewDialer("smtp.gmail.com", 587, "info.minimeister@gmail.com", "jzafrboycrqjlifs")
 
 	if err := dialer.DialAndSend(mailer); err != nil {
@@ -226,19 +200,17 @@ func sendeBestaetigungAnHandwerker(auftrag models.Auftrag, handwerker models.Use
 	return nil
 }
 
-func sendeAuftragsbestaetigungMitAnhang(auftrag models.Auftrag, pdfData []byte) error {
+func sendeAuftragsbestaetigungOhneAnhang(auftrag models.Auftrag) error {
 	mailer := gomail.NewMessage()
 
-	// Setze den Absender, Empfänger und den Betreff
 	mailer.SetHeader("From", "info.minimeister@gmail.com")
 	mailer.SetHeader("To", auftrag.Email)
-	mailer.SetHeader("Subject", "Auftragsbestätigung und Rechnung")
+	mailer.SetHeader("Subject", "Auftragsbestätigung")
 
-	// hier können wir den Inhalt der E-Mail bearbeiten
 	body := fmt.Sprintf(`
 		Sehr geehrte/r %s,
 
-		Vielen Dank für Ihre Buchung bei MiniMeister. Im Anhang finden Sie die Rechnung für Ihren Auftrag.
+		Vielen Dank für Ihre Buchung bei MiniMeister.
 
 		Details Ihres Auftrags:
 
@@ -255,13 +227,6 @@ func sendeAuftragsbestaetigungMitAnhang(auftrag models.Auftrag, pdfData []byte) 
 
 	mailer.SetBody("text/plain", body)
 
-	// PDF-Rechnung als Anhang hinzu
-	mailer.Attach("Rechnung.pdf", gomail.SetCopyFunc(func(w io.Writer) error {
-		_, err := w.Write(pdfData)
-		return err
-	}))
-
-	// SMTP-Einstellungen für unseren E-Mail-Server
 	dialer := gomail.NewDialer("smtp.gmail.com", 587, "info.minimeister@gmail.com", "jzafrboycrqjlifs")
 
 	if err := dialer.DialAndSend(mailer); err != nil {
@@ -271,50 +236,6 @@ func sendeAuftragsbestaetigungMitAnhang(auftrag models.Auftrag, pdfData []byte) 
 	return nil
 }
 
-// ich erstelle die pdf Rechnung hier
-func erstelleRechnungPDF(auftrag models.Auftrag) ([]byte, error) {
-	pdf := gopdf.GoPdf{}
-	pdf.Start(gopdf.Config{PageSize: *gopdf.PageSizeA4})
-	pdf.AddPage()
-
-	// Schriftart wird hier bearbeitet und auch größe
-	err := pdf.AddTTFFont("arial", "../assets/fonts/ARIAL.TTF")
-	if err != nil {
-		return nil, err
-	}
-	err = pdf.SetFont("arial", "", 14)
-	if err != nil {
-		return nil, err
-	}
-
-	//  Logo von assets/images/logo.png wird hier hinzugefügt
-	err = pdf.Image("../assets/images/logo.png", 200, 10, nil) // Positioniere das Bild solen wir hier ändern
-	if err != nil {
-		return nil, err
-	}
-	pdf.Br(70) // Platz für das Bild
-
-	// Beispielinhalt der PDF , soll aber noch bearbeitet werden
-	pdf.Cell(nil, "Rechnung")
-	pdf.Br(50)
-	pdf.Cell(nil, fmt.Sprintf("Auftragnehmer: %s", auftrag.Name))
-	pdf.Br(50)
-	pdf.Cell(nil, fmt.Sprintf("Datum: %s", auftrag.AusgewählterTag))
-	pdf.Br(50)
-	pdf.Cell(nil, fmt.Sprintf("Anliegen: %s", auftrag.Anliegen))
-	pdf.Br(50)
-	pdf.Cell(nil, fmt.Sprintf("Zeitraum: %s - %s", auftrag.StartZeit, auftrag.EndZeit))
-	pdf.Br(50)
-	pdf.Cell(nil, fmt.Sprintf("Adresse: %s, %s", auftrag.StraßeHausnummer, auftrag.StadtPLZ))
-
-	var buf bytes.Buffer
-	err = pdf.Write(&buf)
-	if err != nil {
-		return nil, err
-	}
-
-	return buf.Bytes(), nil
-}
 func GetAufträgeHandler(w http.ResponseWriter, r *http.Request) {
 	userID := r.URL.Query().Get("user_id")
 	if userID == "" {
@@ -329,8 +250,6 @@ func GetAufträgeHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]string{"error": "Fehler beim Abrufen der Aufträge"})
 		return
 	}
-
-	//log.Println("Abgerufene Aufträge:", aufträge)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(aufträge)
