@@ -12,7 +12,7 @@ import dachdeckerbild from "../../../images/dachdecker.png";
 import friseurbild from "../../../images/friseur.png";
 
 
-// Mapping für Kategorien zu Bildern
+
 const handwerkerBilder = {
   "Maler/-in": malerbild,
   "Elektriker/-in": elektrikerbild,
@@ -32,6 +32,7 @@ interface Arbeitszeit {
   tag: string;
   von: string;
   bis: string;
+  gebucht : boolean
 }
 
 const ProfilDetails = () => {
@@ -56,22 +57,22 @@ const ProfilDetails = () => {
       fetch(`http://localhost:8080/handwerker/${id}`)
         .then(response => {
           if (!response.ok) {
-            throw new Error('Handwerker nicht gefunden');
           }
           return response.json();
         })
         .then(data => {
           setHandwerker(data.handwerker);
+          
           setArbeitsZeiten(data.workTimes);
         })
         .catch(error => console.error('Fehler beim Abrufen der Handwerker-Details:', error));
     }
   }, [id]);
 
-  const getNaechsteZweiWochen = () => {
+  const getNaechsteWoche = () => {
     const heute = new Date();
     const naechsteZweiWochen = [];
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 7; i++) {
       const datum = new Date(heute);
       datum.setDate(heute.getDate() + i);
       naechsteZweiWochen.push(datum);
@@ -113,7 +114,7 @@ const ProfilDetails = () => {
   }
   
 
-const buchen = async (e: React.FormEvent) => {
+const buchen = async (e: React.FormEvent ) => {
     e.preventDefault();
 
     if (!name || !straßehausnummer || !stadtPLZ || !email || !tel || !anliegen) {
@@ -154,8 +155,37 @@ const buchen = async (e: React.FormEvent) => {
       });
       
       if (response.ok) {
+        try {
+          const slicedAusgewählterTag = ausgewählterTag.slice(0,-10)
+          
+
+          //const formattedTag = ausgewählterTag.replace(/,\s*/g, '').replace(/\s+/g, '');
+         
+const isAlphaOrSpace = char => ((char.toLowerCase() !==
+char.toUpperCase()) || char === ' ');
+const removeSpecials = (slicedAusgewählterTag = '') => {
+   let res = '';
+   const { length: len } = slicedAusgewählterTag;
+   for(let i = 0; i < len; i++){
+      const el = slicedAusgewählterTag[i];
+      if(isAlphaOrSpace(el)){
+         res += el;
+      };
+   };
+   return res;
+};
+const res = removeSpecials(slicedAusgewählterTag)
+//alert(res)
+          const response2 = await fetch(`http://localhost:8080/gebucht/${id}/${res}`, {
+            method: 'POST',
+          });
+          
+        } catch (error) {
+          console.error('Fehler beim update:', error);
+          
+        }
         zeigePopup('Ihre Buchung wurde erfolgreich durchgeführt');
-        setTimeout(() => {
+         setTimeout(() => {
           setIsOpen(false);
           window.location.reload();
         }, 2000);
@@ -199,7 +229,7 @@ const buchen = async (e: React.FormEvent) => {
   };
 
   if (!handwerker) {
-    return <div>Handwerker nicht gefunden.</div>;
+    return <div>loading ..</div>;
   }
 
   const { vorname, nachname, stadt, kategorie, telefon, stundenlohn, bild } = handwerker;
@@ -218,10 +248,10 @@ const buchen = async (e: React.FormEvent) => {
             <h2 className="text-2xl font-bold mb-4">Verfügbare Arbeitszeiten</h2>
             {istPopupSichtbar && <Popup message={popupNachricht} onClose={schließePopup} />}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {getNaechsteZweiWochen().map((datum, index) => {
+              {getNaechsteWoche().map((datum, index) => {
                 const tagName = getTagName(datum);
                 const arbeitsZeit = arbeitsZeiten.find(az => az.tag === tagName);
-                if (!arbeitsZeit || !arbeitsZeit.von || !arbeitsZeit.bis) return null;
+                if (!arbeitsZeit || !arbeitsZeit.von || !arbeitsZeit.bis || arbeitsZeit.gebucht) return null;
                 if (istZeitSlotReserviert(`${tagName}, ${datum.toLocaleDateString('de-DE')}`, arbeitsZeit.von, arbeitsZeit.bis)) {
                   return null;
                 }
@@ -312,10 +342,11 @@ const buchen = async (e: React.FormEvent) => {
                             </div>
                             <div className="flex justify-center mt-4">
                               <button
-                                onClick={buchen}
+                               
+                                onClick={(e) => buchen(e)}
                                 className={styles.button}
                               >
-                                Buchen
+                           Buchen
                               </button>
                             </div>
                           </div>
