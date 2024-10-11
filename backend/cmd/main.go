@@ -29,6 +29,7 @@ func main() {
 	r.HandleFunc("/api/aufträge", handlers.GetAufträgeHandler).Methods("GET")
 	r.HandleFunc("/handwerker/{id}", handlers.HandwerkerDetailsHandler).Methods("GET")
 	r.HandleFunc("/updateUserData", handlers.UpdateUserDataHandler).Methods("POST")
+	r.HandleFunc("/gebucht/{id}/{tag}", handlers.HandleGebuchtWert).Methods("POST")
 
 	corsOpts := gorillaHandlers.AllowedOrigins([]string{"http://localhost:3000"})
 	corsMethods := gorillaHandlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"})
