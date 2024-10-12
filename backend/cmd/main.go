@@ -34,6 +34,7 @@ func main() {
 	r.HandleFunc("/handwerker/{id}", handlers.HandwerkerDetailsHandler).Methods("GET")
 	r.HandleFunc("/updateUserData", handlers.UpdateUserDataHandler).Methods("POST")
 	r.HandleFunc("/auftrag/{id}/stornieren", handlers.DeleteAuftragHandler).Methods("DELETE")
+	r.HandleFunc("/auftrag/{id}/storniere", handlers.DeleteAuftragHandlerKunde).Methods("DELETE")
 
 	corsOpts := gorillaHandlers.AllowedOrigins([]string{"http://localhost:3000"})
 	corsMethods := gorillaHandlers.AllowedMethods([]string{"GET", "POST", "DELETE", "OPTIONS"})
