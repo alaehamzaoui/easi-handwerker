@@ -21,7 +21,7 @@ export default function Slider() {
 
   const slides = [
     {
-      title: "Als Azubi registrieren",
+      title: "Als Azubi-Handwerker registrieren",
       description: "Geben Sie Ihre Verfügbarkeit an, um Aufträge in Ihrer Nähe zu erhalten.",
       buttonText: "Registrieren",
       buttonLink: "/login",
@@ -55,7 +55,7 @@ export default function Slider() {
             <h2
               onMouseEnter={() => setIstHovered(true)}   
               onMouseLeave={() => setIstHovered(false)} >{slide.title}</h2>
-            <p
+            <p className={styles.description}
               onMouseEnter={() => setIstHovered(true)}  
               onMouseLeave={() => setIstHovered(false)} >{slide.description}</p>
 

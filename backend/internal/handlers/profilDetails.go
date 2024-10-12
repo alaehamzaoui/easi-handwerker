@@ -16,7 +16,7 @@ func HandwerkerDetailsHandler(w http.ResponseWriter, r *http.Request) {
 
 	//log.Println("Angeforderte Handwerker-ID:", id)
 
-	var handwerker models.User
+	var handwerker models.Benutzer
 	if err := db.DB.First(&handwerker, id).Error; err != nil {
 		log.Println("Fehler beim Abrufen des Handwerkers:", err)
 		w.Header().Set("Content-Type", "application/json")

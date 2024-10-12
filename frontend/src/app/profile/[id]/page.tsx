@@ -238,7 +238,7 @@ const res = removeSpecials(slicedAusgewählterTag)
     <div className="min-h-screen flex flex-col">
       <header className="bg-yellow-500 text-gray-800 p-4 flex items-center relative" style={{ height: '100px' }}>
         <div className="absolute left-0 top-0 bg-black h-full p-4 flex items-center cursor-pointer" onClick={() => router.push('/')}>
-          <Image src={logo} alt="Logo" width={100} height={100} />
+          <Image src={logo} alt="Logo" width={200} height={200} className={styles.logo} />
         </div>
       </header>
       <main className="flex-grow bg-gray-100 text-gray-800 p-8 flex flex-col items-center">

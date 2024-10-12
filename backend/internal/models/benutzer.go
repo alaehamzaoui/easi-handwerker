@@ -2,9 +2,9 @@ package models
 
 import "gorm.io/gorm"
 
-type User struct {
+type Benutzer struct {
 	gorm.Model
-	ID uint `json:"id"` // Hier explizit das JSON-Tag für die ID hinzufügen
+	ID uint `json:"id"` // unit steht für unsigned integer , ich habe die benutzt weil ich keine negativen id haben will
 
 	Vorname      string  `json:"vorname"`
 	Nachname     string  `json:"nachname"`

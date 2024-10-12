@@ -32,7 +32,7 @@ func CreateAuftragHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var handwerker models.User
+	var handwerker models.Benutzer
 	if err := db.DB.Where("id = ?", auftrag.UserID).First(&handwerker).Error; err != nil {
 		log.Println("Fehler beim Abrufen des Handwerkers:", err)
 		http.Error(w, "Auftrag gespeichert, aber Fehler beim Abrufen des Handwerkers", http.StatusInternalServerError)
@@ -78,7 +78,7 @@ func DeleteAuftragHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var handwerker models.User
+	var handwerker models.Benutzer
 	if err := db.DB.Where("id = ?", auftrag.UserID).First(&handwerker).Error; err != nil {
 		log.Println("Fehler beim Abrufen des Handwerkers:", err)
 		http.Error(w, "Fehler beim Abrufen des Handwerkers", http.StatusInternalServerError)
@@ -101,7 +101,7 @@ func DeleteAuftragHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "Auftrag erfolgreich gelöscht"})
 }
 
-func sendeStornierungsBestaetigungAnHandwerker(auftrag models.Auftrag, handwerker models.User) error {
+func sendeStornierungsBestaetigungAnHandwerker(auftrag models.Auftrag, handwerker models.Benutzer) error {
 	mailer := gomail.NewMessage()
 
 	mailer.SetHeader("From", "info.minimeister@gmail.com")
@@ -133,7 +133,7 @@ func sendeStornierungsBestaetigungAnHandwerker(auftrag models.Auftrag, handwerke
 	return nil
 }
 
-func sendeStornierungsBestaetigungAnKunde(auftrag models.Auftrag, handwerker models.User) error {
+func sendeStornierungsBestaetigungAnKunde(auftrag models.Auftrag, handwerker models.Benutzer) error {
 	mailer := gomail.NewMessage()
 
 	mailer.SetHeader("From", "info.minimeister@gmail.com")
@@ -167,7 +167,7 @@ func sendeStornierungsBestaetigungAnKunde(auftrag models.Auftrag, handwerker mod
 	return nil
 }
 
-func sendeBestaetigungAnHandwerker(auftrag models.Auftrag, handwerker models.User) error {
+func sendeBestaetigungAnHandwerker(auftrag models.Auftrag, handwerker models.Benutzer) error {
 	mailer := gomail.NewMessage()
 
 	mailer.SetHeader("From", "info.minimeister@gmail.com")

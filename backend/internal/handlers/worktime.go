@@ -21,7 +21,7 @@ func GetWorkTimesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user models.User
+	var user models.Benutzer
 	if err := db.DB.Where("email = ?", email).First(&user).Error; err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		if err == gorm.ErrRecordNotFound {
@@ -79,7 +79,7 @@ func UpdateWorkTimesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user models.User
+	var user models.Benutzer
 	if err := db.DB.Where("email = ?", reqData.Email).First(&user).Error; err != nil {
 		http.Error(w, "Benutzer nicht gefunden", http.StatusNotFound)
 		return

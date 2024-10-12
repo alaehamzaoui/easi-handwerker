@@ -15,7 +15,7 @@ import (
 func main() {
 	db.ConnectDB()
 
-	db.DB.AutoMigrate(&models.User{}, &models.WorkTime{}, &models.Auftrag{})
+	db.DB.AutoMigrate(&models.Benutzer{}, &models.WorkTime{}, &models.Auftrag{})
 	clearTables()
 
 	r := mux.NewRouter()

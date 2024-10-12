@@ -10,7 +10,6 @@ type Auftrag struct {
 	gorm.Model
 	ID                 uint      `json:"id"`
 	UserID             uint      `json:"user_id"`
-	test               string    `json:"name"`
 	Name               string    `json:"name"`
 	StraßeHausnummer   string    `json:"straßehausnummer"`
 	StadtPLZ           string    `json:"stadt_plz"`

@@ -90,6 +90,9 @@
 
 
 @media (max-width: 768px) {
+  .description{
+    display: none;
+  }
   .controls {
     display: none; 
   }
@@ -102,6 +105,9 @@
 }
 
 @media (max-width: 480px) {
+  .description{
+    display: none;
+  }
   .controls {
     display: none;
   }

@@ -8,7 +8,7 @@ import (
 )
 
 func UpdateUserDataHandler(w http.ResponseWriter, r *http.Request) {
-	var updatedUser models.User
+	var updatedUser models.Benutzer
 	err := json.NewDecoder(r.Body).Decode(&updatedUser)
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
@@ -18,7 +18,7 @@ func UpdateUserDataHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//überprüft ob der User existiert
-	var existingUser models.User
+	var existingUser models.Benutzer
 	result := db.DB.First(&existingUser, updatedUser.ID)
 	if result.Error != nil {
 		w.Header().Set("Content-Type", "application/json")

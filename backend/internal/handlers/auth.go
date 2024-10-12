@@ -13,14 +13,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var jwtKey = []byte("your_secret_key")
+var jwtKey = []byte("sehrgeheim")
 
-type Credentials struct {
+type Credentials struct { //Credentials ist eine Konvention, die von jwt-go verwendet wird
 	Email    string `json:"email"`
 	Passwort string `json:"passwort"`
 }
 
-type Claims struct {
+type Claims struct { //Claims ist auch eine konvention, die von jwt-go verwendet wird
 	Email string `json:"email"`
 	jwt.StandardClaims
 }
@@ -31,7 +31,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unable to parse form", http.StatusBadRequest)
 		return
 	}
-	var user models.User
+	var user models.Benutzer
 	user.Vorname = r.FormValue("vorname")
 	user.Nachname = r.FormValue("nachname")
 	user.Geburtsdatum = r.FormValue("geburtsdatum")
@@ -48,7 +48,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unable to upload Vertrag PDF", http.StatusBadRequest)
 		return
 	}
-	defer file.Close()
+	defer file.Close() // defer macht dass die Funktion erst ausgeführt wird, wenn die umgebende Funktion fertig ist
 
 	fileBytes, err := ioutil.ReadAll(file)
 	if err != nil {
@@ -101,7 +101,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user models.User
+	var user models.Benutzer
 	db.DB.Where("email = ?", creds.Email).First(&user)
 
 	if user.ID == 0 || bcrypt.CompareHashAndPassword([]byte(user.Passwort), []byte(creds.Passwort)) != nil {

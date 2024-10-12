@@ -97,6 +97,8 @@
 }
 
 @media (max-width: 1200px) {
+  
+
   .product {
     width: 22vw;
     height: 35vh;
@@ -105,11 +107,14 @@
 
   .soda {
     width: 20vw;
+    display: none;
+
   }
 
   .rock img {
     height: 10vh;
   }
+
 }
 
 @media (max-width: 992px) {
@@ -151,6 +156,7 @@
 
   .soda {
     width: 16vw;
+    display: none;
   }
 
   .rock img {
@@ -171,6 +177,7 @@
     left: 30%;
     bottom: 3vh;
   }
+  
 }
 
 @media (max-width: 576px) {
@@ -182,6 +189,7 @@
 
   .soda {
     width: 30vw;
+    display: none;
   }
 
   .rock img {

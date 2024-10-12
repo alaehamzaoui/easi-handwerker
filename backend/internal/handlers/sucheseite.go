@@ -12,7 +12,7 @@ func SearchHandwerkerHandler(w http.ResponseWriter, r *http.Request) {
 	kategorie := r.URL.Query().Get("kategorie")
 	stadt := r.URL.Query().Get("stadt")
 
-	var handwerker []models.User
+	var handwerker []models.Benutzer
 
 	query := db.DB
 
