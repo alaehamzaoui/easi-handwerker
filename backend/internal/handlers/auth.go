@@ -4,7 +4,6 @@ import (
 	"backend/internal/db"
 	"backend/internal/models"
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
@@ -15,12 +14,12 @@ import (
 
 var jwtKey = []byte("sehrgeheim")
 
-type Credentials struct { //Credentials ist eine Konvention, die von jwt-go verwendet wird
+type Credentials struct {
 	Email    string `json:"email"`
 	Passwort string `json:"passwort"`
 }
 
-type Claims struct { //Claims ist auch eine konvention, die von jwt-go verwendet wird
+type Claims struct {
 	Email string `json:"email"`
 	jwt.StandardClaims
 }
@@ -43,19 +42,6 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	user.Passwort = r.FormValue("passwort")
 	user.Stundenlohn, _ = strconv.ParseFloat(r.FormValue("stundenlohn"), 64)
 
-	file, handler, err := r.FormFile("vertrag")
-	if err != nil {
-		http.Error(w, "Unable to upload Vertrag PDF", http.StatusBadRequest)
-		return
-	}
-	defer file.Close() // defer macht dass die Funktion erst ausgeführt wird, wenn die umgebende Funktion fertig ist
-
-	fileBytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		http.Error(w, "Unable to read Vertrag file", http.StatusInternalServerError)
-		return
-	}
-	user.Vertrag = fileBytes
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Passwort), bcrypt.DefaultCost)
 	user.Passwort = string(hashedPassword)
 
@@ -88,7 +74,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	db.DB.Create(&defaultWorkTimes)
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]string{"message": "Benutzer erfolgreich registriert", "file_name": handler.Filename})
+	json.NewEncoder(w).Encode(map[string]string{"message": "Benutzer erfolgreich registriert"})
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -142,7 +128,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			"kategorie":   user.Kategorie,
 			"stundenlohn": user.Stundenlohn,
 			"bild":        user.Bild,
-			"verified":    user.Verified,
 		},
 	})
 }

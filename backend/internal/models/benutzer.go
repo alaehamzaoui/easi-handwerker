@@ -17,6 +17,4 @@ type Benutzer struct {
 	Passwort     string  `json:"passwort"`
 	Stundenlohn  float64 `json:"stundenlohn"`
 	Bild         string  `json:"bild"`
-	Verified     bool    `json:"verified"`
-	Vertrag      []byte  `json:"vertrag"`
 }

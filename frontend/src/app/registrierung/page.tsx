@@ -18,7 +18,6 @@ export default function Anmeldung() {
     const [passwort, setPasswort] = useState('');
     const [passwortWiederholen, setPasswortWiederholen] = useState('');
     const [stundenlohn, setStundenlohn] = useState('');
-    const [vertrag, setVertrag] = useState(null);
     const [popupNachricht, setPopupNachricht] = useState('');
     const [istPopupSichtbar, setIstPopupSichtbar] = useState(false);
 
@@ -42,20 +41,10 @@ export default function Anmeldung() {
         setIstPopupSichtbar(false);
     };
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file && file.type !== 'application/pdf') {
-            zeigePopup('Bitte laden Sie nur PDF-Dateien hoch.');
-            e.target.value = ''; 
-            return;
-        }
-        setVertrag(file);
-    };
-
     const handleAbsenden = async (e) => {
         e.preventDefault();
 
-        if (!vorname || !nachname || !geburtsdatum || !kategorie || !straße || !stadt || !telefon || !email || !passwort || !passwortWiederholen || !stundenlohn || !vertrag) {
+        if (!vorname || !nachname || !geburtsdatum || !kategorie || !straße || !stadt || !telefon || !email || !passwort || !passwortWiederholen || !stundenlohn) {
             zeigePopup('Bitte füllen Sie alle Felder aus');
             return;
         }
@@ -77,11 +66,6 @@ export default function Anmeldung() {
             return;
         }
 
-        if (vertrag && vertrag.size > 10 * 1024 * 1024) {
-            zeigePopup('Die Datei ist größer als 10 MB. Bitte laden Sie eine kleinere Datei hoch.');
-            return;
-        }
-
         const formData = new FormData();
         formData.append("vorname", vorname);
         formData.append("nachname", nachname);
@@ -93,7 +77,6 @@ export default function Anmeldung() {
         formData.append("email", email);
         formData.append("passwort", passwort);
         formData.append("stundenlohn", stundenlohn);
-        formData.append("vertrag", vertrag);
 
         const response = await fetch('http://localhost:8080/register', {
             method: 'POST',
@@ -223,18 +206,6 @@ export default function Anmeldung() {
                             value={stundenlohn}
                             placeholder='Stundenlohn'
                             onChange={(e) => setStundenlohn(e.target.value)}
-                            className={styles.input}
-                        />
-                    </div>
-                    <div className={styles.row}>
-                         <label htmlFor="vertrag" className={styles.label}>Vertrag (PDF max 10 Mb) :</label>
-                    </div>
-                    <div className={styles.row}>
-                        <input
-                            type="file"
-                            id="vertrag"
-                            accept="application/pdf"
-                            onChange={handleFileChange}
                             className={styles.input}
                         />
                     </div>

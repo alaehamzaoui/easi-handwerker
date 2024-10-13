@@ -38,7 +38,6 @@ func UpdateUserDataHandler(w http.ResponseWriter, r *http.Request) {
 	existingUser.Email = updatedUser.Email
 	existingUser.Stundenlohn = updatedUser.Stundenlohn
 	existingUser.Bild = updatedUser.Bild
-	existingUser.Verified = updatedUser.Verified
 
 	result = db.DB.Save(&existingUser)
 	if result.Error != nil {
