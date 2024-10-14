@@ -69,17 +69,6 @@ const PersoenlicheDatenModal: React.FC<PersoenlicheDatenModalProps> = ({ initial
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={benutzerDaten.email}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-
-        <div className="mb-4">
           <label className="block text-gray-700">Stadt</label>
           <input
             type="text"
