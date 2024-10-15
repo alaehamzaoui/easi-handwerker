@@ -23,7 +23,7 @@ export default function Slider() {
     {
       title: "Als Azubi-Handwerker registrieren",
       description: "Geben Sie Ihre Verfügbarkeit an, um Aufträge in Ihrer Nähe zu erhalten.",
-      buttonText: "Registrieren",
+      buttonText: "Anmelden",
       buttonLink: "/login",
     },
     {
