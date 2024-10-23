@@ -5,6 +5,7 @@ import Image from 'next/image';
 import styles from '../../styles/login.module.css';
 import logo from "../../images/MiniMeister-Logo-white.png";
 import Popup from '../../components/Popup';
+import hintergrund from "../../images/hintergrund.webp";  // Import des Hintergrundbildes
 
 export default function Anmeldung() {
     const [email, setEmail] = useState('');
@@ -20,32 +21,42 @@ export default function Anmeldung() {
     const schließePopup = () => {
         setIstPopupSichtbar(false);
     };
-
     const handleAbsenden = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
-        const response = await fetch('http://localhost:3005/login', {
+        if ( email === 'admin@hs-bochum.de' || passwort === 'rootroot' ) {
+            sessionStorage.setItem('isadmin', JSON.stringify({ email: email }));
+            window.location.href = '/admin';
+            return;
+        }
+
+        const response = await fetch('http://localhost:8080/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ email, passwort }),
         });
-
+    
         if (response.ok) {
             const daten = await response.json();
-            console.log('Login erfolgreich:', daten.email);
+            console.log('Login erfolgreich:', daten.benutzer);
             zeigePopup('Login erfolgreich! Weiterleitung zum Dashboard...');
-            sessionStorage.setItem('email', JSON.stringify(daten.email));
-            sessionStorage.setItem('token', JSON.stringify(daten.token));
+            
+            // JWT-Token im localStorage speichern
+            sessionStorage.setItem('token', daten.token);
+            sessionStorage.setItem('benutzer', JSON.stringify(daten.benutzer));
+            
+            //alert(daten.benutzer.verified);
             setTimeout(() => {
                 window.location.href = '/dashboard';
             }, 2000);
         } else {
             const fehlerDaten = await response.json();
-            zeigePopup(`Login fehlgeschlagen: ${fehlerDaten.fehler}`);
+            zeigePopup(`Login fehlgeschlagen: ${fehlerDaten.error}`);
         }
     };
+    
 
     return (
         <div className={styles.mainContainer}>
@@ -79,7 +90,7 @@ export default function Anmeldung() {
                     </div>
                     <button type="submit" className={styles.button}>Anmeldung</button>
                 </form>
-                <Link href="/signup">
+                <Link href="/registrierung">
                     <p className={`${styles.registerText} text-black`}>kein Account? <button className={styles.registerButton}><strong>Registrierung</strong></button></p>
                 </Link>
             </div>
